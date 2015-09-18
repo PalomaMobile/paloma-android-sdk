@@ -1,0 +1,10 @@
+<resources>
+
+    <!-- To run instrumentation tests that involve creating FB users provide your own values below -->
+    <string name="facebook_app_id">510756569089287</string>
+    <string name="facebook_app_secret">ad61ae4a607787d5c010d00d9ede13c6</string>
+
+
+    <string name="palomamobile_client_id">testapp-client</string>
+    <string name="palomamobile_endpoint">http://ec2-46-137-242-200.ap-southeast-1.compute.amazonaws.com</string>
+</resources>

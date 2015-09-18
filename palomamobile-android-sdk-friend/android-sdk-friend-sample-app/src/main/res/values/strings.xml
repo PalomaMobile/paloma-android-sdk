@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Friend Sample App</string>
+    <string name="title_activity_main">Friend Sample App</string>
+
+    <string name="palomamobile_client_id">testapp-client</string>
+    <string name="palomamobile_endpoint">http://ec2-46-137-242-200.ap-southeast-1.compute.amazonaws.com</string>
+
+    <string name="please_wait">Please wait</string>
+    <string name="please_refresh">Please Refresh</string>
+    <string name="err_network">Network throwable.</string>
+    <string name="friend_user_id">Enter friends User ID</string>
+
+    <string name="registering_user">Registering user…</string>
+    <string name="err_register_user">Unable to register user</string>
+    <string name="add_friend">Add Friend</string>
+    <string name="refresh_friends">Refresh Friends</string>
+    <string name="friend_list_title">Your Friends:</string>
+    <string name="local_user_id">Your User ID:</string>
+
+</resources>

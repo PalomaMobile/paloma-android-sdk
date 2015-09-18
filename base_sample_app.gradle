@@ -1,0 +1,34 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    lintOptions {
+        abortOnError false
+    }
+
+  defaultConfig {
+    versionCode VERSION_CODE.toInteger()
+    versionName VERSION_NAME
+    minSdkVersion 9
+    targetSdkVersion 22
+
+    resValue "string", "paloma_test_endpoint", TEST_ENDPOINT
+  }
+
+  signingConfigs {
+        debug {
+            storeFile file("../../integration.keystore")
+            storePassword "paloma"
+            keyAlias "paloma"
+            keyPassword "paloma"
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+    }
+}

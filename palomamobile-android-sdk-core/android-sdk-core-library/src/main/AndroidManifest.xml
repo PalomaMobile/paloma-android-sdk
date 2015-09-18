@@ -1,0 +1,23 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.palomamobile.android.sdk.core"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <!--
+    These are the basic set of permissions required to use the Paloma Mobile SDK.
+    All SDK libraries inherit these in addition to any other permissions they declare.
+    -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="22" />
+
+    <application
+        android:label="@string/app_name"
+        android:icon="@drawable/ic_launcher"
+        android:theme="@style/AppTheme"/>
+
+</manifest>

@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">User Sample App</string>
+    <string name="title_activity_user_registration_sample">User Registration Sample Activity</string>
+    <string name="name_pwd">or register with user name and password</string>
+
+
+    <!-- To enable Facebook login provide your own value for facebook_app_id below -->
+    <string name="facebook_app_id"></string>
+
+    <string name="palomamobile_client_id">testapp-client</string>
+    <string name="palomamobile_endpoint">http://ec2-46-137-242-200.ap-southeast-1.compute.amazonaws.com</string>
+
+    <string name="user_name_hint">user name</string>
+    <string name="password_hint">password</string>
+    <string name="create_account_btn">Register</string>
+    <string name="err_network">Network throwable.</string>
+
+    <string name="provide_credentials">Provide user name and password.</string>
+    <string name="login_success_as">Registered as %1$s id: %2$s</string>
+    <string name="register_fb">Login with Facebook</string>
+</resources>

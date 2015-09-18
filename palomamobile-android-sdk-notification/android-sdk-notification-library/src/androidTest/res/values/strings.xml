@@ -1,0 +1,5 @@
+<resources>
+    <string name="palomamobile_client_id">testapp-client</string>
+    <string name="palomamobile_endpoint">http://ec2-46-137-242-200.ap-southeast-1.compute.amazonaws.com</string>
+    <string name="palomamobile_gcm_sender_id">784964565680</string>
+</resources>

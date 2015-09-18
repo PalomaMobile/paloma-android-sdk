@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Core Library</string>
+    <string name="err_app_metadata"><![CDATA[No value for \'%1$s\'. The <application> element in your AndroidManifest.xml must contain: <meta-data android:name=\"%1$s\" android:value=\"…\"/>]]></string>
+</resources>

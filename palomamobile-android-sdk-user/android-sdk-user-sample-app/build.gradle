@@ -1,0 +1,7 @@
+apply from: '../../base_sample_app.gradle'
+
+dependencies {
+  compile project(":palomamobile-android-sdk-user:android-sdk-user-library")
+  compile 'com.facebook.android:facebook-android-sdk:4.4.0'
+  compile 'com.android.support:appcompat-v7:22.2.0'
+}

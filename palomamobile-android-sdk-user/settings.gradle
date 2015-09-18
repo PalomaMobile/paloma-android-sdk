@@ -1,0 +1,2 @@
+include 'android-sdk-user-library'
+include 'android-sdk-user-sample-app'

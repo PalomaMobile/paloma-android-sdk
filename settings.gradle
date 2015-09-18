@@ -1,0 +1,25 @@
+include 'palomamobile-android-sdk-core'
+include 'palomamobile-android-sdk-core:android-sdk-core-library'
+
+include 'palomamobile-android-sdk-auth'
+include 'palomamobile-android-sdk-auth:android-sdk-auth-library'
+
+include 'palomamobile-android-sdk-user'
+include 'palomamobile-android-sdk-user:android-sdk-user-library'
+include 'palomamobile-android-sdk-user:android-sdk-user-sample-app'
+
+include 'palomamobile-android-sdk-media'
+include 'palomamobile-android-sdk-media:android-sdk-media-library'
+include 'palomamobile-android-sdk-media:android-sdk-media-sample-app'
+
+include 'palomamobile-android-sdk-message'
+include 'palomamobile-android-sdk-message:android-sdk-message-library'
+include 'palomamobile-android-sdk-message:android-sdk-message-sample-app'
+
+include 'palomamobile-android-sdk-friend'
+include 'palomamobile-android-sdk-friend:android-sdk-friend-library'
+include 'palomamobile-android-sdk-friend:android-sdk-friend-sample-app'
+
+include 'palomamobile-android-sdk-notification'
+include 'palomamobile-android-sdk-notification:android-sdk-notification-library'
+include 'palomamobile-android-sdk-notification:android-sdk-notification-sample-app'

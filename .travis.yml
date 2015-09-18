@@ -1,0 +1,38 @@
+language: android
+script: "./gradlew clean assembleDebug testDebug connectedAndroidTest build"
+android:
+  components:
+  - build-tools-22.0.1
+  - android-22
+  - extra
+notifications:
+  email:
+    recipients:
+    - karel@palomamobile.com
+    on_success: always
+    on_failure: always
+branches:
+  only:
+  - master
+before_script:
+  - "echo $JAVA_OPTS"
+  - "export JAVA_OPTS=-Xmx1024m"
+  - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
+before_install:
+- chmod a+x .utility/initiate-publish.sh
+- openssl aes-256-cbc -pass pass:$ENCRYPT_PASSWORD -in .utility/secring.gpg.enc -out .utility/generated.secring.gpg -d
+- openssl aes-256-cbc -pass pass:$ENCRYPT_PASSWORD -in .utility/pubring.gpg.enc -out .utility/generated.pubring.gpg -d
+after_success:
+- ".utility/initiate-publish.sh"
+- gradle clean test jacoco:report coveralls:report
+env:
+  global:
+  - MALLOC_ARENA_MAX=2
+  - secure: XMV8KBNrzAQ3F0G0VdF3PI8eqIEWNai3N9Is+KUhoojYdxex18fmAvzKjSW2/pKrPSv3Dqn+OLCkuleJAYTe+rUeX+XCSEOhBi6t7Ssit37wydXCcl+iovL9yQFqYeSIgeEHdvXt2YoVhIHHfoeV+9gbw3OLcWse5DXM9TiuVKE=
+  - secure: d750XD9M8GK2+ESPTfswmKXJtmtoQCSyV6f5wLCkd7SE5LX/R9BN0dFpigU4sG8CjYwNjGTTxCWpiHajmP5fcMjog7Lx9nSbs0/QNazE8rsuGAuDqyoT+oXuUG3yOB/dCKpwobDaT8L18tkI1/kDSndHefebqhU+wZczqC49YwE=
+  - secure: E5nvWhPdOUTxjjbgKR3svJ0uc2TGHEkogZNcXmfLcF6TeaujuAo3iYJvY2SjCJZCSwDkX+8mAid8/emrXocA0NfiRiF3B3Ld3crz0/BcC37Hd5xsvqJ51UXY4Iw6Fn/Wc5yuKwlaojYm6jKT5EL6jkw2z7t+1mu684H6oJ3USao=
+  - secure: ACKFke4n3acdj7MA7V7CpuZUjLfLCOZsxpmQksIy3rO3ryBP34y7cbwa7UyrruC5a/rvULBmUkKJNVhapXXssQ3+6J7e43/YdqTK1//+qVLQ/HHIApekZyMr+juJqc/RvuZ4hCPbp5gz9rLOJk30vGJfLLygZ2G6gDiEaRqIRIA=
+  - secure: Kyf2o2zwANv31bT9toQSEOJZzhRmCD7LBCHSJlF+oXhm4qkDb97cfEhMjVN4Pva49P9tO2C1cLeKnz+0d48jJeo7hlfZlA1UGsqGmBFEe0Y21YELSxo1iO8t42LFEKFQj9klGnvuAvNRUYQbTpjTAT1ikgACKijK7kDn3QcD+q8=

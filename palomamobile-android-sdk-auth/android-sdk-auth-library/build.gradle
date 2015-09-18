@@ -1,0 +1,35 @@
+apply from: '../../base_sdk_library.gradle'
+apply from: '../../maven_push.gradle'
+
+android {
+  defaultConfig {
+    buildConfigField "String", "TARGET_SERVICE_VERSION", "\"auth-1.1\""
+  }
+}
+
+dependencies {
+  compile project(":palomamobile-android-sdk-core:android-sdk-core-library")
+
+  //needed for unit tests under src/test/java
+  testCompile 'junit:junit:4.12'
+}
+
+android.libraryVariants.all { variant ->
+  task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+    description "Generates Javadoc for $variant.name."
+    source = 'src/main/java'
+    destinationDir = file("build/" + POM_ARTIFACT_ID + '-docs')
+    ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+    classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
+    options.linksOffline("http://d.android.com/reference", "${android.sdkDirectory}/docs/reference");
+    options.linksOffline("http://palomamobile.github.io/paloma-android-sdk/core-docs/", "../../palomamobile-android-sdk-core/android-sdk-core-library/build/core-docs");
+
+    // exclude generated files
+    exclude '**/BuildConfig.java'
+    exclude '**/package.html'
+    exclude '**/R.java'
+  }
+}
+
+
+

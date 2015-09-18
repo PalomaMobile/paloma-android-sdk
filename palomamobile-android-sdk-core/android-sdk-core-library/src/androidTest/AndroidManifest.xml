@@ -1,0 +1,18 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.palomamobile.android.sdk.core.sampleApp"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="22" />
+
+    <application android:label="@string/app_name"
+        android:icon="@drawable/ic_launcher"
+        android:theme="@style/AppTheme"
+        android:allowBackup="true">
+
+        <!-- Configure ServiceSupport -->
+        <meta-data android:name="com.palomamobile.android.sdk.ClientId" android:value="unused"/>
+        <meta-data android:name="com.palomamobile.android.sdk.Endpoint" android:value="unused"/>
+    </application>
+
+</manifest>

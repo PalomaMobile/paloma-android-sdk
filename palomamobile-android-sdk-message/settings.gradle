@@ -1,0 +1,2 @@
+include 'android-sdk-message-library'
+include 'android-sdk-message-sample-app'
