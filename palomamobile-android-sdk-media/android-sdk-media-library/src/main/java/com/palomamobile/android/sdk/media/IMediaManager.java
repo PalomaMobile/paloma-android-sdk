@@ -43,7 +43,7 @@ public interface IMediaManager extends IServiceManager<IMediaService> {
 
     /**
      * User may wish to share private media that was created using {@link JobUploadMediaPrivate} or directly via a call
-     * to {@link IMediaService#postMediaPrivate(long, TypedInput)}. Access to such media requires authentication.
+     * to {@link IMediaService#postMediaPrivate(String, long, TypedInput)}. Access to such media requires authentication.
      * This method returns a short-lived publicly accessible Url that can be shared.
      *
      * @param mediaUrl url of a media resource

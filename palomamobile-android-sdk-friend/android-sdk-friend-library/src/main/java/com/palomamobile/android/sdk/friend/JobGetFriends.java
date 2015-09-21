@@ -11,7 +11,7 @@ import com.path.android.jobqueue.Params;
 import java.util.Map;
 
 /**
- * Convenience wrapper around {@link IFriendService#getFriends(long, Map)}, request to refresh current users list of friends.
+ * Convenience wrapper around {@link IFriendService#getFriends(String, long, Map)}, request to refresh current users list of friends.
  * Once this job is completed (with success or failure) it posts {@link EventFriendsListReceived} on the
  * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
@@ -40,7 +40,7 @@ public class JobGetFriends extends BaseRetryPolicyAwareJob<PaginatedResponse<Fri
         User user = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser();
 
         FriendManager friendManager = (FriendManager) ServiceSupport.Instance.getServiceManager(IFriendManager.class);
-        PaginatedResponse<Friend> result = friendManager.getService().getFriends(user.getId(), null);
+        PaginatedResponse<Friend> result = friendManager.getService().getFriends(getRetryId(), user.getId(), null);
         Log.d(TAG, "Received list of friends from server: " + result);
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventFriendsListReceived(this, result));

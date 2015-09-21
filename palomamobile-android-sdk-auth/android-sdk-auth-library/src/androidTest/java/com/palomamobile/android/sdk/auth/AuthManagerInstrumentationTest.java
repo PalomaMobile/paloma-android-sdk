@@ -16,17 +16,17 @@ public class AuthManagerInstrumentationTest extends InstrumentationTestCase {
 
         ServiceSupport.Instance.getCache().clear();
 
-        AccessToken clientToken = authManager.getClientAccessToken(IAuthManager.TokenRetrievalMode.CACHE_ONLY);
+        AccessToken clientToken = authManager.getClientAccessToken(IAuthManager.TokenRetrievalMode.CACHE_ONLY, null);
         assertNull(clientToken);
 
-        clientToken = authManager.getClientAccessToken(IAuthManager.TokenRetrievalMode.CACHE_THEN_NETWORK);
+        clientToken = authManager.getClientAccessToken(IAuthManager.TokenRetrievalMode.CACHE_THEN_NETWORK, Long.toString(System.currentTimeMillis()));
         assertNotNull(clientToken);
 
-        clientToken = authManager.getClientAccessToken(IAuthManager.TokenRetrievalMode.CACHE_ONLY);
+        clientToken = authManager.getClientAccessToken(IAuthManager.TokenRetrievalMode.CACHE_ONLY, null);
         assertNotNull(clientToken);
 
         authManager.clearCachedTokens();
-        assertNull(authManager.getClientAccessToken(IAuthManager.TokenRetrievalMode.CACHE_ONLY));
+        assertNull(authManager.getClientAccessToken(IAuthManager.TokenRetrievalMode.CACHE_ONLY, null));
     }
 
     //testGetClientAccessToken(){} is effectively done in the User SDK

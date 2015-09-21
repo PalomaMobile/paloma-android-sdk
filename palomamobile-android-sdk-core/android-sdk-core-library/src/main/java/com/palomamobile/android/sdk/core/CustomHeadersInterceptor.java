@@ -45,6 +45,11 @@ class CustomHeadersInterceptor implements Interceptor {
                 .addHeader(HEADER_NAME_PALOMA_DEVICE, getPalomaDeviceHeaderValue(context))
                 .build();
 
+        String requestId = requestWithUserAgent.header(CustomHeader.HEADER_NAME_PALOMA_REQUEST);
+        if (requestId == null) {
+            throw new RuntimeException(CustomHeader.HEADER_NAME_PALOMA_REQUEST + " header must be present on all requests.");
+        }
+
         return chain.proceed(requestWithUserAgent);
     }
 

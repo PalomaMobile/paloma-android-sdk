@@ -15,7 +15,7 @@ import com.path.android.jobqueue.Params;
  * The default provided implementation of the {@link INotificationManager} runs this job
  * whenever required to ensure the GcmRegistrationId is up to date on the back-end.
  *
- * Convenience wrapper around {@link INotificationService#putGcmRegistrationId(Long, JsonObject)}
+ * Convenience wrapper around {@link INotificationService#putGcmRegistrationId(String, Long, JsonObject)}
  * Once this job is completed (with success or failure) it posts {@link EventGcmRegistrationIdUpdated} on the
  * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
@@ -103,7 +103,7 @@ public class JobUserUpdateGcmRegistrationId extends BaseRetryPolicyAwareJob<Stri
         gcmRegistrationIdJson.addProperty("gcmRegistrationId", gcmRegistrationId);
         NotificationManager notificationManager = (NotificationManager) ServiceSupport.Instance.getServiceManager(INotificationManager.class);
 
-        GcmRegistrationIdResponse gcmRegistrationIdResponse = notificationManager.getNotificationService().putGcmRegistrationId(userId, gcmRegistrationIdJson);
+        GcmRegistrationIdResponse gcmRegistrationIdResponse = notificationManager.getNotificationService().putGcmRegistrationId(getRetryId(), userId, gcmRegistrationIdJson);
         Log.d(TAG, "SUCCESS (update cache) putGcmRegistrationId() for userId: " + userId + ", gcmRegistrationId: " + gcmRegistrationId);
         ServiceSupport.Instance.getCache().put(NotificationManager.CACHE_KEY_GCM_REGISTRATION_ID, gcmRegistrationIdResponse.getGcmRegistrationId());
         if (postEvent) {

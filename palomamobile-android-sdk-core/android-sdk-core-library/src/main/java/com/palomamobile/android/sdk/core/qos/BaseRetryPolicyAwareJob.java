@@ -8,6 +8,8 @@ import com.path.android.jobqueue.Params;
 import com.path.android.jobqueue.RetryConstraint;
 
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  *
@@ -16,12 +18,19 @@ public abstract class BaseRetryPolicyAwareJob<Result> extends Job {
 
     public static final long DEFAULT_INITIAL_BACK_OFF_MS = 10 * 1000; //10 secs
 
+    private static transient String sessionId = UUID.randomUUID().toString();
+    private static transient AtomicLong sessionJobCounter = new AtomicLong(-1);
+
+    private String retryId;
+
     /**
      * Create a new job with the supplied params.
      * @param params
      */
     public BaseRetryPolicyAwareJob(Params params) {
         super(params);
+        retryId = sessionId + ":" + sessionJobCounter.incrementAndGet();
+        Log.i(getClass().getSimpleName(), "Create new job with retryId: " + retryId);
     }
 
     private Result result;
@@ -195,6 +204,33 @@ public abstract class BaseRetryPolicyAwareJob<Result> extends Job {
 
     }
 
+    public String getRetryId() {
+        return retryId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BaseRetryPolicyAwareJob<?> that = (BaseRetryPolicyAwareJob<?>) o;
+
+        if (maxAttempts != that.maxAttempts) return false;
+        if (retryId != null ? !retryId.equals(that.retryId) : that.retryId != null) return false;
+        if (result != null ? !result.equals(that.result) : that.result != null) return false;
+        return !(serviceRequestParams != null ? !serviceRequestParams.equals(that.serviceRequestParams) : that.serviceRequestParams != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result1 = retryId != null ? retryId.hashCode() : 0;
+        result1 = 31 * result1 + (result != null ? result.hashCode() : 0);
+        result1 = 31 * result1 + (serviceRequestParams != null ? serviceRequestParams.hashCode() : 0);
+        result1 = 31 * result1 + maxAttempts;
+        return result1;
+    }
+
     public static String toString(RetryConstraint constraint) {
         return "RetryConstraint{" +
                 "retry=" + constraint.shouldRetry() +
@@ -210,6 +246,7 @@ public abstract class BaseRetryPolicyAwareJob<Result> extends Job {
                 ", result=" + result +
                 ", serviceRequestParams=" + serviceRequestParams +
                 ", maxAttempts=" + maxAttempts +
+                ", retryId=" + retryId +
                 "} " + super.toString();
     }
 }

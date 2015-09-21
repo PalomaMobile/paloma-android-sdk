@@ -2,6 +2,7 @@ package com.palomamobile.android.sdk.auth;
 
 import android.util.Log;
 import android.util.Pair;
+import com.palomamobile.android.sdk.core.CustomHeader;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -27,7 +28,7 @@ class OAuth2Interceptor implements Interceptor {
         Request request = chain.request();
         Log.d(TAG, "request => " + request);
 
-        AuthType authType = AuthType.User; //set AuthType.User as the default as most api call use this
+        AuthType authType = AuthType.User; //set AuthType.User as the default as most api calls use this
         List<String> authTypeHeaders = request.headers(IAuthManager.AUTH_REQUIREMENT_HEADER_NAME);
         if (authTypeHeaders != null && authTypeHeaders.size() > 0) {
             if (authTypeHeaders.size() > 1) {
@@ -40,19 +41,23 @@ class OAuth2Interceptor implements Interceptor {
             }
         }
 
+        String requestId = request.header(CustomHeader.HEADER_NAME_PALOMA_REQUEST);
+        if (requestId == null) {
+            throw new RuntimeException(CustomHeader.HEADER_NAME_PALOMA_REQUEST + " header must be present on all requests.");
+        }
 
         Pair<String, String> authorizationHeader = null;
 
         switch (authType) {
             case Client: {
                 Log.d(TAG, "Client Auth required.");
-                AccessToken clientAccessToken = authManager.getClientAccessToken(IAuthManager.TokenRetrievalMode.CACHE_THEN_NETWORK);
+                AccessToken clientAccessToken = authManager.getClientAccessToken(IAuthManager.TokenRetrievalMode.CACHE_THEN_NETWORK, requestId);
                 authorizationHeader = new Pair<>("Authorization", AuthUtils.getBearerAuthHeaderValue(clientAccessToken.getAccessToken()));
                 break;
             }
             case User: {
                 Log.d(TAG, "User Auth required.");
-                AccessToken userAccessToken = authManager.getUserAccessToken(IAuthManager.TokenRetrievalMode.CACHE_THEN_NETWORK);
+                AccessToken userAccessToken = authManager.getUserAccessToken(IAuthManager.TokenRetrievalMode.CACHE_THEN_NETWORK, requestId);
                 authorizationHeader = new Pair<>("Authorization", AuthUtils.getBearerAuthHeaderValue(userAccessToken.getAccessToken()));
                 break;
             }
@@ -86,12 +91,12 @@ class OAuth2Interceptor implements Interceptor {
             switch (authType) {
                 // Expired user token is reasonable as per spec
                 case User: {
-                    response = handleUserTokenExpired(chain, newRequestBuilder);
+                    response = handleUserTokenExpired(chain, newRequestBuilder, requestId);
                     break;
                 }
                 // Expired client token is something I can imagine
                 case Client: {
-                    response = handleClientTokenExpired(chain, newRequestBuilder);
+                    response = handleClientTokenExpired(chain, newRequestBuilder, requestId);
                     break;
                 }
                 //otherwise something is wrong most likely the client id and/or client signature are misconfigured
@@ -105,15 +110,15 @@ class OAuth2Interceptor implements Interceptor {
         return response;
     }
 
-    private Response handleUserTokenExpired(Chain chain, Request.Builder newRequestBuilder) throws IOException {
+    private Response handleUserTokenExpired(Chain chain, Request.Builder newRequestBuilder, String requestId) throws IOException {
         Log.d(TAG, "response was HTTP_UNAUTHORIZED for AuthType.User - OK need to refresh the User token");
-        AccessToken cachedUserAccessToken = authManager.getUserAccessToken(IAuthManager.TokenRetrievalMode.CACHE_ONLY);
+        AccessToken cachedUserAccessToken = authManager.getUserAccessToken(IAuthManager.TokenRetrievalMode.CACHE_ONLY, requestId);
         if (cachedUserAccessToken != null) {
             Log.d(TAG, "we have a cached User token: " + cachedUserAccessToken);
             String refreshToken = cachedUserAccessToken.getRefreshToken();
             if (refreshToken != null) {
                 Log.d(TAG, "we have a refresh User token: " + refreshToken + ", doing a user token refresh");
-                AccessToken refreshedUserAccessToken = authManager.refreshUserAccessToken(refreshToken);
+                AccessToken refreshedUserAccessToken = authManager.refreshUserAccessToken(refreshToken, requestId);
                 Pair<String, String> authorizationHeader = new Pair<>("Authorization", AuthUtils.getBearerAuthHeaderValue(refreshedUserAccessToken.getAccessToken()));
                 newRequestBuilder.header(authorizationHeader.first, authorizationHeader.second);
 
@@ -135,8 +140,8 @@ class OAuth2Interceptor implements Interceptor {
         return null;
     }
 
-    private Response handleClientTokenExpired(Chain chain, Request.Builder newRequestBuilder) throws IOException {
-        AccessToken clientAccessToken = authManager.getClientAccessToken(IAuthManager.TokenRetrievalMode.NETWORK_ONLY);
+    private Response handleClientTokenExpired(Chain chain, Request.Builder newRequestBuilder, String requestId) throws IOException {
+        AccessToken clientAccessToken = authManager.getClientAccessToken(IAuthManager.TokenRetrievalMode.NETWORK_ONLY, requestId);
         Pair<String, String> authorizationHeader = new Pair<>("Authorization", AuthUtils.getBearerAuthHeaderValue(clientAccessToken.getAccessToken()));
         newRequestBuilder.header(authorizationHeader.first, authorizationHeader.second);
 

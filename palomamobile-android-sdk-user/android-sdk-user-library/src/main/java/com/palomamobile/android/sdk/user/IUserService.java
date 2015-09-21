@@ -4,6 +4,7 @@ import com.palomamobile.android.sdk.auth.IAuthManager;
 import com.palomamobile.android.sdk.auth.IUserCredential;
 import com.palomamobile.android.sdk.core.CustomHeader;
 import retrofit.http.Body;
+import retrofit.http.Header;
 import retrofit.http.Headers;
 import retrofit.http.POST;
 
@@ -21,6 +22,7 @@ public interface IUserService {
      * Throws {@link retrofit.RetrofitError} on failure.
      * <br/>{@link JobRegisterUser} provides a convenient wrapper, consider using it instead.
      *
+     * @param requestId for the purposes of identifying retries
      * @param userCredential
      * @return new or existing user
      */
@@ -29,12 +31,13 @@ public interface IUserService {
             CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION,
             CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/users")
-    User registerUser(@Body IUserCredential userCredential);
+    User registerUser(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Body IUserCredential userCredential);
 
     /**
      * Return an existing {@link User} that matches the provided credentials on success. Throws {@link retrofit.RetrofitError} on failure.
      * <br/>{@link JobLoginUser} provides a convenient wrapper, consider using it instead.
      *
+     * @param requestId for the purposes of identifying retries
      * @param userCredential
      * @return existing user
      */
@@ -43,6 +46,6 @@ public interface IUserService {
             CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION,
             CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/users/me")
-    User validateCredentials(@Body IUserCredential userCredential);
+    User validateCredentials(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Body IUserCredential userCredential);
 
 }

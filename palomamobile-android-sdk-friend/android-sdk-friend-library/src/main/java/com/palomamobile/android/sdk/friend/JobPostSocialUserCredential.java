@@ -10,7 +10,7 @@ import com.path.android.jobqueue.Params;
 import java.util.Map;
 
 /**
- * Convenience wrapper around {@link IFriendService#postSocialUserCredentials(long, SocialUserCredential, Map)}
+ * Convenience wrapper around {@link IFriendService#postSocialUserCredentials(String, long, SocialUserCredential, Map)}
  * request to post 3rd party service credentials to the Friend service for the purposes of friend discovery and friend matching.
  * Once this job is completed (with success or failure) it posts {@link EventSocialUserCredentialsPosted} on the
  * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
@@ -44,7 +44,7 @@ public class JobPostSocialUserCredential extends BaseRetryPolicyAwareJob<Void> {
         User user = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser();
         FriendManager friendManager = (FriendManager) ServiceSupport.Instance.getServiceManager(IFriendManager.class);
         Log.d(TAG, "Posting: " + socialUserCredential);
-        friendManager.getService().postSocialUserCredentials(user.getId(), socialUserCredential, null);
+        friendManager.getService().postSocialUserCredentials(getRetryId(), user.getId(), socialUserCredential, null);
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventSocialUserCredentialsPosted(this));
         }

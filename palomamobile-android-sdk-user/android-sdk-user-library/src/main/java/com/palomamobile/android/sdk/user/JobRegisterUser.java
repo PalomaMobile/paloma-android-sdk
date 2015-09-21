@@ -8,7 +8,7 @@ import com.path.android.jobqueue.Params;
 import retrofit.RetrofitError;
 
 /**
- * Convenience wrapper around {@link IUserService#registerUser(IUserCredential)}
+ * Convenience wrapper around {@link IUserService#registerUser(String, IUserCredential)}
  * used to clear local caches and then attempt to register a new user user. If the credentials match an existing user a new user will not be created,
  * instead the existing user will be returned.
  * Once this job is completed (with success or failure) it posts {@link EventLocalUserUpdated} on the
@@ -59,7 +59,7 @@ public class JobRegisterUser extends BaseRetryPolicyAwareJob<User> {
         User result;
         final UserManager userManager = (UserManager) ServiceSupport.Instance.getServiceManager(IUserManager.class);
         try {
-            result = userManager.getService().registerUser(userCredential);
+            result = userManager.getService().registerUser(getRetryId(), userCredential);
         } catch (RetrofitError error) {
             //HTTP STATUS 303: See Other (since HTTP/1.1)
             if (error.getResponse() != null && error.getResponse().getStatus() == 303) {

@@ -7,7 +7,7 @@ import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.path.android.jobqueue.Params;
 
 /**
- * Convenience wrapper around {@link IUserService#validateCredentials(IUserCredential)}
+ * Convenience wrapper around {@link IUserService#validateCredentials(String, IUserCredential)}
  * used to clear local caches and then attempt to login an existing user user. If the credentials do not match an existing user a new user will not be created,
  * instead the job will fail. Once this job is completed (with success or failure) it posts {@link EventLocalUserUpdated} on the
  * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
@@ -56,7 +56,7 @@ public class JobLoginUser extends BaseRetryPolicyAwareJob<User> {
         Log.d(TAG, "about to login as: " + userCredential);
         final UserManager userManager = (UserManager) ServiceSupport.Instance.getServiceManager(IUserManager.class);
         //IUserService.validateCredentials() will never create a user it will return either 200 (with user in body) if user found or 404 fail
-        User result = userManager.getService().validateCredentials(userCredential);
+        User result = userManager.getService().validateCredentials(getRetryId(), userCredential);
         userManager.updateLocalUser(result);
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventLocalUserUpdated(this, result));

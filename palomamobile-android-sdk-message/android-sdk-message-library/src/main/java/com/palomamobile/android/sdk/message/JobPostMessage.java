@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Convenience wrapper around {@link IMessageService#postMessageSent(long, MessageSent)}
+ * Convenience wrapper around {@link IMessageService#postMessageSent(String, long, MessageSent)}
  * Once this job is completed (with success or failure) it posts {@link EventMessageSentPosted} on the
  * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
@@ -63,7 +63,7 @@ public class JobPostMessage extends BaseRetryPolicyAwareJob<MessageSent> {
         messageSent.setContentList(contentDetails);
         messageSent.setRecipients(friendIds);
         MessageManager messageManager = (MessageManager) ServiceSupport.Instance.getServiceManager(IMessageManager.class);
-        MessageSent result = messageManager.getService().postMessageSent(userId, messageSent);
+        MessageSent result = messageManager.getService().postMessageSent(getRetryId(), userId, messageSent);
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventMessageSentPosted(this, result));
         }

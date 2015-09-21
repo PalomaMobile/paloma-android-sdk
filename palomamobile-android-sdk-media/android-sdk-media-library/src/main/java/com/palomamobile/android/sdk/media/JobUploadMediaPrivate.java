@@ -11,7 +11,7 @@ import retrofit.mime.TypedInput;
 import java.io.File;
 
 /**
- * Convenience wrapper around {@link IMediaService#postMediaPrivate(long, TypedInput)}}
+ * Convenience wrapper around {@link IMediaService#postMediaPrivate(String, long, TypedInput)}}
  * used to post media that becomes available only to the posting user.
  * Once this job is completed (with success or failure) it posts {@link EventMediaUploaded} on the
  * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
@@ -44,7 +44,7 @@ public class JobUploadMediaPrivate extends BaseJobUploadMedia {
     protected MediaInfo callService(String mime, String file) throws ConversionException {
         IUserManager userManager = ServiceSupport.Instance.getServiceManager(IUserManager.class);
         IMediaManager mediaManager = ServiceSupport.Instance.getServiceManager(IMediaManager.class);
-        Response response = mediaManager.getService().postMediaPrivate(userManager.getUser().getId(), new TypedFile(mime, new File(file)));
+        Response response = mediaManager.getService().postMediaPrivate(getRetryId(), userManager.getUser().getId(), new TypedFile(mime, new File(file)));
         return getMediaInfo(response);
     }
 

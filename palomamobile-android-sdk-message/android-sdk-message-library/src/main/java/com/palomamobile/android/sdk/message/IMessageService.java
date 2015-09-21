@@ -5,6 +5,7 @@ import com.palomamobile.android.sdk.core.PaginatedResponse;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
+import retrofit.http.Header;
 import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.Path;
@@ -26,18 +27,20 @@ public interface IMessageService {
      * Send a message to another user.
      * <br/>{@link JobPostMessage} provides a convenient wrapper, consider using it instead.
      *
+     * @param requestId for the purposes of identifying retries
      * @param userId
      * @param messageSent
      * @return
      */
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/users/{userId}/messages/sent")
-    MessageSent postMessageSent(@Path("userId") long userId, @Body MessageSent messageSent);
+    MessageSent postMessageSent(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @Body MessageSent messageSent);
 
     /**
      * Get a list of previously sent messages.
      * <br/>{@link JobGetMessagesSent} provides a convenient wrapper, consider using it instead.
      *
+     * @param requestId for the purposes of identifying retries
      * @param userId
      * @param options
      * @param filterQuery
@@ -46,12 +49,13 @@ public interface IMessageService {
      */
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @GET("/users/{userId}/messages/sent")
-    PaginatedResponse<MessageSent> getMessagesSent(@Path("userId") long userId, @QueryMap Map<String, String> options, @Query("where") String filterQuery, @Query("sort") String... sortOrder);
+    PaginatedResponse<MessageSent> getMessagesSent(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @QueryMap Map<String, String> options, @Query("where") String filterQuery, @Query("sort") String... sortOrder);
 
     /**
      * Get a list of received messages.
      * <br/>{@link JobGetMessagesReceived} provides a convenient wrapper, consider using it instead.
      *
+     * @param requestId for the purposes of identifying retries
      * @param userId
      * @param options
      * @param filterQuery
@@ -60,12 +64,13 @@ public interface IMessageService {
      */
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @GET("/users/{userId}/messages/received")
-    PaginatedResponse<MessageReceived> getMessagesReceived(@Path("userId") long userId, @QueryMap Map<String, String> options, @Query("where") String filterQuery, @Query("sort") String... sortOrder);
+    PaginatedResponse<MessageReceived> getMessagesReceived(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @QueryMap Map<String, String> options, @Query("where") String filterQuery, @Query("sort") String... sortOrder);
 
     /**
      * Delete a received message.
      * <br/>{@link JobDeleteMessageReceived} provides a convenient wrapper, consider using it instead.
      *
+     * @param requestId for the purposes of identifying retries
      * @param userId
      * @param messageId
      * @param options
@@ -75,6 +80,6 @@ public interface IMessageService {
      */
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @DELETE("/users/{userId}/messages/received/{messageId}?max=-1")
-    Void deleteMessageReceived(@Path("userId") long userId, @Path("messageId") long messageId, @QueryMap Map<String, String> options, @Query("where") String filterQuery, @Query("sort") String... sortOrder);
+    Void deleteMessageReceived(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @Path("messageId") long messageId, @QueryMap Map<String, String> options, @Query("where") String filterQuery, @Query("sort") String... sortOrder);
 
 }

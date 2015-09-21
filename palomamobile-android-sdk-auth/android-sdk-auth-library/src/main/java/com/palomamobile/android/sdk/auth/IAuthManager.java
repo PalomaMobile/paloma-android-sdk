@@ -13,8 +13,8 @@ public interface IAuthManager extends IServiceManager<IAuthService> {
     String AUTH_REQUIREMENT_HEADER_NAME = "X-RequiredAuth";
 
     /**
-     * Removes both Client and User access token from cache so that the next call to {@link #getUserAccessToken(TokenRetrievalMode)}
-     * or {@link #getClientAccessToken(TokenRetrievalMode)} with a {@link com.palomamobile.android.sdk.auth.IAuthManager.TokenRetrievalMode#CACHE_ONLY}
+     * Removes both Client and User access token from cache so that the next call to {@link #getUserAccessToken(TokenRetrievalMode, String)}
+     * or {@link #getClientAccessToken(TokenRetrievalMode, String)} with a {@link com.palomamobile.android.sdk.auth.IAuthManager.TokenRetrievalMode#CACHE_ONLY}
      * parameter will return {@code null}
      */
     void clearCachedTokens();
@@ -45,30 +45,32 @@ public interface IAuthManager extends IServiceManager<IAuthService> {
      * @param mode of retrieval
      * @return client application access token
      */
-    @Nullable AccessToken getClientAccessToken(TokenRetrievalMode mode);
+    @Nullable AccessToken getClientAccessToken(TokenRetrievalMode mode, String requestId);
 
     /**
      * Retrieve the access token for the application user. The method may return {@code null} if the Access Token cannot
      * be retrieved using the {@link com.palomamobile.android.sdk.auth.IAuthManager.TokenRetrievalMode} specified.
      *
      * @param mode of retrieval
+     * @param requestId of the request that triggered this method call
      * @return user access token
      * @throws CredentialsProviderMissingException if calling this method results in an attempt to retrieve the user token from the network
      * before {@link #setUserCredentialsProvider(IUserCredentialsProvider)} has been called, this is because we must be
      * able to Auth the user with the provided credentials before we can get the token back
      */
-    @Nullable AccessToken getUserAccessToken(TokenRetrievalMode mode);
+    @Nullable AccessToken getUserAccessToken(TokenRetrievalMode mode, String requestId);
 
     /**
      * Retrieve a fresh access token for the application user using the provided refresh token.
      * @param refreshToken user refresh token returned with the previous user token
-     * @return
+     * @param requestId of the request that triggered this method call
+     * @return fresh user access token
      */
-    AccessToken refreshUserAccessToken(String refreshToken);
+    AccessToken refreshUserAccessToken(String refreshToken, String requestId);
 
     /**
      * Registers an implementation of the {@link IUserCredentialsProvider} interface. This method must be called
-     * must be registered prior to attempting to {@link #getUserAccessToken(TokenRetrievalMode)} over network, since
+     * must be registered prior to attempting to {@link #getUserAccessToken(TokenRetrievalMode, String)} over network, since
      * retrieving a user token requires a valid set of user credentials.
      * @param credentialsProvider
      */

@@ -16,4 +16,10 @@ public interface CustomHeader {
      * Header with this name is placed on each Service call to describe the SDK version for error reporting etc.
      */
     String HEADER_PALOMA_SDK_MODULE_VERSION = "Paloma-SDK-Module-Version";
+
+    /**
+     * Header with this name identifies each individual request for the purposes of deduping requests during retries.
+     */
+    String HEADER_NAME_PALOMA_REQUEST = "X-Paloma-Request";
+
 }

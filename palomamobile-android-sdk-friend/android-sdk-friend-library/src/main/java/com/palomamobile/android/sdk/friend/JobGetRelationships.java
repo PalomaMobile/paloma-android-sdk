@@ -11,7 +11,7 @@ import com.path.android.jobqueue.Params;
 import java.util.Map;
 
 /**
- * Convenience wrapper around {@link IFriendService#getRelationships(long, Map)} to retrieve a list of local users relationships.
+ * Convenience wrapper around {@link IFriendService#getRelationships(String, long, Map)} to retrieve a list of local users relationships.
  * Once this job is completed (with success or failure) it posts {@link EventRelationshipsListReceived} on the
  * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
@@ -39,7 +39,7 @@ public class JobGetRelationships extends BaseRetryPolicyAwareJob<PaginatedRespon
     public PaginatedResponse<Relationship> syncRun(boolean postEvent) throws Throwable {
         User user = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser();
         FriendManager friendManager = (FriendManager) ServiceSupport.Instance.getServiceManager(IFriendManager.class);
-        PaginatedResponse<Relationship> result = friendManager.getService().getRelationships(user.getId(), null);
+        PaginatedResponse<Relationship> result = friendManager.getService().getRelationships(getRetryId(), user.getId(), null);
         Log.d(TAG, "Received list of relationship from server: " + result);
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventRelationshipsListReceived(this, result));

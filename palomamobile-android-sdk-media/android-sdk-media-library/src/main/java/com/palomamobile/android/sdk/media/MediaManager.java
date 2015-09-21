@@ -13,6 +13,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  *
@@ -59,6 +60,7 @@ class MediaManager implements IMediaManager {
                     .get()
                     .addHeader(CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION, BuildConfig.TARGET_SERVICE_VERSION)
                     .addHeader(CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION, BuildConfig.VERSION_NAME)
+                    .addHeader(CustomHeader.HEADER_NAME_PALOMA_REQUEST, UUID.randomUUID().toString())
                     .url(mediaUri.toString())
                     .build());
             Response response = call.execute();

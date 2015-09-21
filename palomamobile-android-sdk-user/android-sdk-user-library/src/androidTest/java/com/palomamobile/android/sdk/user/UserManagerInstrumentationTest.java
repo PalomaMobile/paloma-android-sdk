@@ -242,6 +242,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
             jobLoginUserViaPassword.syncRun(false);
             fail("RetrofitError expected - can't verify creds as no paloma user exists yet");
         } catch (RetrofitError retrofitError) {
+            assertNotNull(retrofitError.getResponse());
             assertEquals(404, retrofitError.getResponse().getStatus());
         }
 

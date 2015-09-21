@@ -19,8 +19,9 @@ public interface IAuthService {
      * Retrieve Client access token.<br/>
      *
      * @param authorizationValue base64 encoded basic auth header with client id and client password
+     * @param requestId of the request that triggered this method call
      * @param grantType requires {@code client_credentials}
-     * @return
+     * @return client access token
      */
     @Headers({
             IAuthManager.AUTH_REQUIREMENT_HEADER_NAME + ": " + "None",
@@ -29,12 +30,15 @@ public interface IAuthService {
     @POST("/oauth/token")
     @FormUrlEncoded
     AccessToken getClientAccessToken(@Header("Authorization") String authorizationValue,
-                                     @Field("grant_type") String grantType);
+                                     @Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId,
+                                     @Field("grant_type") String grantType
+    );
 
     /**
      * Retrieve User access token based on user credentials.<br/>
      *
      * @param authorizationValue base64 encoded basic auth header with client id and client password
+     * @param requestId of the request that triggered this method call
      * @param userName
      * @param passsword
      * @param credentialType supported values are {@code password} or {@code facebook}
@@ -48,6 +52,7 @@ public interface IAuthService {
     @POST("/oauth/token")
     @FormUrlEncoded
     AccessToken getUserAccessToken(@Header("Authorization") String authorizationValue,
+                                   @Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId,
                                    @Field("username") String userName,
                                    @Field("password") String passsword,
                                    @Field("credential_type") String credentialType,
@@ -59,9 +64,10 @@ public interface IAuthService {
     /**
      * Retrieve a new User access token based on a refresh token.<br/>
      *
-     * @param authorizationValue
+     * @param authorizationValue base64 encoded basic auth header with client id and client password
+     * @param requestId of the request that triggered this method call
      * @param grantType requires {@code refresh_token}
-     * @param refreshToken refresh token value as previously returned in {@link AccessToken#refreshToken} from {@link #getUserAccessToken(String, String, String, String, String)}
+     * @param refreshToken refresh token value as previously returned in {@link AccessToken#refreshToken} from {@link #getUserAccessToken(String, String, String, String, String, String)}
      * @return
      */
     @Headers({
@@ -71,6 +77,7 @@ public interface IAuthService {
     @POST("/oauth/token")
     @FormUrlEncoded
     AccessToken refreshUserAccessToken(@Header("Authorization") String authorizationValue,
+                                       @Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId,
                                        @Field("grant_type") String grantType,
                                        @Field("refresh_token") String refreshToken
     );

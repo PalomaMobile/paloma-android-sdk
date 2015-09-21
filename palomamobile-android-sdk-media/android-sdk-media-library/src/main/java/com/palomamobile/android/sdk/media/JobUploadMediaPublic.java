@@ -9,7 +9,7 @@ import retrofit.mime.TypedInput;
 import java.io.File;
 
 /**
- * Convenience wrapper around {@link IMediaService#postMediaPublic(TypedInput)}
+ * Convenience wrapper around {@link IMediaService#postMediaPublic(String, TypedInput)}
  * used to post media that becomes available publicly available.
  * Once this job is completed (with success or failure) it posts {@link EventMediaUploaded} on the
  * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
@@ -41,7 +41,7 @@ public class JobUploadMediaPublic extends BaseJobUploadMedia {
     @Override
     protected MediaInfo callService(String mime, String file) throws Exception {
         IMediaManager mediaManager = ServiceSupport.Instance.getServiceManager(IMediaManager.class);
-        Response response = mediaManager.getService().postMediaPublic(new TypedFile(mime, new File(file)));
+        Response response = mediaManager.getService().postMediaPublic(getRetryId(), new TypedFile(mime, new File(file)));
         return getMediaInfo(response);
     }
 

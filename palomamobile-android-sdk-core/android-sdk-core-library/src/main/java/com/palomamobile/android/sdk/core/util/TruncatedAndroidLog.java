@@ -11,7 +11,7 @@ import retrofit.RestAdapter;
 public class TruncatedAndroidLog implements RestAdapter.Log {
 
     public static final int DEFAULT_TRUNCATED_LOG_CHUNK_SIZE = 4000;
-    public static final String DEFAULT_LOG_TAG = "TrAnLog";
+    public static final String DEFAULT_LOG_TAG = "com.palomamobile";
 
     private int maxMsgLogLength;
     private String tag;

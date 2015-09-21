@@ -8,7 +8,7 @@ import com.path.android.jobqueue.Params;
 import java.util.Map;
 
 /**
- * Convenience wrapper around {@link IMessageService#getMessagesSent(long, Map, String, String...)}
+ * Convenience wrapper around {@link IMessageService#getMessagesSent(String, long, Map, String, String...)}
  * Once this job is completed (with success or failure) it posts {@link EventMessagesSent} on the
  * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
@@ -40,7 +40,7 @@ public class JobGetMessagesSent extends BaseRetryPolicyAwareJob<PaginatedRespons
     @Override
     public PaginatedResponse<MessageSent> syncRun(boolean postEvent) throws Throwable {
         MessageManager messageManager = (MessageManager) ServiceSupport.Instance.getServiceManager(IMessageManager.class);
-        PaginatedResponse<MessageSent> messagesSentResponse = messageManager.getService().getMessagesSent(userId, getOptions(), getFilterQuery(), getSortParams());
+        PaginatedResponse<MessageSent> messagesSentResponse = messageManager.getService().getMessagesSent(getRetryId(), userId, getOptions(), getFilterQuery(), getSortParams());
         PaginatedResponse<MessageSent> result = messagesSentResponse;
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventMessagesSent(this, result) );

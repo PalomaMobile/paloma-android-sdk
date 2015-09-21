@@ -73,19 +73,19 @@ class AuthManager implements IAuthManager {
 
 
     @Override
-    public AccessToken getClientAccessToken(TokenRetrievalMode mode) {
+    public AccessToken getClientAccessToken(TokenRetrievalMode mode, String requestId) {
         AccessToken clientAccessToken = null;
         switch (mode) {
             case CACHE_ONLY:
                 return this.serviceSupport.getCache().get(CACHE_KEY_CLIENT_ACCESS_TOKEN, AccessToken.class);
             case NETWORK_ONLY:
-                clientAccessToken = authService.getClientAccessToken(AuthUtils.getBasicAuthHeaderValueBase64(clientId, appSignature), GRANT_TYPE_CLIENT_CREDENTIALS);
+                clientAccessToken = authService.getClientAccessToken(AuthUtils.getBasicAuthHeaderValueBase64(clientId, appSignature), requestId, GRANT_TYPE_CLIENT_CREDENTIALS);
                 serviceSupport.getCache().put(CACHE_KEY_CLIENT_ACCESS_TOKEN, clientAccessToken);
                 break;
             case CACHE_THEN_NETWORK:
-                clientAccessToken = getClientAccessToken(TokenRetrievalMode.CACHE_ONLY);
+                clientAccessToken = getClientAccessToken(TokenRetrievalMode.CACHE_ONLY, requestId);
                 if (clientAccessToken == null) {
-                    clientAccessToken = getClientAccessToken(TokenRetrievalMode.NETWORK_ONLY);
+                    clientAccessToken = getClientAccessToken(TokenRetrievalMode.NETWORK_ONLY, requestId);
                 }
                 break;
         }
@@ -93,7 +93,7 @@ class AuthManager implements IAuthManager {
     }
 
     @Override
-    public AccessToken getUserAccessToken(TokenRetrievalMode mode) {
+    public AccessToken getUserAccessToken(TokenRetrievalMode mode, String requestId) {
         AccessToken userAccessToken = null;
         switch (mode) {
             case CACHE_ONLY:
@@ -105,6 +105,7 @@ class AuthManager implements IAuthManager {
                 IUserCredential userCredential = userCredentialsProvider.getUserCredential();
                 userAccessToken = authService.getUserAccessToken(
                         AuthUtils.getBasicAuthHeaderValueBase64(clientId, appSignature),
+                        requestId,
                         userCredential.getUsername(),
                         userCredential.getUserPassword(),
                         userCredential.getCredentialType(),
@@ -114,9 +115,9 @@ class AuthManager implements IAuthManager {
                 }
                 break;
             case CACHE_THEN_NETWORK:
-                userAccessToken = getUserAccessToken(TokenRetrievalMode.CACHE_ONLY);
+                userAccessToken = getUserAccessToken(TokenRetrievalMode.CACHE_ONLY, requestId);
                 if (userAccessToken == null) {
-                    userAccessToken = getUserAccessToken(TokenRetrievalMode.NETWORK_ONLY);
+                    userAccessToken = getUserAccessToken(TokenRetrievalMode.NETWORK_ONLY, requestId);
                 }
                 break;
         }
@@ -124,9 +125,10 @@ class AuthManager implements IAuthManager {
     }
 
     @Override
-    public AccessToken refreshUserAccessToken(String refreshToken) {
+    public AccessToken refreshUserAccessToken(String refreshToken, String requestId) {
         AccessToken userAccessToken = authService.refreshUserAccessToken(
                 AuthUtils.getBasicAuthHeaderValueBase64(clientId, appSignature),
+                requestId,
                 GRANT_TYPE_REFRESH_TOKEN,
                 refreshToken);
         if (userAccessToken != null) {
