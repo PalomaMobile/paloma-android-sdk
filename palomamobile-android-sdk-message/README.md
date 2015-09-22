@@ -33,6 +33,8 @@ will enable server push notifications for [events of interest](http://54.251.112
 
 ## Quick start
 
+For a complete working project see the [android-sdk-message-sample-app](../palomamobile-android-sdk-message/android-sdk-message-sample-app)
+
 Before much else can be done the application needs to register a user. If you're not sure how to do this have a look 
 at the [User SDK](../palomamobile-android-sdk-user).
 
@@ -147,5 +149,3 @@ public class MessageSampleActivity extends Activity {
 
 }
 ```
-
-For a complete working project see the [android-sdk-message-sample-app](../palomamobile-android-sdk-message/android-sdk-message-sample-app)

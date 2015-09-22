@@ -39,6 +39,8 @@ The User SDK depends on:
 
 ## Quick start
 
+For a complete working project that uses both username & password as well as Facebook login see the [android-sdk-user-sample-app](../palomamobile-android-sdk-user/android-sdk-user-sample-app)
+
 ### Declare dependencies in your `build.gradle`
 
 ```groovy
@@ -161,5 +163,3 @@ buttonFbLogin.registerCallback(fbCallbackManager, new FacebookCallback<LoginResu
     }
 });
 ```     
-
-For a complete working project that uses both username & password as well as Facebook login see the [android-sdk-user-sample-app](../palomamobile-android-sdk-user/android-sdk-user-sample-app)

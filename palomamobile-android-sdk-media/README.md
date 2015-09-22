@@ -5,7 +5,7 @@ Media SDK module supports the [Media Service provided by the Paloma Mobile platf
 
 At a high level the Media SDK supports the following functionality:
 
-* API to upload public media (available to anyone with the hard-to-guess URL)
+* API to upload public media (available to anyone with access to the hard-to-guess URL)
 * API to upload private media (available to authenticated media owner or to unauthenticated users via an expiring, short lived URL provided by the media owner)
 * Standard HTTP download mechanism via URL
 
@@ -28,6 +28,8 @@ The Media SDK depends on:
 
 
 ## Quick start
+
+For a complete working project see the [android-sdk-media-sample-app](../palomamobile-android-sdk-media/android-sdk-media-sample-app)
 
 Before much else can be done the application needs to register a user. If you're not sure how to do this have a look 
 at the [User SDK](../palomamobile-android-sdk-user).
@@ -63,7 +65,6 @@ dependencies {
 
 Initiate the Paloma Mobile platform SDK
 
-
 ```java
 public class App extends Application {
 
@@ -75,7 +76,7 @@ public class App extends Application {
 }
 ```
 
-In your Activity class request a refresh of friends list and listen for results:
+In your Activity class request a media upload and listen for results:
 
 ```java
 public class MediaSampleActivity extends Activity {
@@ -125,5 +126,3 @@ public class MediaSampleActivity extends Activity {
 
 }
 ```
-
-For a complete working project see the [android-sdk-media-sample-app](../palomamobile-android-sdk-media/android-sdk-media-sample-app)
