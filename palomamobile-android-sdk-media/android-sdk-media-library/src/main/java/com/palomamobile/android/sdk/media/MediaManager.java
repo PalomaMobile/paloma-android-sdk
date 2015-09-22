@@ -53,7 +53,6 @@ class MediaManager implements IMediaManager {
     public Uri requestExpiringPublicUrl(Uri mediaUri) throws IOException {
         Uri resolved = mediaUri;
 
-        //eg: http://ec2-46-137-242-200.ap-southeast-1.compute.amazonaws.com
         Uri endpoint = ServiceSupport.Instance.getEndpoint();
         if (endpoint.getHost().equals(mediaUri.getHost())) {
             Call call = nonRedirectingHttpClient.newCall(new Request.Builder()

@@ -193,7 +193,7 @@ public class MessageSampleActivity extends Activity {
     private void showLastMessageReceived() {
         if (messagesReceived != null && messagesReceived.size() > 0) {
             MessageReceived messageReceived = messagesReceived.get(0);
-            Toast.makeText(this, messageReceived.getContentList().get(0).getContent(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, messageReceived.getContentList().get(0).getPayload(), Toast.LENGTH_LONG).show();
             deleteMessage(messageReceived);
         }
     }

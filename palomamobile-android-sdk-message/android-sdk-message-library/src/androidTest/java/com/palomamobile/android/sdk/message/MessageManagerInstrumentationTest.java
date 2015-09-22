@@ -99,7 +99,9 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         ).syncRun(false);
         assertEquals(2, messageReceivedPaginatedResponse.getEmbedded().getItems().size());
         assertEquals("https://bit.ly/2", messageReceivedPaginatedResponse.getEmbedded().getItems().get(0).getContentList().get(0).getUrl());
+        assertEquals("test2", messageReceivedPaginatedResponse.getEmbedded().getItems().get(0).getContentList().get(0).getPayload());
         assertEquals("https://bit.ly/1", messageReceivedPaginatedResponse.getEmbedded().getItems().get(1).getContentList().get(0).getUrl());
+        assertEquals("test1", messageReceivedPaginatedResponse.getEmbedded().getItems().get(1).getContentList().get(0).getPayload());
 
 
         messageReceivedPaginatedResponse = messageManager.createJobGetMessagesReceived().setServiceRequestParams(

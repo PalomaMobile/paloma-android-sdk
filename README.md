@@ -54,7 +54,8 @@ The SDK depends on the following open source projects that we hold in high regar
 * [gson](https://github.com/google/gson) for parsing and constructing JSON.
 * [okhttp](https://github.com/square/okhttp) for HTTP comms.
 * [retrofit](https://github.com/square/retrofit) to talk to our restful platform APIs.
-* [android-priority-jobqueue](https://github.com/yigit/android-priority-jobqueue) for Job management. Whenever the app asks the SDK to do something (eg: create a user) it's a job.
+* [android-priority-jobqueue](https://github.com/yigit/android-priority-jobqueue) for Job management. Whenever your app asks our SDK to do something (eg: create a user) it's a job
+that can be persisted across application restarts, retried on network failures, prioritized, canceled ...
 
 ### ... and this is a sample of what the code looks like
 
@@ -119,20 +120,20 @@ Switch to the SDK directory
 
 To build of all library .aar files and sample app .apk files run:
 
-`gradle clean build`
+`./gradlew clean build`
 
 To build and install library .aar files for all modules into your local maven repo run:
 
-`gradle clean installLibraries`
+`./gradlew clean installLibraries`
 
 To unit tests in VM during build run:
 
-`gradle clean assembleDebug testDebug`
+`./gradlew clean assembleDebug testDebug`
 
 To execute tests (instrumentation or unit) on device run:
 
-`gradle clean connectedAndroidTest`
+`./gradlew clean connectedAndroidTest`
 
 To execute all tests run:
 
-`gradle clean assembleDebug testDebug connectedAndroidTest`
+`./gradlew clean assembleDebug testDebug connectedAndroidTest`

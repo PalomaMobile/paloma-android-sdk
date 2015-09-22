@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 rm -rf build/docs;
 javadoc \
 -d build/docs \

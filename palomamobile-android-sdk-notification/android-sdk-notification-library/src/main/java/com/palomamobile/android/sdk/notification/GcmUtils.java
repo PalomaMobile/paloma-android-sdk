@@ -19,7 +19,7 @@ public class GcmUtils {
     private GcmUtils(){}
 
     /**
-     * Check is the google play services are available on device.
+     * Check if the google play services are available on device.
      * @param context application context
      * @return {@code true} if google play services are available, {@code false} otherwise
      */

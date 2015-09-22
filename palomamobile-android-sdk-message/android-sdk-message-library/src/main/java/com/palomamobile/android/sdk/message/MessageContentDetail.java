@@ -14,7 +14,7 @@ public class MessageContentDetail implements Serializable {
 
     private String url;
     private String contentType;
-    private String content;
+    private String payload;
 
     public MessageContentDetail() {
     }
@@ -23,10 +23,10 @@ public class MessageContentDetail implements Serializable {
         this(contentType, url, null);
     }
 
-    public MessageContentDetail(@NonNull String contentType, @NonNull String url, @Nullable String content) {
+    public MessageContentDetail(@NonNull String contentType, @NonNull String url, @Nullable String payload) {
         this.contentType = contentType;
         this.url = url;
-        this.content = content;
+        this.payload = payload;
     }
 
     public String getContentType() {
@@ -45,12 +45,12 @@ public class MessageContentDetail implements Serializable {
         this.url = url;
     }
 
-    public String getContent() {
-        return content;
+    public String getPayload() {
+        return payload;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setPayload(String payload) {
+        this.payload = payload;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class MessageContentDetail implements Serializable {
         final StringBuilder sb = new StringBuilder("MessageContentDetail{");
         sb.append("contentType='").append(contentType).append('\'');
         sb.append(", url='").append(url).append('\'');
-        sb.append(", content='").append(content).append('\'');
+        sb.append(", content='").append(payload).append('\'');
         sb.append('}');
         return sb.toString();
     }

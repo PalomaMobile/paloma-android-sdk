@@ -4,5 +4,4 @@
     <string name="facebook_app_secret"></string>
 
     <string name="palomamobile_client_id">testapp-client</string>
-    <string name="palomamobile_endpoint">http://ec2-46-137-242-200.ap-southeast-1.compute.amazonaws.com</string>
 </resources>
