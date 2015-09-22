@@ -1,7 +1,7 @@
 # Paloma Core SDK for Android
 ## Overview
 The Core SDK module provides, as the name suggests, core functionality such as SDK initialization and SDK module management.
-It also defines key framework classes and intefaces that define the pluggable SDK architecture.
+It also defines key framework classes and interfaces that define the pluggable SDK architecture.
 
 The [javadoc is available here](http://palomamobile.github.io/paloma-android-sdk/docs/index.html) under package _com.palomamobile.android.sdk.core.*_
 

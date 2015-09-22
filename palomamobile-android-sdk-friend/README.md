@@ -42,100 +42,102 @@ at the [User SDK](../palomamobile-android-sdk-user).
 
 ### Declare dependencies in your `build.gradle`
 
-    dependencies {
+```groovy
+dependencies {
+    ...
     
-        ...
+    //you may already use some of these and that is OK
+    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.android.support:support-annotations:22.2.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.birbit:android-priority-jobqueue:1.3.3'
 
-        //you may already use some of these and that is OK
-        compile 'de.greenrobot:eventbus:2.4.0'
-        compile 'com.google.code.gson:gson:2.3.1'
-        compile 'com.android.support:support-annotations:22.2.0'
-        compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0'
-        compile 'com.squareup.okhttp:okhttp:2.4.0'
-        compile 'com.squareup.retrofit:retrofit:1.9.0'
-        compile 'com.birbit:android-priority-jobqueue:1.3.3'
+    //Paloma Platform SDK modules
+    compile 'com.palomamobile.android.sdk:core:2.5@aar'
+    compile 'com.palomamobile.android.sdk:auth:2.5@aar'
+    compile 'com.palomamobile.android.sdk:user:2.5@aar'
+    compile 'com.palomamobile.android.sdk:friend:2.5@aar'
     
-        //Paloma Platform SDK modules
-        compile 'com.palomamobile.android.sdk:core:2.5@aar'
-        compile 'com.palomamobile.android.sdk:auth:2.5@aar'
-        compile 'com.palomamobile.android.sdk:user:2.5@aar'
-        compile 'com.palomamobile.android.sdk:friend:2.5@aar'
-        
-        //Enable optional notifications of friends discovered
-        compile 'com.palomamobile.android.sdk:notification:2.5@aar'
-        ...
-        
-    }
+    //Enable optional notifications of friends discovered
+    compile 'com.palomamobile.android.sdk:notification:2.5@aar'
+    
+    ... 
+}
+```
 
-
-### In you code
+### In your code
 
 Initiate the Paloma Mobile platform SDK
 
+```java
+public class App extends Application {
 
-    public class App extends Application {
-    
-        @Override
-        public void onCreate() {
-            super.onCreate();
-            ServiceSupport.Instance.init(this.getApplicationContext());
-        }
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ServiceSupport.Instance.init(this.getApplicationContext());
     }
+}
+```
 
 In your Activity class request a refresh of friends list and listen for results:
 
-
-    public class FriendSampleActivity extends Activity {
-
-
-        private IFriendManager friendManager ;
+```java
+public class FriendSampleActivity extends Activity {
 
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            //listen for events
-            ServiceSupport.Instance.getEventBus().register(this);
-            
-            friendManager = ServiceSupport.Instance.getServiceManager(IFriendManager.class);
-            ...
-            
-            buttonRefreshFriends = (Button) findViewById(R.id.buttonRefreshFriends);
-            buttonRefreshFriends.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //create a job to be done, i.e. get a list of friends 
-                    JobGetFriends jobGetFriends = friendManager.createJobGetFriends();
-                    //put the job on the queue and when the job is done EventFriendsListReceived will be fired 
-                    ServiceSupport.Instance.getJobManager().addJobInBackground(jobGetFriends);
-                }
-            });
-        }
+    private IFriendManager friendManager ;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        //listen for events
+        ServiceSupport.Instance.getEventBus().register(this);
         
+        friendManager = ServiceSupport.Instance.getServiceManager(IFriendManager.class);
+        ...
         
-        @Override
-        protected void onDestroy() {
-            //stop listening for events
-            ServiceSupport.Instance.getEventBus().unregister(this);
-            super.onDestroy();
-        }
-        
-
-        
-        @SuppressWarnings("unused")
-        public void onEventMainThread(EventFriendsListReceived event) {
-            //act on events
-            Throwable throwable = event.getFailure();
-            if (throwable == null) {
-                displayFriends(event.getSuccess());
+        buttonRefreshFriends = (Button) findViewById(R.id.buttonRefreshFriends);
+        buttonRefreshFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //create a job to be done, i.e. get a list of friends 
+                JobGetFriends jobGetFriends = friendManager.createJobGetFriends();
+                //put the job on the queue and when the job is done EventFriendsListReceived will be fired 
+                ServiceSupport.Instance.getJobManager().addJobInBackground(jobGetFriends);
             }
-            else {
-                Toast.makeText(getApplicationContext(), "Err: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.w(TAG, throwable.getMessage());
-            }
-        }
-        
-    ...
-    
+        });
     }
+    
+    
+    @Override
+    protected void onDestroy() {
+        //stop listening for events
+        ServiceSupport.Instance.getEventBus().unregister(this);
+        super.onDestroy();
+    }
+    
+
+    
+    @SuppressWarnings("unused")
+    public void onEventMainThread(EventFriendsListReceived event) {
+        //act on events
+        Throwable throwable = event.getFailure();
+        if (throwable == null) {
+            displayFriends(event.getSuccess());
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Err: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.w(TAG, throwable.getMessage());
+        }
+    }
+    
+...
+
+}
+```
 
 For a complete working project see the [android-sdk-friend-sample-app](../palomamobile-android-sdk-friend/android-sdk-friend-sample-app)

@@ -41,36 +41,35 @@ The User SDK depends on:
 
 ### Declare dependencies in your `build.gradle`
 
-    dependencies {
-    
-        ...
+```groovy
+dependencies {
 
-        //you may already use some of these and that is OK
-        compile 'de.greenrobot:eventbus:2.4.0'
-        compile 'com.google.code.gson:gson:2.3.1'
-        compile 'com.android.support:support-annotations:22.2.0'
-        compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0'
-        compile 'com.squareup.okhttp:okhttp:2.4.0'
-        compile 'com.squareup.retrofit:retrofit:1.9.0'
-        compile 'com.birbit:android-priority-jobqueue:1.3.3'
-    
-        //Paloma Platform SDK modules
-        compile 'com.palomamobile.android.sdk:core:2.5@aar'
-        compile 'com.palomamobile.android.sdk:auth:2.5@aar'
-        compile 'com.palomamobile.android.sdk:user:2.5@aar'
-        
-        ...
-        
-    }
+    ...
 
+    //you may already use some of these and that is OK
+    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.android.support:support-annotations:22.2.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.birbit:android-priority-jobqueue:1.3.3'
+
+    //Paloma Platform SDK modules
+    compile 'com.palomamobile.android.sdk:core:2.5@aar'
+    compile 'com.palomamobile.android.sdk:auth:2.5@aar'
+    compile 'com.palomamobile.android.sdk:user:2.5@aar'
+    
+    ...
+    
+}
+```
 
 ### In your code
 
 Initiate the Paloma Mobile platform SDK
 
-``` java
-//...
-
+```java
 public class App extends Application {
 
     @Override
@@ -84,14 +83,10 @@ public class App extends Application {
 
 In your Activity class request to sign-up a user with username and password credentials and listen for results:
 
-``` java
-//...
-
+```java
 public class UserRegistrationActivity extends Activity {
 
-
     private IUserManager userManager;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,23 +96,15 @@ public class UserRegistrationActivity extends Activity {
         userManager = ServiceSupport.Instance.getServiceManager(IUserManager.class);
         ...
         
-        buttonCreateAccount = (Button) findViewById(R.id.buttonCreateAccount);
         buttonCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userName = editTextUsername.getText().toString().trim();
-                String password = editTextPassword.getText().toString().trim();
-                if (userName.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(UserRegistrationSampleActivity.this, R.string.provide_credentials, Toast.LENGTH_LONG).show();
-                }
-                else {
-                    JobRegisterUser jobRegisterUserViaPassword = userManager.createJobRegisterUserViaPassword(userName, password);
-                    ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaPassword);
-                }
+                ...
+                JobRegisterUser jobRegisterUserViaPassword = userManager.createJobRegisterUserViaPassword(userName, password);
+                ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaPassword);
             }
         });
     }
-    
     
     @Override
     protected void onDestroy() {
@@ -125,24 +112,18 @@ public class UserRegistrationActivity extends Activity {
         ServiceSupport.Instance.getEventBus().unregister(this);
         super.onDestroy();
     }
-    
 
-    
     @SuppressWarnings("unused")
     public void onEventMainThread(EventLocalUserUpdated event) {
         Throwable throwable = event.getFailure();
         if (throwable == null) {
-            Log.d(TAG, "onEventMainThread(): " + event);
-            setResult(RESULT_OK);
-            Toast.makeText(getApplicationContext(), getString(R.string.login_success_as, event.getSuccess().getUsername()), Toast.LENGTH_LONG).show();
+            User user = event.getSuccess();
+            ...
         }
         else {
             Toast.makeText(getApplicationContext(), throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
         }
     }
-
-    
-...
 
 }
 ```
@@ -151,8 +132,7 @@ To use the 'Facebook login' follow the [Facebook Android SDK instructions](https
 to get users `AccessToken`. Here is a code example showing how to use the Facebook credentials to either create a new 
 user or sign-in as an existing user into the Paloma Platform:
  
-``` java
-//...
+```java
 
 fbCallbackManager = CallbackManager.Factory.create();
 

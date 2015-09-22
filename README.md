@@ -26,8 +26,8 @@ The Paloma SDK for Android is written and structured with the following goals in
 
 The SDK is split into several modules clearly defined by their function.
 
-* [Core module](./palomamobile-android-sdk-core) 
-* [Auth module](./palomamobile-android-sdk-auth) 
+* [Core module](./palomamobile-android-sdk-core)
+* [Auth module](./palomamobile-android-sdk-auth)
 * [User module](./palomamobile-android-sdk-user)
 * [Message module](./palomamobile-android-sdk-message)
 * [Friend module and discovery](./palomamobile-android-sdk-friend)
@@ -42,15 +42,67 @@ Complete [javadoc for all modules](http://palomamobile.github.io/paloma-android-
 
 Each application facing module provides a <b>Sample app</b> project that demonstrates how to use its functionality.
 
+## Internal dependencies
+
+To get started you will need to set-up a [platform application](http://54.251.112.144/index.html#_authenticating_client_applications).
+
 ## External dependencies
 
 The SDK depends on the following open source projects that we hold in high regard:
 
-* [EventBus](https://github.com/greenrobot/EventBus)
-* [gson](https://github.com/google/gson)
-* [okhttp](https://github.com/square/okhttp)
-* [retrofit](https://github.com/square/retrofit)
-* [android-priority-jobqueue](https://github.com/yigit/android-priority-jobqueue)
+* [EventBus](https://github.com/greenrobot/EventBus) for updating your app with changes, this is how the SDK communicates with your app. 
+* [gson](https://github.com/google/gson) for parsing and constructing JSON.
+* [okhttp](https://github.com/square/okhttp) for HTTP comms.
+* [retrofit](https://github.com/square/retrofit) to talk to our restful platform APIs.
+* [android-priority-jobqueue](https://github.com/yigit/android-priority-jobqueue) for Job management. Whenever the app asks the SDK to do something (eg: create a user) it's a job.
+
+### ... and this is a sample of what the code looks like
+
+``` java
+public class UserRegistrationActivity extends Activity {
+
+    private IUserManager userManager;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        //listen for events
+        ServiceSupport.Instance.getEventBus().register(this);
+        
+        userManager = ServiceSupport.Instance.getServiceManager(IUserManager.class);
+        ...
+        
+        buttonCreateAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ...
+                JobRegisterUser jobRegisterUserViaPassword = userManager.createJobRegisterUserViaPassword(userName, password);
+                ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaPassword);
+            }
+        });
+    }
+    
+    @Override
+    protected void onDestroy() {
+        //stop listening for events
+        ServiceSupport.Instance.getEventBus().unregister(this);
+        super.onDestroy();
+    }
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(EventLocalUserUpdated event) {
+        Throwable throwable = event.getFailure();
+        if (throwable == null) {
+            User user = event.getSuccess();
+            ...
+        }
+        else {
+            Toast.makeText(getApplicationContext(), throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+}
+```
+
 
 ## Building the SDK from sources
 

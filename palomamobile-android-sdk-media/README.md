@@ -34,92 +34,96 @@ at the [User SDK](../palomamobile-android-sdk-user).
 
 ### Declare dependencies in your `build.gradle`
 
-    dependencies {
+```groovy
+dependencies {
+
+    ...
+
+    //you may already use some of these and that is OK
+    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.android.support:support-annotations:22.2.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.birbit:android-priority-jobqueue:1.3.3'
+
+    //Paloma Platform SDK modules
+    compile 'com.palomamobile.android.sdk:core:2.5@aar'
+    compile 'com.palomamobile.android.sdk:auth:2.5@aar'
+    compile 'com.palomamobile.android.sdk:user:2.5@aar'
+    compile 'com.palomamobile.android.sdk:media:2.5@aar'
     
-        ...
-
-        //you may already use some of these and that is OK
-        compile 'de.greenrobot:eventbus:2.4.0'
-        compile 'com.google.code.gson:gson:2.3.1'
-        compile 'com.android.support:support-annotations:22.2.0'
-        compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0'
-        compile 'com.squareup.okhttp:okhttp:2.4.0'
-        compile 'com.squareup.retrofit:retrofit:1.9.0'
-        compile 'com.birbit:android-priority-jobqueue:1.3.3'
+    ...
     
-        //Paloma Platform SDK modules
-        compile 'com.palomamobile.android.sdk:core:2.5@aar'
-        compile 'com.palomamobile.android.sdk:auth:2.5@aar'
-        compile 'com.palomamobile.android.sdk:user:2.5@aar'
-        compile 'com.palomamobile.android.sdk:media:2.5@aar'
-        
-        ...
-        
-    }
+}
+```
 
-
-### In you code
+### In your code
 
 Initiate the Paloma Mobile platform SDK
 
 
-    public class App extends Application {
-    
-        @Override
-        public void onCreate() {
-            super.onCreate();
-            ServiceSupport.Instance.init(this.getApplicationContext());
-        }
+```java
+public class App extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ServiceSupport.Instance.init(this.getApplicationContext());
     }
+}
+```
 
 In your Activity class request a refresh of friends list and listen for results:
 
-
-    public class MediaSampleActivity extends Activity {
-
-
-        private IMediaManager mediaManager ;
+```java
+public class MediaSampleActivity extends Activity {
 
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            //listen for events
-            ServiceSupport.Instance.getEventBus().register(this);
-        }
+    private IMediaManager mediaManager ;
 
-        
-        @Override
-        protected void onDestroy() {
-            //stop listening for events
-            ServiceSupport.Instance.getEventBus().unregister(this);
-            super.onDestroy();
-        }
-        
-        
-        private void onImageSelected(String imgPath) {
-            mediaManager = ServiceSupport.Instance.getServiceManager(IMediaManager.class);
-            ...
-            
-            JobUploadMediaPublic mediaUploadJob = ServiceSupport.Instance.getServiceManager(IMediaManager.class).createJobMediaUploadPublic("image/jpg", imgPath);
-            ServiceSupport.Instance.getJobManager().addJobInBackground(mediaUploadJob);
-        }
-        
-        
-        @SuppressWarnings("unused")
-        public void onEventMainThread(EventMediaUploaded event) {
-            //act on events
-            Throwable throwable = event.getFailure();
-            if (throwable == null) {
-                displayUploadSuccess(event.getSuccess().getUrl());
-            }
-            else {
-                Toast.makeText(getApplicationContext(), "Err: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.w(TAG, throwable.getMessage());
-            }
-        }
-        
-    ...
-    
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        //listen for events
+        ServiceSupport.Instance.getEventBus().register(this);
     }
+
+    
+    @Override
+    protected void onDestroy() {
+        //stop listening for events
+        ServiceSupport.Instance.getEventBus().unregister(this);
+        super.onDestroy();
+    }
+    
+    
+    private void onImageSelected(String imgPath) {
+        mediaManager = ServiceSupport.Instance.getServiceManager(IMediaManager.class);
+        ...
+        
+        JobUploadMediaPublic mediaUploadJob = ServiceSupport.Instance.getServiceManager(IMediaManager.class).createJobMediaUploadPublic("image/jpg", imgPath);
+        ServiceSupport.Instance.getJobManager().addJobInBackground(mediaUploadJob);
+    }
+    
+    
+    @SuppressWarnings("unused")
+    public void onEventMainThread(EventMediaUploaded event) {
+        //act on events
+        Throwable throwable = event.getFailure();
+        if (throwable == null) {
+            displayUploadSuccess(event.getSuccess().getUrl());
+        }
+        else {
+            Toast.makeText(getApplicationContext(), "Err: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.w(TAG, throwable.getMessage());
+        }
+    }
+    
+...
+
+}
+```
 
 For a complete working project see the [android-sdk-media-sample-app](../palomamobile-android-sdk-media/android-sdk-media-sample-app)
