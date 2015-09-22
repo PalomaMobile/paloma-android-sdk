@@ -64,113 +64,122 @@ The User SDK depends on:
     }
 
 
-### In you code
+### In your code
 
 Initiate the Paloma Mobile platform SDK
 
+``` java
+//...
 
-    public class App extends Application {
-    
-        @Override
-        public void onCreate() {
-            super.onCreate();
-            ServiceSupport.Instance.init(this.getApplicationContext());
-        }
+public class App extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ServiceSupport.Instance.init(this.getApplicationContext());
     }
+}
+
+```
 
 In your Activity class request to sign-up a user with username and password credentials and listen for results:
 
+``` java
+//...
 
-    public class UserRegistrationActivity extends Activity {
+public class UserRegistrationActivity extends Activity {
 
 
-        private IUserManager userManager;
+    private IUserManager userManager;
 
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            //listen for events
-            ServiceSupport.Instance.getEventBus().register(this);
-            
-            userManager = ServiceSupport.Instance.getServiceManager(IUserManager.class);
-            ...
-            
-            buttonCreateAccount = (Button) findViewById(R.id.buttonCreateAccount);
-            buttonCreateAccount.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String userName = editTextUsername.getText().toString().trim();
-                    String password = editTextPassword.getText().toString().trim();
-                    if (userName.isEmpty() || password.isEmpty()) {
-                        Toast.makeText(UserRegistrationSampleActivity.this, R.string.provide_credentials, Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        JobRegisterUser jobRegisterUserViaPassword = userManager.createJobRegisterUserViaPassword(userName, password);
-                        ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaPassword);
-                    }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        //listen for events
+        ServiceSupport.Instance.getEventBus().register(this);
+        
+        userManager = ServiceSupport.Instance.getServiceManager(IUserManager.class);
+        ...
+        
+        buttonCreateAccount = (Button) findViewById(R.id.buttonCreateAccount);
+        buttonCreateAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String userName = editTextUsername.getText().toString().trim();
+                String password = editTextPassword.getText().toString().trim();
+                if (userName.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(UserRegistrationSampleActivity.this, R.string.provide_credentials, Toast.LENGTH_LONG).show();
                 }
-            });
-        }
-        
-        
-        @Override
-        protected void onDestroy() {
-            //stop listening for events
-            ServiceSupport.Instance.getEventBus().unregister(this);
-            super.onDestroy();
-        }
-        
+                else {
+                    JobRegisterUser jobRegisterUserViaPassword = userManager.createJobRegisterUserViaPassword(userName, password);
+                    ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaPassword);
+                }
+            }
+        });
+    }
+    
+    
+    @Override
+    protected void onDestroy() {
+        //stop listening for events
+        ServiceSupport.Instance.getEventBus().unregister(this);
+        super.onDestroy();
+    }
+    
 
-        
-        @SuppressWarnings("unused")
-        public void onEventMainThread(EventLocalUserUpdated event) {
-            Throwable throwable = event.getFailure();
-            if (throwable == null) {
-                Log.d(TAG, "onEventMainThread(): " + event);
-                setResult(RESULT_OK);
-                Toast.makeText(getApplicationContext(), getString(R.string.login_success_as, event.getSuccess().getUsername()), Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(getApplicationContext(), throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-            }
+    
+    @SuppressWarnings("unused")
+    public void onEventMainThread(EventLocalUserUpdated event) {
+        Throwable throwable = event.getFailure();
+        if (throwable == null) {
+            Log.d(TAG, "onEventMainThread(): " + event);
+            setResult(RESULT_OK);
+            Toast.makeText(getApplicationContext(), getString(R.string.login_success_as, event.getSuccess().getUsername()), Toast.LENGTH_LONG).show();
         }
-    
-        
-    ...
-    
+        else {
+            Toast.makeText(getApplicationContext(), throwable.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
+    
+...
+
+}
+```
 
 To use the 'Facebook login' follow the [Facebook Android SDK instructions](https://developers.facebook.com/docs/facebook-login/android) 
 to get users `AccessToken`. Here is a code example showing how to use the Facebook credentials to either create a new 
 user or sign-in as an existing user into the Paloma Platform:
  
-    fbCallbackManager = CallbackManager.Factory.create();
+``` java
+//...
 
-    buttonFbLogin = (LoginButton) findViewById(R.id.buttonFbLogin);
-    buttonFbLogin.setReadPermissions("user_friends");
-    buttonFbLogin.registerCallback(fbCallbackManager, new FacebookCallback<LoginResult>() {
-        @Override
-        public void onSuccess(LoginResult loginResult) {
-            AccessToken accessToken = loginResult.getAccessToken();
-            Log.d(TAG, "FB login success, received FB AccessToken: " +
-                    "userId = " + accessToken.getUserId() + ", " +
-                    "applicationId = " + accessToken.getApplicationId() + ", " +
-                    "token = " + accessToken.getToken());
-            JobRegisterUser jobRegisterUserViaFacebook = userManager.createJobRegisterUserViaFacebook(accessToken.getUserId(), accessToken.getToken());
-            ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaFacebook);
-        }
+fbCallbackManager = CallbackManager.Factory.create();
 
-        @Override
-        public void onCancel() {
-            Log.d(TAG, "FB login cancelled");
-        }
+buttonFbLogin = (LoginButton) findViewById(R.id.buttonFbLogin);
+buttonFbLogin.setReadPermissions("user_friends");
+buttonFbLogin.registerCallback(fbCallbackManager, new FacebookCallback<LoginResult>() {
+    @Override
+    public void onSuccess(LoginResult loginResult) {
+        AccessToken accessToken = loginResult.getAccessToken();
+        Log.d(TAG, "FB login success, received FB AccessToken: " +
+                "userId = " + accessToken.getUserId() + ", " +
+                "applicationId = " + accessToken.getApplicationId() + ", " +
+                "token = " + accessToken.getToken());
+        JobRegisterUser jobRegisterUserViaFacebook = userManager.createJobRegisterUserViaFacebook(accessToken.getUserId(), accessToken.getToken());
+        ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaFacebook);
+    }
 
-        @Override
-        public void onError(FacebookException exception) {
-            Log.w(TAG, "FB login throwable", exception);
-        }
-    });
-     
+    @Override
+    public void onCancel() {
+        Log.d(TAG, "FB login cancelled");
+    }
+
+    @Override
+    public void onError(FacebookException exception) {
+        Log.w(TAG, "FB login throwable", exception);
+    }
+});
+```     
 
 For a complete working project that uses both username & password as well as Facebook login see the [android-sdk-user-sample-app](../palomamobile-android-sdk-user/android-sdk-user-sample-app)
