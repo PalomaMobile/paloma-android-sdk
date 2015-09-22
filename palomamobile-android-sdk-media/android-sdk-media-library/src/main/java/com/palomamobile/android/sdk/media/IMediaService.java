@@ -14,7 +14,7 @@ import retrofit.mime.TypedInput;
  * All calls are synchronous. To get a concrete implementation of this interface call {@link IMediaManager#getService()}
  * This class provides somewhat low level access to the Server API it may be more convenient to use methods in {@link IMediaManager}.
  * <br/>
- * @see <a href="http://46.137.242.200/docs/media-service/index.html">Paloma Mobile Platform Media Service RESTful API</a>
+ * @see <a href="http://54.251.112.144/docs/media-service/index.html">Paloma Mobile Platform Media Service RESTful API</a>
  */
 public interface IMediaService {
 

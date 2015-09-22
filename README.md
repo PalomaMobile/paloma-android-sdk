@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/PalomaMobile/paloma-android-sdk.svg)](https://travis-ci.org/PalomaMobile/paloma-android-sdk)
+[![Build Status](https://magnum.travis-ci.com/PalomaMobile/paloma-android-sdk.svg?token=MqkF7WcptxY6tzunqsBa)](https://magnum.travis-ci.com/PalomaMobile/paloma-android-sdk)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.palomamobile/androidSdk/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.palomamobile/androidSdk)
 [![Coverage Status](https://coveralls.io/repos/PalomaMobile/paloma-android-sdk/badge.svg)](https://coveralls.io/r/PalomaMobile/paloma-android-sdk)
 
@@ -7,7 +7,7 @@
 ## Feature overview
 
 The Paloma SDK for Android provides a library, and documentation for developers to build connected mobile applications using the Paloma Mobile Platform Services.
-For in-depth information check out the detailed description of the [Paloma Mobile Platform Services](http://ec2-54-251-61-68.ap-southeast-1.compute.amazonaws.com/index.html#_platform_description).
+For in-depth information check out the detailed description of the [Paloma Mobile Platform Services](http://54.251.112.144/index.html#_platform_description).
 At a high level the SDK enables the following key features provided by the platform:
 
 * Authentication and User management

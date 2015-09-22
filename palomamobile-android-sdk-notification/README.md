@@ -1,7 +1,7 @@
 # Paloma Notification SDK for Android
 
 ## Overview
-Notification SDK module supports the [Notification Service provided by the Paloma Mobile platform cloud](http://46.137.242.200/docs/notification-service/index.html#_service_description).
+Notification SDK module supports the [Notification Service provided by the Paloma Mobile platform cloud](http://54.251.112.144/docs/notification-service/index.html#_service_description).
 At a high level the Friend SDK supports the following functionality:
 
 * Receiving push notifications via GCM (in future to be expanded to SMS, and custom socket channel)
@@ -108,8 +108,8 @@ Initiate the Paloma Mobile platform SDK, and register to receive Notifications. 
 received by any given client app depends on the Paloma Mobile platform services the client app uses. Each service lists
 the notifications it triggers. For example:
 
-* [Friend SDK notifications](http://46.137.242.200/docs/friend-service/index.html#_notifications)
-* [Message SDK notifications](http://46.137.242.200/docs/message-service/index.html#_notifications)
+* [Friend SDK notifications](http://54.251.112.144/docs/friend-service/index.html#_notifications)
+* [Message SDK notifications](http://54.251.112.144/docs/message-service/index.html#_notifications)
 
 
     public class App extends Application {

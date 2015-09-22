@@ -131,7 +131,7 @@ public class ServiceRequestParams {
     /**
      * Request to filter results based on a query.
      * For documentation on how to build queries see:
-     * http://ec2-54-251-61-68.ap-southeast-1.compute.amazonaws.com/index.html#_filtering_results
+     * http://54.251.112.144/index.html#_filtering_results
      *
      * @param filterQuery
      * @return {@code this} for chaining calls

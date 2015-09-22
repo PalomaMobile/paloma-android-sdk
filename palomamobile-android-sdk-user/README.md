@@ -1,7 +1,7 @@
 # Paloma User SDK for Android
 
 ## Overview
-User SDK module supports the user management features of the [User Service provided by the Paloma Mobile platform cloud](http://46.137.242.200/docs/user-service/index.html#_service_description). 
+User SDK module supports the user management features of the [User Service provided by the Paloma Mobile platform cloud](http://54.251.112.144/docs/user-service/index.html#_service_description). 
 Note that Authentication functionality is implemented in the [Auth SDK](../palomamobile-android-sdk-auth)
 not in the User SDK.
 

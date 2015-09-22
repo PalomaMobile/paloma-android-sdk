@@ -18,7 +18,7 @@ import java.util.Map;
  * All calls are synchronous. To get a concrete implementation of this interface call {@link IFriendManager#getService()}
  * This class provides somewhat low level access to the Server API it may be more convenient to use methods in {@link IFriendManager}.
  * <br/>
- * @see <a href="http://46.137.242.200/docs/friend-service/index.html">Paloma Mobile Platform Friend Service RESTful API</a>
+ * @see <a href="http://54.251.112.144/docs/friend-service/index.html">Paloma Mobile Platform Friend Service RESTful API</a>
  */
 public interface IFriendService {
 

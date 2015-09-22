@@ -1,7 +1,7 @@
 # Paloma Friend SDK for Android
 
 ## Overview
-Friend SDK module supports the [Friend Service provided by the Paloma Mobile platform cloud](http://46.137.242.200/docs/friend-service/index.html#_service_description).
+Friend SDK module supports the [Friend Service provided by the Paloma Mobile platform cloud](http://54.251.112.144/docs/friend-service/index.html#_service_description).
 
 At a high level the Friend SDK supports the following functionality:
 
@@ -32,7 +32,7 @@ The Friend SDK depends on:
 * [User SDK](../palomamobile-android-sdk-user)
 
 Optional but recommended dependency on the [Notification SDK](../palomamobile-android-sdk-notification)
-will enable server push notifications for [events of interest](http://46.137.242.200/docs/friend-service/index.html#_notifications).
+will enable server push notifications for [events of interest](http://54.251.112.144/docs/friend-service/index.html#_notifications).
 
 
 ## Quick start

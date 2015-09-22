@@ -1,7 +1,7 @@
 # Paloma Media SDK for Android
 
 ## Overview
-Media SDK module supports the [Media Service provided by the Paloma Mobile platform cloud](http://46.137.242.200/docs/media-service/index.html#_service_description).
+Media SDK module supports the [Media Service provided by the Paloma Mobile platform cloud](http://54.251.112.144/docs/media-service/index.html#_service_description).
 
 At a high level the Media SDK supports the following functionality:
 
