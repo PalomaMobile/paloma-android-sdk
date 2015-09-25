@@ -32,4 +32,13 @@ public abstract class BaseJobEvent<Job extends BaseRetryPolicyAwareJob, Result> 
     public Throwable getFailure() {
         return failure;
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" +
+                "failure=" + failure +
+                ", job=" + job +
+                ", result=" + result +
+                '}';
+    }
 }
