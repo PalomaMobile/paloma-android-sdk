@@ -52,7 +52,7 @@ public class JobDeleteMessageReceived extends BaseRetryPolicyAwareJob<Void> {
     public Void syncRun(boolean postEvent) throws Throwable {
         MessageManager messageManager = (MessageManager) ServiceSupport.Instance.getServiceManager(IMessageManager.class);
         IMessageService messageService = messageManager.getService();
-        messageService.deleteMessageReceived(getRetryId(), userId, messageId, getOptions(), getFilterQuery(), getSortParams());
+        messageService.deleteMessageReceived(getRetryId(), userId, messageId);
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventMessageReceivedDeleted(this));
         }

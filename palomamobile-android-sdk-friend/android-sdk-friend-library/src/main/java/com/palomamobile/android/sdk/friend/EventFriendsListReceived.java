@@ -2,7 +2,7 @@ package com.palomamobile.android.sdk.friend;
 
 import com.palomamobile.android.sdk.core.PaginatedResponse;
 import com.palomamobile.android.sdk.core.ServiceSupport;
-import com.palomamobile.android.sdk.core.qos.IJobEvent;
+import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
 
 /**
  * Event published on the {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()})
@@ -12,40 +12,12 @@ import com.palomamobile.android.sdk.core.qos.IJobEvent;
  * <br/>
  *
  */
-public class EventFriendsListReceived implements IJobEvent<JobGetFriends, PaginatedResponse<Friend>> {
-    protected PaginatedResponse<Friend> friends;
-    private JobGetFriends job;
-    private Throwable throwable;
-
-    EventFriendsListReceived(JobGetFriends job, Throwable throwable) {
-        this.job = job;
-        this.throwable = throwable;
+public class EventFriendsListReceived extends BaseJobEvent<JobGetFriends, PaginatedResponse<Friend>> {
+    public EventFriendsListReceived(JobGetFriends job, Throwable failure) {
+        super(job, failure);
     }
 
-    EventFriendsListReceived(JobGetFriends job, PaginatedResponse<Friend> friends) {
-        this.job = job;
-        this.friends = friends;
-    }
-
-    @Override
-    public JobGetFriends getJob() {
-        return job;
-    }
-
-    public PaginatedResponse<Friend> getSuccess() {
-        return friends;
-    }
-
-    @Override
-    public String toString() {
-        return "EventFriendsListReceived{" +
-                "friends=" + friends +
-                ", job=" + job +
-                ", throwable=" + throwable +
-                '}';
-    }
-
-    public Throwable getFailure() {
-        return throwable;
+    public EventFriendsListReceived(JobGetFriends job, PaginatedResponse<Friend> friendPaginatedResponse) {
+        super(job, friendPaginatedResponse);
     }
 }

@@ -1,7 +1,7 @@
 package com.palomamobile.android.sdk.friend;
 
 import com.palomamobile.android.sdk.core.ServiceSupport;
-import com.palomamobile.android.sdk.core.qos.IJobEvent;
+import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
 
 /**
  * Event published on the {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()})
@@ -11,37 +11,12 @@ import com.palomamobile.android.sdk.core.qos.IJobEvent;
  * <br/>
  *
  */
-public class EventSocialUserCredentialsPosted implements IJobEvent<JobPostSocialUserCredential, Void> {
-    private JobPostSocialUserCredential job;
-    private Throwable throwable;
-
-    EventSocialUserCredentialsPosted(JobPostSocialUserCredential job, Throwable throwable) {
-        this.job = job;
-        this.throwable = throwable;
+public class EventSocialUserCredentialsPosted extends BaseJobEvent<JobPostSocialUserCredential, Void> {
+    protected EventSocialUserCredentialsPosted(JobPostSocialUserCredential job, Throwable failure) {
+        super(job, failure);
     }
 
-    EventSocialUserCredentialsPosted(JobPostSocialUserCredential job) {
-        this.job = job;
-    }
-
-    @Override
-    public JobPostSocialUserCredential getJob() {
-        return job;
-    }
-
-    public Void getSuccess() {
-        return null;
-    }
-
-    @Override
-    public String toString() {
-        return "EventSocialUserCredentialsPosted{" +
-                "job=" + job +
-                ", throwable=" + throwable +
-                '}';
-    }
-
-    public Throwable getFailure() {
-        return throwable;
+    protected EventSocialUserCredentialsPosted(JobPostSocialUserCredential job) {
+        super(job, (Void) null);
     }
 }

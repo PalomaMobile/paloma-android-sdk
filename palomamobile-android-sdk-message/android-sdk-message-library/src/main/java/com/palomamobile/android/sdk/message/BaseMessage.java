@@ -11,6 +11,7 @@ import java.util.List;
 public abstract class BaseMessage implements Serializable {
 
     private long id;
+    private String type;
     private List<MessageContentDetail> contentList;
 
     public long getId() {
@@ -29,10 +30,19 @@ public abstract class BaseMessage implements Serializable {
         this.contentList = contentList;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Message{");
         sb.append("id=").append(id);
+        sb.append(", type=\'").append(type).append('\'');
         sb.append(", contentList=").append(contentList);
         sb.append('}');
         return sb.toString();

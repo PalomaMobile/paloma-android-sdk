@@ -52,7 +52,7 @@ public class DefaultRetryPolicyProvider implements IRetryPolicyProvider {
             if (status >= 500) //server errors should be temporary :)
                 return true;
         }
-        return false;
+        return false; //amongst others also all 4xx errors
     }
 
     private static String asString(RetryConstraint retryConstraint) {

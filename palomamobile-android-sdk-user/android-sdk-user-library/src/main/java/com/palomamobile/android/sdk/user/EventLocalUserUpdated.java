@@ -1,9 +1,8 @@
 package com.palomamobile.android.sdk.user;
 
-import android.support.annotation.NonNull;
 import com.palomamobile.android.sdk.auth.IUserCredential;
 import com.palomamobile.android.sdk.core.ServiceSupport;
-import com.palomamobile.android.sdk.core.qos.IJobEvent;
+import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 
 /**
@@ -15,43 +14,12 @@ import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
  * <br/>
  *
  */
-public class EventLocalUserUpdated implements IJobEvent<BaseRetryPolicyAwareJob<User>, User> {
-
-    private User localUser;
-    private BaseRetryPolicyAwareJob<User> job;
-    private Throwable throwable;
-
-    EventLocalUserUpdated(BaseRetryPolicyAwareJob<User> job, @NonNull Throwable throwable) {
-        this.job = job;
-        this.throwable = throwable;
+public class EventLocalUserUpdated extends BaseJobEvent<BaseRetryPolicyAwareJob<User>, User> {
+    protected EventLocalUserUpdated(BaseRetryPolicyAwareJob<User> job, Throwable failure) {
+        super(job, failure);
     }
 
-    EventLocalUserUpdated(BaseRetryPolicyAwareJob<User> job, @NonNull User localUser) {
-        this.job = job;
-        this.localUser = localUser;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("EventLocalUserUpdated{");
-        sb.append("throwable=").append(throwable);
-        sb.append(", localUser=").append(localUser);
-        sb.append('}');
-        return sb.toString();
-    }
-
-    @Override
-    public BaseRetryPolicyAwareJob<User> getJob() {
-        return job;
-    }
-
-    @Override
-    public User getSuccess() {
-        return localUser;
-    }
-
-    @Override
-    public Throwable getFailure() {
-        return throwable;
+    protected EventLocalUserUpdated(BaseRetryPolicyAwareJob<User> job, User user) {
+        super(job, user);
     }
 }

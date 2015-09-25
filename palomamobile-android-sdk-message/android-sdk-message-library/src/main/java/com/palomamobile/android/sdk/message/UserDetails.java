@@ -3,11 +3,11 @@ package com.palomamobile.android.sdk.message;
 import java.io.Serializable;
 
 /**
- * Class {@code Sender} represents the information available about the sender of a {@link MessageReceived}.
+ * Class {@code UserDetail} represents the information available about the user in the context of Messaging.
  * <br/>
  *
  */
-public class Sender implements Serializable {
+public class UserDetails implements Serializable {
 
     private long id;
     private String username;
@@ -33,7 +33,7 @@ public class Sender implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Sender sender = (Sender) o;
+        UserDetails sender = (UserDetails) o;
 
         if (id != sender.id) return false;
         return !(username != null ? !username.equals(sender.username) : sender.username != null);
@@ -49,7 +49,7 @@ public class Sender implements Serializable {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Sender{");
+        final StringBuilder sb = new StringBuilder("UserDetails{");
         sb.append("id=").append(id);
         sb.append(", username='").append(username).append('\'');
         sb.append('}');
