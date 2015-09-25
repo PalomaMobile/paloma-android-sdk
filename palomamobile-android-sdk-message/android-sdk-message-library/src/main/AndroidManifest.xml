@@ -13,6 +13,7 @@
         android:theme="@style/AppTheme">
 
         <meta-data android:name="com.palomamobile.android.sdk.manager-class.message" android:value="com.palomamobile.android.sdk.message.MessageManager"/>
+        <meta-data android:name="com.palomamobile.android.sdk.manager-class.messageThread" android:value="com.palomamobile.android.sdk.messageThread.MessageThreadManager"/>
 
     </application>
 

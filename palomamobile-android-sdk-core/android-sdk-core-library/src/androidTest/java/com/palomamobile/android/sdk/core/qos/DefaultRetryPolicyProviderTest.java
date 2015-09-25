@@ -52,7 +52,7 @@ public class DefaultRetryPolicyProviderTest extends InstrumentationTestCase {
 
         Thread.sleep(5000);
         long actualJobDuration = job.failTime - job.startTime;
-        Log.d(TAG, "actualJobDuration: " + actualJobDuration + ", job.workDurationMs: "+job.workDurationMs);
+        Log.d(TAG, "testRetrofitNetworkErrorFailQuick() actualJobDuration: " + actualJobDuration + ", job.workDurationMs: "+job.workDurationMs);
         assertEquals(maxAttempts, job.getCurrentRunCount());
         assertTrue(actualJobDuration >= job.workDurationMs);
     }
@@ -81,7 +81,7 @@ public class DefaultRetryPolicyProviderTest extends InstrumentationTestCase {
         jobManager.addJob(job);
         Thread.sleep(2100);
         long actualJobDuration = job.failTime - job.startTime;
-        Log.d(TAG, "actualJobDuration: " + actualJobDuration + " , job.workDurationMs: " + job.workDurationMs);
+        Log.d(TAG, "testRetrofitConversionErrorFail() actualJobDuration: " + actualJobDuration + " , job.workDurationMs: " + job.workDurationMs);
         assertEquals(1, job.getCurrentRunCount());
         assertTrue(actualJobDuration >= job.workDurationMs);
     }
@@ -112,7 +112,7 @@ public class DefaultRetryPolicyProviderTest extends InstrumentationTestCase {
         jobManager.addJob(job);
         Thread.sleep(1100);
         long actualJobDuration = job.failTime - job.startTime;
-        Log.d(TAG, "actualJobDuration: " + actualJobDuration + " , job.workDurationMs: " + job.workDurationMs);
+        Log.d(TAG, "testRetrofitHttpErrorNonRetryableFail() actualJobDuration: " + actualJobDuration + " , job.workDurationMs: " + job.workDurationMs);
         assertEquals(1, job.getCurrentRunCount());
         assertTrue(actualJobDuration >= job.workDurationMs);
     }

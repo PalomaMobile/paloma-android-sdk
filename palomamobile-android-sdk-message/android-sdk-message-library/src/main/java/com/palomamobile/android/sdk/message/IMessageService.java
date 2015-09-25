@@ -15,7 +15,8 @@ import retrofit.http.QueryMap;
 import java.util.Map;
 
 /**
- * This interface is consumed by the Retrofit library to provide access to the Paloma Mobile Platform Sharing and Messaging Service RESTful API.
+ * This interface is consumed by the Retrofit library to provide access to the messaging functionality of the Paloma Mobile Platform
+ * Sharing and Messaging Service RESTful API.
  * All calls are synchronous. To get a concrete implementation of this interface call {@link IMessageManager#getService()}
  * This class provides somewhat low level access to the Server API it may be more convenient to use methods in {@link IMessageManager}.
  * <br/>
@@ -73,13 +74,20 @@ public interface IMessageService {
      * @param requestId for the purposes of identifying retries
      * @param userId
      * @param messageId
-     * @param options
-     * @param filterQuery
-     * @param sortOrder
-     * @return
      */
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
-    @DELETE("/users/{userId}/messages/received/{messageId}?max=-1")
-    Void deleteMessageReceived(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @Path("messageId") long messageId, @QueryMap Map<String, String> options, @Query("where") String filterQuery, @Query("sort") String... sortOrder);
+    @DELETE("/users/{userId}/messages/received/{messageId}")
+    Void deleteMessageReceived(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @Path("messageId") long messageId);
+
+    /**
+     * Delete all received messages belonging to a user.
+     * <br/>{@link JobDeleteMessageReceived} provides a convenient wrapper, consider using it instead.
+     *
+     * @param requestId for the purposes of identifying retries
+     * @param userId
+     */
+    @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
+    @DELETE("/users/{userId}/messages/received")
+    Void deleteMessagesReceived(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId);
 
 }

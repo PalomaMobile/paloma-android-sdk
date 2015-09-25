@@ -9,12 +9,7 @@ import com.palomamobile.android.sdk.user.IUserManager;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- */
 class MessageManager implements IMessageManager {
-
-    static final String CACHE_KEY_SHARES_RECEIVED = "cache_key_messages_received";
 
     private IMessageService messageService;
 

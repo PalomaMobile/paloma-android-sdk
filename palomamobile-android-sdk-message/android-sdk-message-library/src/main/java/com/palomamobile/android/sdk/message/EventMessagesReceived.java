@@ -2,7 +2,7 @@ package com.palomamobile.android.sdk.message;
 
 import com.palomamobile.android.sdk.core.PaginatedResponse;
 import com.palomamobile.android.sdk.core.ServiceSupport;
-import com.palomamobile.android.sdk.core.qos.IJobEvent;
+import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
 
 /**
  * Event published on the {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()})
@@ -13,40 +13,12 @@ import com.palomamobile.android.sdk.core.qos.IJobEvent;
  * <br/>
  *
  */
-public class EventMessagesReceived implements IJobEvent<JobGetMessagesReceived, PaginatedResponse<MessageReceived>> {
-
-    private Throwable throwable;
-    private JobGetMessagesReceived job;
-    private PaginatedResponse<MessageReceived> messagesReceived;
-
-    EventMessagesReceived(JobGetMessagesReceived job, Throwable throwable) {
-        this.job = job;
-        this.throwable = throwable;
+public class EventMessagesReceived extends BaseJobEvent<JobGetMessagesReceived, PaginatedResponse<MessageReceived>> {
+    protected EventMessagesReceived(JobGetMessagesReceived job, Throwable failure) {
+        super(job, failure);
     }
 
-    EventMessagesReceived(JobGetMessagesReceived job, PaginatedResponse<MessageReceived> messagesReceived) {
-        this.job = job;
-        this.messagesReceived = messagesReceived;
-    }
-
-    public PaginatedResponse<MessageReceived> getSuccess() {
-        return messagesReceived;
-    }
-
-    public Throwable getFailure() {
-        return throwable;
-    }
-
-    @Override
-    public String toString() {
-        return "EventMessagesReceived{" +
-                "job=" + job +
-                ", throwable=" + throwable +
-                ", messagesReceived=" + messagesReceived +
-                '}';
-    }
-
-    public JobGetMessagesReceived getJob() {
-        return job;
+    protected EventMessagesReceived(JobGetMessagesReceived job, PaginatedResponse<MessageReceived> messageReceivedPaginatedResponse) {
+        super(job, messageReceivedPaginatedResponse);
     }
 }

@@ -8,7 +8,7 @@ import com.palomamobile.android.sdk.user.User;
 import com.path.android.jobqueue.Params;
 
 /**
- * Convenience wrapper around {@link IFriendService#putRelationship(String, long, long, RelationAttributes)}
+ * Convenience wrapper around {@link IFriendService#addRelationship(String, long, long, RelationAttributes)}
  * used for friend requests, confirmations, user blocking etc.
  * Once this job is completed (with success or failure) it posts {@link EventRelationshipUpdated} on the
  * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
@@ -45,7 +45,7 @@ public class JobPutRelationship extends BaseRetryPolicyAwareJob<Relationship> {
     public Relationship syncRun(boolean postEvent) throws Throwable {
         User user = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser();
         FriendManager friendManager = (FriendManager) ServiceSupport.Instance.getServiceManager(IFriendManager.class);
-        Relationship result = friendManager.getService().putRelationship(getRetryId(), user.getId(), reciprocalUserId, relationAttributes);
+        Relationship result = friendManager.getService().addRelationship(getRetryId(), user.getId(), reciprocalUserId, relationAttributes);
         Log.d(TAG, "Received relationship from server: " + result);
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventRelationshipUpdated(this, result));

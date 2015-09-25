@@ -1,7 +1,8 @@
 package com.palomamobile.android.sdk.message;
 
 import com.palomamobile.android.sdk.core.ServiceSupport;
-import com.palomamobile.android.sdk.core.qos.IJobEvent;
+import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
+import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 
 import java.util.List;
 
@@ -13,40 +14,12 @@ import java.util.List;
  * <br/>
  *
  */
-public class EventMessageSentPosted implements IJobEvent<JobPostMessage, MessageSent> {
-
-    private MessageSent messageSent;
-    private JobPostMessage job;
-    private Throwable throwable;
-
-    EventMessageSentPosted(JobPostMessage job, Throwable throwable) {
-        this.job = job;
-        this.throwable = throwable;
+public class EventMessageSentPosted extends BaseJobEvent<BaseRetryPolicyAwareJob<MessageSent>, MessageSent> {
+    public EventMessageSentPosted(BaseRetryPolicyAwareJob<MessageSent> job, Throwable failure) {
+        super(job, failure);
     }
 
-    EventMessageSentPosted(JobPostMessage job, MessageSent messageSent) {
-        this.job = job;
-        this.messageSent = messageSent;
-    }
-
-    public MessageSent getSuccess() {
-        return messageSent;
-    }
-
-    public Throwable getFailure() {
-        return throwable;
-    }
-
-    @Override
-    public String toString() {
-        return "EventMessageSentPosted{" +
-                "job=" + job +
-                ", messageSent=" + messageSent +
-                ", throwable=" + throwable +
-                '}';
-    }
-
-    public JobPostMessage getJob() {
-        return job;
+    public EventMessageSentPosted(BaseRetryPolicyAwareJob<MessageSent> job, MessageSent messageSent) {
+        super(job, messageSent);
     }
 }

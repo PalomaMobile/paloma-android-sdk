@@ -5,12 +5,13 @@ Message SDK module supports the [Message Service provided by the Paloma Mobile p
 
 At a high level the Message SDK supports the following functionality:
 
-* User to single user or multiple users communication between users who have a mutual friend relationship
-* Simple text messaging
-* Link sharing (one or more HTTP accessible resources)
-* Deleting messages
+* User to user or multiple users communication between users who have a mutual friend relationship
+* Text messaging
+* Wide range of shared content, including photos, text, video, and voice
+* Thread based group chats, as well as following a user or content channel
 
-The [javadoc is available here](http://palomamobile.github.io/paloma-android-sdk/docs/index.html) under package _com.palomamobile.android.sdk.message_
+The [javadoc is available here](http://palomamobile.github.io/paloma-android-sdk/docs/index.html) under packages _com.palomamobile.android.sdk.message_ 
+and _com.palomamobile.android.sdk.messageThread_
 
 Before diving deeper into a specific SDK module we suggest you first have a look at the [Paloma SDK for Android overview]
  (https://github.com/PalomaMobile/paloma-android-sdk) to get an idea of:
@@ -49,8 +50,8 @@ dependencies {
     compile 'de.greenrobot:eventbus:2.4.0'
     compile 'com.google.code.gson:gson:2.3.1'
     compile 'com.android.support:support-annotations:22.2.0'
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.3.0'
-    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.birbit:android-priority-jobqueue:1.3.3'
 

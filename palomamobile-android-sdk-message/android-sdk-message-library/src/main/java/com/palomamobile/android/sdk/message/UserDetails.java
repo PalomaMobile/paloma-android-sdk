@@ -3,21 +3,21 @@ package com.palomamobile.android.sdk.message;
 import java.io.Serializable;
 
 /**
- * Class {@code Sender} represents the information available about the sender of a {@link MessageReceived}.
+ * Class {@code UserDetail} represents the information available about the user in the context of Messaging.
  * <br/>
  *
  */
-public class Sender implements Serializable {
+public class UserDetails implements Serializable {
 
-    private long id;
+    private long userId;
     private String username;
 
-    public long getId() {
-        return id;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -33,24 +33,24 @@ public class Sender implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Sender sender = (Sender) o;
+        UserDetails sender = (UserDetails) o;
 
-        if (id != sender.id) return false;
+        if (userId != sender.userId) return false;
         return !(username != null ? !username.equals(sender.username) : sender.username != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = (int) (userId ^ (userId >>> 32));
         result = 31 * result + (username != null ? username.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Sender{");
-        sb.append("id=").append(id);
+        final StringBuilder sb = new StringBuilder("UserDetails{");
+        sb.append("userId=").append(userId);
         sb.append(", username='").append(username).append('\'');
         sb.append('}');
         return sb.toString();

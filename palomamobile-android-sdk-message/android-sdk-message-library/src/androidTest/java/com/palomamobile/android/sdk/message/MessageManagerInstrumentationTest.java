@@ -329,7 +329,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
     private void verifyMessageReceived(List<MessageReceived> messagesReceived, long expectedSenderId, String expectedSenderName, String expectedContentType, String expectedUrl) {
         assertEquals(1, messagesReceived.size());
         MessageReceived messageReceived = messagesReceived.get(0);
-        assertEquals(expectedSenderId, messageReceived.getSender().getId());
+        assertEquals(expectedSenderId, messageReceived.getSender().getUserId());
         assertEquals(expectedSenderName, messageReceived.getSender().getUsername());
         assertEquals(1, messageReceived.getContentList().size());
         MessageContentDetail messageContentDetail = messageReceived.getContentList().get(0);

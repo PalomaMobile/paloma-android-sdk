@@ -4,10 +4,8 @@ import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.path.android.jobqueue.Params;
 
-import java.util.Map;
-
 /**
- * Convenience wrapper around {@link IMessageService#deleteMessageReceived(String, long, long, Map, String, String...)}
+ * Convenience wrapper around {@link IMessageService#deleteMessageReceived(String, long, long)}
  * Once this job is completed (with success or failure) it posts {@link EventMessageReceivedDeleted} on the
  * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
@@ -50,9 +48,9 @@ public class JobDeleteMessageReceived extends BaseRetryPolicyAwareJob<Void> {
 
     @Override
     public Void syncRun(boolean postEvent) throws Throwable {
-        MessageManager messageManager = (MessageManager) ServiceSupport.Instance.getServiceManager(IMessageManager.class);
+        IMessageManager messageManager = ServiceSupport.Instance.getServiceManager(IMessageManager.class);
         IMessageService messageService = messageManager.getService();
-        messageService.deleteMessageReceived(getRetryId(), userId, messageId, getOptions(), getFilterQuery(), getSortParams());
+        messageService.deleteMessageReceived(getRetryId(), userId, messageId);
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventMessageReceivedDeleted(this));
         }

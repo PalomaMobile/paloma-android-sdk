@@ -61,7 +61,7 @@ public interface IFriendService {
      */
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @PUT("/users/{userId}/relationships/{reciprocalUserId}")
-    Relationship putRelationship(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @Path("reciprocalUserId") long reciprocalUserId, @Body RelationAttributes relationAttributes);
+    Relationship addRelationship(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @Path("reciprocalUserId") long reciprocalUserId, @Body RelationAttributes relationAttributes);
 
     /**
      * Get the list of relationships this user has with other users.
