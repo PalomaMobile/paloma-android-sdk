@@ -35,7 +35,7 @@ public interface INotificationService {
             CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION,
             CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @PUT("/users/{userId}/gcm")
-    GcmRegistrationIdResponse putGcmRegistrationId(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") Long id, @Body JsonObject gcmRegistrationId);
+    GcmRegistrationIdResponse addGcmRegistrationId(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") Long id, @Body JsonObject gcmRegistrationId);
 
     /**
      * For testing only - each user is only allowed to post a Notification to her self.

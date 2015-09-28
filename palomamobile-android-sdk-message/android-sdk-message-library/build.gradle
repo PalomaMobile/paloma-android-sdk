@@ -3,7 +3,7 @@ apply from: '../../maven_push.gradle'
 
 android {
   defaultConfig {
-    buildConfigField "String", "TARGET_SERVICE_VERSION", "\"message-1.1\""
+    buildConfigField "String", "TARGET_SERVICE_VERSION", "\"message-1.2\""
   }
 }
 

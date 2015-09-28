@@ -9,15 +9,15 @@ import java.io.Serializable;
  */
 public class UserDetails implements Serializable {
 
-    private long id;
+    private long userId;
     private String username;
 
-    public long getId() {
-        return id;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {
@@ -35,14 +35,14 @@ public class UserDetails implements Serializable {
 
         UserDetails sender = (UserDetails) o;
 
-        if (id != sender.id) return false;
+        if (userId != sender.userId) return false;
         return !(username != null ? !username.equals(sender.username) : sender.username != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (id ^ (id >>> 32));
+        int result = (int) (userId ^ (userId >>> 32));
         result = 31 * result + (username != null ? username.hashCode() : 0);
         return result;
     }
@@ -50,7 +50,7 @@ public class UserDetails implements Serializable {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("UserDetails{");
-        sb.append("id=").append(id);
+        sb.append("userId=").append(userId);
         sb.append(", username='").append(username).append('\'');
         sb.append('}');
         return sb.toString();

@@ -5,6 +5,8 @@ import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.util.LatchedBusListener;
 import com.palomamobile.android.sdk.user.TestUtilities;
 import com.palomamobile.android.sdk.user.User;
+import com.path.android.jobqueue.JobManager;
+import de.greenrobot.event.EventBus;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 public class MessageThreadManagerInstrumentationTest extends InstrumentationTestCase {
     public static final String TAG = MessageThreadManagerInstrumentationTest.class.getSimpleName();
 
+    private EventBus eventBus;
+    private JobManager jobManager;
     private IMessageThreadManager messageThreadManager;
 
     @Override
@@ -22,6 +26,8 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         super.setUp();
         ServiceSupport.Instance.init(getInstrumentation().getContext());
         messageThreadManager = ServiceSupport.Instance.getServiceManager(IMessageThreadManager.class);
+        jobManager = ServiceSupport.Instance.getJobManager();
+        eventBus = ServiceSupport.Instance.getEventBus();
     }
 
     @Override
@@ -39,10 +45,10 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(tmp, null, "testType", custom, null);
 
         final LatchedBusListener<EventMessageThreadPosted> latchedBusListener = new LatchedBusListener<>(EventMessageThreadPosted.class);
-        ServiceSupport.Instance.getEventBus().register(latchedBusListener);
-        ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostMessageThread);
+        eventBus.register(latchedBusListener);
+        jobManager.addJobInBackground(jobPostMessageThread);
         latchedBusListener.await(10, TimeUnit.SECONDS);
-        ServiceSupport.Instance.getEventBus().unregister(this);
+        eventBus.unregister(this);
 
         EventMessageThreadPosted event = latchedBusListener.getEvent();
         assertNotNull(event);
@@ -56,7 +62,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         assertEquals("positive", messageThread.getCustom().get("mood"));
         assertEquals(1, messageThread.getMemberCount());
         assertEquals(0, messageThread.getMessageCount());
-        assertEquals(self.getId(), messageThread.getOwner().getId());
+        assertEquals(self.getId(), messageThread.getOwner().getUserId());
         assertEquals(self.getUsername(), messageThread.getOwner().getUsername());
         assertEquals("testType", messageThread.getType());
     }
@@ -71,10 +77,10 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(tmp, null, "testType", custom, null);
 
         final LatchedBusListener<EventMessageThreadPosted> latchedBusListener = new LatchedBusListener<>(EventMessageThreadPosted.class);
-        ServiceSupport.Instance.getEventBus().register(latchedBusListener);
-        ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostMessageThread);
+        eventBus.register(latchedBusListener);
+        jobManager.addJobInBackground(jobPostMessageThread);
         latchedBusListener.await(10, TimeUnit.SECONDS);
-        ServiceSupport.Instance.getEventBus().unregister(latchedBusListener);
+        eventBus.unregister(latchedBusListener);
 
         EventMessageThreadPosted event = latchedBusListener.getEvent();
         assertNotNull(event);
@@ -84,10 +90,10 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
 
         JobGetMessageThread jobGetMessageThread = messageThreadManager.createJobGetMessageThread(created.getId());
         final LatchedBusListener<EventMessageThreadReceived> latchedBusListenerReceive = new LatchedBusListener<>(EventMessageThreadReceived.class);
-        ServiceSupport.Instance.getEventBus().register(latchedBusListenerReceive);
-        ServiceSupport.Instance.getJobManager().addJobInBackground(jobGetMessageThread);
+        eventBus.register(latchedBusListenerReceive);
+        jobManager.addJobInBackground(jobGetMessageThread);
         latchedBusListener.await(10, TimeUnit.SECONDS);
-        ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerReceive);
+        eventBus.unregister(latchedBusListenerReceive);
 
         EventMessageThreadReceived eventReceive = latchedBusListenerReceive.getEvent();
         assertNotNull(event);
@@ -112,10 +118,10 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(tmp, messageThreadBlah.getId(), "testType", custom, null);
 
         final LatchedBusListener<EventMessageThreadPosted> latchedBusListenerPost = new LatchedBusListener<>(EventMessageThreadPosted.class);
-        ServiceSupport.Instance.getEventBus().register(latchedBusListenerPost);
-        ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostMessageThread);
+        eventBus.register(latchedBusListenerPost);
+        jobManager.addJobInBackground(jobPostMessageThread);
         latchedBusListenerPost.await(20, TimeUnit.SECONDS);
-        ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerPost);
+        eventBus.unregister(latchedBusListenerPost);
 
         EventMessageThreadPosted eventPost = latchedBusListenerPost.getEvent();
         assertNotNull(eventPost);
@@ -130,10 +136,10 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
 
         JobUpdateMessageThread jobUpdateMessageThread = messageThreadManager.createJobUpdateMessageThread(posted.getId(), update);
         final LatchedBusListener<EventMessageThreadUpdated> latchedBusListenerUpdate = new LatchedBusListener<>(EventMessageThreadUpdated.class);
-        ServiceSupport.Instance.getEventBus().register(latchedBusListenerUpdate);
-        ServiceSupport.Instance.getJobManager().addJobInBackground(jobUpdateMessageThread);
+        eventBus.register(latchedBusListenerUpdate);
+        jobManager.addJobInBackground(jobUpdateMessageThread);
         latchedBusListenerUpdate.await(10, TimeUnit.SECONDS);
-        ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerUpdate);
+        eventBus.unregister(latchedBusListenerUpdate);
 
         EventMessageThreadUpdated eventUpdate = latchedBusListenerUpdate.getEvent();
         assertNotNull(eventUpdate);
@@ -155,5 +161,67 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         //XXX put this back once Craig fixes the server
 //        assertEquals(2, updated.getCustom().size());
     }
+
+    public void testMessageThreadDelete() throws Throwable {
+        TestUtilities.registerUserSynchronous(this);
+
+        String name = "blah_" + Long.toString(System.currentTimeMillis());
+        MessageThread messageThreadBlah = messageThreadManager.createJobPostMessageThread(name, null, "blah", null, null).syncRun(false);
+
+        String tmp = Long.toString(System.currentTimeMillis());
+        HashMap<String, String> custom = new HashMap<>();
+        custom.put("greeting", "hello");
+        custom.put("mood", "positive");
+        JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(tmp, messageThreadBlah.getId(), "testType", custom, null);
+        MessageThread messageThread = jobPostMessageThread.syncRun(false);
+
+        JobDeleteMessageThread jobDeleteMessageThread = messageThreadManager.createJobDeleteMessageThread(messageThread.getId());
+
+        final LatchedBusListener<EventMessageThreadDeleted> latchedBusListenerDelete = new LatchedBusListener<>(EventMessageThreadDeleted.class);
+        eventBus.register(latchedBusListenerDelete);
+        jobManager.addJobInBackground(jobDeleteMessageThread);
+        latchedBusListenerDelete.await(10, TimeUnit.SECONDS);
+        eventBus.unregister(latchedBusListenerDelete);
+
+        EventMessageThreadDeleted eventDelete = latchedBusListenerDelete.getEvent();
+        assertNotNull(eventDelete);
+        assertNull(eventDelete.getFailure());
+
+
+        JobGetMessageThread jobGetMessageThread = messageThreadManager.createJobGetMessageThread(messageThread.getId());
+
+        final LatchedBusListener<EventMessageThreadReceived> latchedBusListenerReceived = new LatchedBusListener<>(EventMessageThreadReceived.class);
+        eventBus.register(latchedBusListenerReceived);
+        jobManager.addJobInBackground(jobGetMessageThread);
+        latchedBusListenerReceived.await(10, TimeUnit.SECONDS);
+        eventBus.unregister(latchedBusListenerReceived);
+
+        EventMessageThreadReceived eventMessageThreadReceived = latchedBusListenerReceived.getEvent();
+        assertNotNull(eventMessageThreadReceived.getFailure());
+    }
+
+    public void testMessageThreadGetMembers() throws Throwable {
+        User user = TestUtilities.registerUserSynchronous(this);
+        String name = "blah_" + Long.toString(System.currentTimeMillis());
+        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(name, null, "blah", null, null).syncRun(false);
+
+        JobGetMessageThreadMembers jobGetMessageThreadMembers = messageThreadManager.createJobGetMessageThreadMembers(messageThread.getId());
+
+        final LatchedBusListener<EventMessageThreadMembersReceived> latchedBusListenerReceived = new LatchedBusListener<>(EventMessageThreadMembersReceived.class);
+        eventBus.register(latchedBusListenerReceived);
+        jobManager.addJobInBackground(jobGetMessageThreadMembers);
+        latchedBusListenerReceived.await(10, TimeUnit.SECONDS);
+        eventBus.unregister(latchedBusListenerReceived);
+
+        EventMessageThreadMembersReceived eventMessageThreadReceived = latchedBusListenerReceived.getEvent();
+        assertNull(eventMessageThreadReceived.getFailure());
+        assertEquals(1, eventMessageThreadReceived.getSuccess().getEmbedded().getItems().size());
+        MessageThreadMember messageThreadMember = eventMessageThreadReceived.getSuccess().getEmbedded().getItems().get(0);
+        assertEquals(messageThread.getId(), messageThreadMember.getThreadId());
+        assertEquals(user.getUsername(), messageThreadMember.getUser().getUsername());
+        assertEquals(user.getId(), messageThreadMember.getUser().getUserId());
+    }
+
+
 
 }

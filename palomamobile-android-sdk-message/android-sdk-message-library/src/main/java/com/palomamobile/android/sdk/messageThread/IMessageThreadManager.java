@@ -20,4 +20,7 @@ public interface IMessageThreadManager extends IServiceManager<IMessageThreadSer
     JobUpdateMessageThread createJobUpdateMessageThread(long messageThreadId, MessageThreadUpdate update);
 
     JobDeleteMessageThread createJobDeleteMessageThread(long messageThreadId);
+
+    JobGetMessageThreadMembers createJobGetMessageThreadMembers(long messageThreadId);
+
 }

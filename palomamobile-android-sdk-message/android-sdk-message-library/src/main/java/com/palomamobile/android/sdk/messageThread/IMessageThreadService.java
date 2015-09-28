@@ -12,6 +12,10 @@ import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
+import retrofit.http.Query;
+import retrofit.http.QueryMap;
+
+import java.util.Map;
 
 /**
  * This interface is consumed by the Retrofit library to provide access to the message threading functionality of the Paloma Mobile Platform
@@ -41,11 +45,11 @@ public interface IMessageThreadService {
 
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @GET("/threads/{threadId}/members")
-    PaginatedResponse<MessageThreadMember> getMessageThreadMembers(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("threadId") long threadId);
+    PaginatedResponse<MessageThreadMember> getMessageThreadMembers(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("threadId") long threadId, @QueryMap Map<String, String> options, @Query("where") String filterQuery, @Query("sort") String... sortOrder);
 
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @PUT("/threads/{threadId}/members/{userId}")
-    MessageThreadMember putMessageThreadMember(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("threadId") long threadId, @Path("userId") long userId);
+    MessageThreadMember addMessageThreadMember(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("threadId") long threadId, @Path("userId") long userId);
 
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @DELETE("/threads/{threadId}/members/{userId}")
@@ -53,7 +57,7 @@ public interface IMessageThreadService {
 
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @GET("/threads/{threadId}/messages")
-    PaginatedResponse<MessageSent> getMessages(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("threadId") long threadId);
+    PaginatedResponse<MessageSent> getMessages(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("threadId") long threadId, @QueryMap Map<String, String> options, @Query("where") String filterQuery, @Query("sort") String... sortOrder);
 
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/threads/{threadId}")
@@ -61,7 +65,7 @@ public interface IMessageThreadService {
 
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @GET("/users/{userId}/threads")
-    PaginatedResponse<MessageThread> getMessageThreads(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId);
+    PaginatedResponse<MessageThread> getMessageThreads(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @QueryMap Map<String, String> options, @Query("where") String filterQuery, @Query("sort") String... sortOrder);
 
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @DELETE("/users/{userId}/threads")

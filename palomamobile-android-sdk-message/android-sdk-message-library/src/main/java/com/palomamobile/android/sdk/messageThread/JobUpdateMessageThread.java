@@ -15,7 +15,7 @@ public class JobUpdateMessageThread extends BaseRetryPolicyAwareJob<MessageThrea
     public static final String TAG = JobUpdateMessageThread.class.getSimpleName();
 
     private long messageThreadId;
-    private final MessageThreadUpdate update;
+    private MessageThreadUpdate update;
 
 
     public JobUpdateMessageThread(long messageThreadId, MessageThreadUpdate update) {

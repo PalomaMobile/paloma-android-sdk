@@ -5,7 +5,7 @@ import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.path.android.jobqueue.Params;
 
 /**
- * Created by Karel Herink
+ *
  */
 public class JobDeleteMessageThread extends BaseRetryPolicyAwareJob<Void> {
 
@@ -22,11 +22,17 @@ public class JobDeleteMessageThread extends BaseRetryPolicyAwareJob<Void> {
 
     @Override
     protected void postFailure(Throwable throwable) {
-        ServiceSupport.Instance.getEventBus().post(new EventMessageThreadDeleted(this));
+        ServiceSupport.Instance.getEventBus().post(new EventMessageThreadDeleted(this, throwable));
     }
 
     @Override
     public Void syncRun(boolean postEvent) throws Throwable {
+        IMessageThreadManager messageThreadManager = ServiceSupport.Instance.getServiceManager(IMessageThreadManager.class);
+        IMessageThreadService messageThreadService = messageThreadManager.getService();
+        messageThreadService.deleteMessageThread(getRetryId(), messageThreadId);
+        if (postEvent) {
+            ServiceSupport.Instance.getEventBus().post(new EventMessageThreadDeleted(this));
+        }
         return null;
     }
 }
