@@ -53,14 +53,14 @@ public interface IMessageThreadService {
 
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @DELETE("/threads/{threadId}/members/{userId}")
-    MessageThreadMember deleteMessageThreadMember(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("threadId") long threadId, @Path("userId") long userId);
+    Void deleteMessageThreadMember(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("threadId") long threadId, @Path("userId") long userId);
 
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @GET("/threads/{threadId}/messages")
     PaginatedResponse<MessageSent> getMessages(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("threadId") long threadId, @QueryMap Map<String, String> options, @Query("where") String filterQuery, @Query("sort") String... sortOrder);
 
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
-    @POST("/threads/{threadId}")
+    @POST("/threads/{threadId}/messages")
     MessageSent postMessage(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("threadId") long threadId, @Body MessageSent message);
 
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})

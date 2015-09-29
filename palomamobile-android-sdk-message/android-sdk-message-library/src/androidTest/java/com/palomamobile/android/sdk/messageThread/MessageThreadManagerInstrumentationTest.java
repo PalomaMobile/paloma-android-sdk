@@ -5,11 +5,16 @@ import com.palomamobile.android.sdk.auth.PasswordUserCredential;
 import com.palomamobile.android.sdk.core.PaginatedResponse;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.util.LatchedBusListener;
+import com.palomamobile.android.sdk.message.EventMessageSentPosted;
+import com.palomamobile.android.sdk.message.MessageContentDetail;
+import com.palomamobile.android.sdk.message.MessageSent;
 import com.palomamobile.android.sdk.user.TestUtilities;
 import com.palomamobile.android.sdk.user.User;
 import com.path.android.jobqueue.JobManager;
 import de.greenrobot.event.EventBus;
+import retrofit.RetrofitError;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -227,7 +232,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         assertEquals(user.getId(), messageThreadMember.getUser().getUserId());
     }
 
-    public void testMessageThreadAddMember() throws Throwable {
+    public void testMessageThreadAddAndDeleteMember() throws Throwable {
         String u1 = "u1_" + Long.toString(System.currentTimeMillis());
         User other = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(u1, u1));
 
@@ -272,7 +277,60 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         assertEquals(messageThread.getId(), memberSelf.getThreadId());
         assertEquals(self.getUsername(), memberSelf.getUser().getUsername());
         assertEquals(self.getId(), memberSelf.getUser().getUserId());
+
+
+        JobDeleteMessageThreadMember jobDeleteMessageThreadMember = messageThreadManager.createJobDeleteMessageThreadMember(messageThread.getId(), self.getId());
+
+        final LatchedBusListener<EventMessageThreadMemberDeleted> latchedBusListenerDeleted = new LatchedBusListener<>(EventMessageThreadMemberDeleted.class);
+        eventBus.register(latchedBusListenerDeleted);
+        jobManager.addJobInBackground(jobDeleteMessageThreadMember);
+        latchedBusListenerDeleted.await(10, TimeUnit.SECONDS);
+        eventBus.unregister(latchedBusListenerDeleted);
+        EventMessageThreadMemberDeleted deleted = latchedBusListenerDeleted.getEvent();
+        assertNull(deleted.getFailure());
+
+        try {
+            PaginatedResponse<MessageThreadMember> shouldFail = messageThreadManager.createJobGetMessageThreadMembers(messageThread.getId()).syncRun(false);
+            fail("403 Forbidden expected");
+        } catch (RetrofitError retrofitError) {
+            assertEquals(403, retrofitError.getResponse().getStatus());
+        }
     }
 
+    public void testPostMessageAndGetMessagesFromThread() throws Throwable {
+        User self = TestUtilities.registerUserSynchronous(this);
+
+        String tmp = Long.toString(System.currentTimeMillis());
+        HashMap<String, String> custom = new HashMap<>();
+        custom.put("greeting", "hello");
+        custom.put("mood", "positive");
+        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(tmp, null, "testType", custom, null).syncRun(false);
+
+
+        MessageSent toSend = new MessageSent();
+        List<MessageContentDetail> contentDetailList = new ArrayList<>();
+        contentDetailList.add(new MessageContentDetail("text/html", "http://www.google.com"));
+        toSend.setContentList(contentDetailList);
+
+        JobPostMessageThreadMessage jobPostMessageThreadMessage = messageThreadManager.createJobPostMessageThreadMessage(messageThread.getId(), toSend);
+
+        final LatchedBusListener<EventMessageSentPosted> latchedBusListenerPosted = new LatchedBusListener<>(EventMessageSentPosted.class);
+        eventBus.register(latchedBusListenerPosted);
+        jobManager.addJobInBackground(jobPostMessageThreadMessage);
+        latchedBusListenerPosted.await(10, TimeUnit.SECONDS);
+        eventBus.unregister(latchedBusListenerPosted);
+
+        EventMessageSentPosted eventMessageSentPosted = latchedBusListenerPosted.getEvent();
+        assertNull(eventMessageSentPosted.getFailure());
+        MessageSent success = eventMessageSentPosted.getSuccess();
+        assertNotNull(success);
+        assertEquals(toSend.getMessageThreadId(), success.getMessageThreadId());
+        assertEquals(1, success.getContentList().size());
+
+        MessageContentDetail messageContentDetail = success.getContentList().get(0);
+        assertEquals("text/html", messageContentDetail.getContentType());
+        assertEquals("http://www.google.com", messageContentDetail.getUrl());
+
+    }
 
 }

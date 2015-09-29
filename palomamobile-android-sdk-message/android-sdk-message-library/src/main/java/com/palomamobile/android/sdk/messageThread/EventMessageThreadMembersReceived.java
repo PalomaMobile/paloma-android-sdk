@@ -18,7 +18,7 @@ public class EventMessageThreadMembersReceived extends BaseJobEvent<JobGetMessag
         super(job, failure);
     }
 
-    protected EventMessageThreadMembersReceived(JobGetMessageThreadMembers job, PaginatedResponse<MessageThreadMember> messageReceivedPaginatedResponse) {
-        super(job, messageReceivedPaginatedResponse);
+    protected EventMessageThreadMembersReceived(JobGetMessageThreadMembers job, PaginatedResponse<MessageThreadMember> membersReceivedPaginatedResponse) {
+        super(job, membersReceivedPaginatedResponse);
     }
 }

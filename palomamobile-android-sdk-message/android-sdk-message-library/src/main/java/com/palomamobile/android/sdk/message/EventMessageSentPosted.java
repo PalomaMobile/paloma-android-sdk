@@ -2,6 +2,7 @@ package com.palomamobile.android.sdk.message;
 
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
+import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 
 import java.util.List;
 
@@ -13,12 +14,12 @@ import java.util.List;
  * <br/>
  *
  */
-public class EventMessageSentPosted extends BaseJobEvent<JobPostMessage, MessageSent> {
-    protected EventMessageSentPosted(JobPostMessage job, Throwable failure) {
+public class EventMessageSentPosted extends BaseJobEvent<BaseRetryPolicyAwareJob<MessageSent>, MessageSent> {
+    public EventMessageSentPosted(BaseRetryPolicyAwareJob<MessageSent> job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventMessageSentPosted(JobPostMessage job, MessageSent messageSent) {
+    public EventMessageSentPosted(BaseRetryPolicyAwareJob<MessageSent> job, MessageSent messageSent) {
         super(job, messageSent);
     }
 }

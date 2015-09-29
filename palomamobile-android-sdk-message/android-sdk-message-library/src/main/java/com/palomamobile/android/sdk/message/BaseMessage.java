@@ -11,6 +11,7 @@ import java.util.List;
 public abstract class BaseMessage implements Serializable {
 
     private long id;
+    private long messageThreadId;
     private String type;
     private List<MessageContentDetail> contentList;
 
@@ -36,6 +37,14 @@ public abstract class BaseMessage implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public long getMessageThreadId() {
+        return messageThreadId;
+    }
+
+    public void setMessageThreadId(long messageThreadId) {
+        this.messageThreadId = messageThreadId;
     }
 
     @Override
