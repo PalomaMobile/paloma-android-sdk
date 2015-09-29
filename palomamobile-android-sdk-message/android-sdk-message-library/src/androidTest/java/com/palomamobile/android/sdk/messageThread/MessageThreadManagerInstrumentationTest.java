@@ -1,6 +1,8 @@
 package com.palomamobile.android.sdk.messageThread;
 
 import android.test.InstrumentationTestCase;
+import com.palomamobile.android.sdk.auth.PasswordUserCredential;
+import com.palomamobile.android.sdk.core.PaginatedResponse;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.util.LatchedBusListener;
 import com.palomamobile.android.sdk.user.TestUtilities;
@@ -8,7 +10,10 @@ import com.palomamobile.android.sdk.user.User;
 import com.path.android.jobqueue.JobManager;
 import de.greenrobot.event.EventBus;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -222,6 +227,52 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         assertEquals(user.getId(), messageThreadMember.getUser().getUserId());
     }
 
+    public void testMessageThreadAddMember() throws Throwable {
+        String u1 = "u1_" + Long.toString(System.currentTimeMillis());
+        User other = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(u1, u1));
+
+        String u2 = "u2_" + Long.toString(System.currentTimeMillis());
+        User self = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(u2, u2));
+
+        String threadName = "blah_" + Long.toString(System.currentTimeMillis());
+        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(threadName, null, "blah", null, null).syncRun(false);
+
+
+        JobAddMessageThreadMember jobAddMessageThreadMember = messageThreadManager.createJobAddMessageThreadMember(messageThread.getId(), other.getId());
+
+        final LatchedBusListener<EventMessageThreadMemberAdded> latchedBusListenerAdded = new LatchedBusListener<>(EventMessageThreadMemberAdded.class);
+        eventBus.register(latchedBusListenerAdded);
+        jobManager.addJobInBackground(jobAddMessageThreadMember);
+        latchedBusListenerAdded.await(10, TimeUnit.SECONDS);
+        eventBus.unregister(latchedBusListenerAdded);
+        EventMessageThreadMemberAdded added = latchedBusListenerAdded.getEvent();
+        assertNull(added.getFailure());
+        MessageThreadMember threadMember = added.getSuccess();
+        assertNotNull(threadMember);
+        assertEquals(messageThread.getId(), threadMember.getThreadId());
+        assertEquals(other.getId(), threadMember.getUser().getUserId());
+        assertEquals(other.getUsername(), threadMember.getUser().getUsername());
+
+        PaginatedResponse<MessageThreadMember> messageThreadMemberPaginatedResponse = messageThreadManager.createJobGetMessageThreadMembers(messageThread.getId()).syncRun(false);
+        List<MessageThreadMember> members = messageThreadMemberPaginatedResponse.getEmbedded().getItems();
+        assertEquals(2, members.size());
+        //do our own sorting until server supports it for messageThreads
+        Collections.sort(members, new Comparator<MessageThreadMember>() {
+            @Override
+            public int compare(MessageThreadMember lhs, MessageThreadMember rhs) {
+                return lhs.getUser().getUsername().compareTo(rhs.getUser().getUsername());
+            }
+        });
+        MessageThreadMember memberOther = members.get(0);
+        assertEquals(messageThread.getId(), memberOther.getThreadId());
+        assertEquals(other.getUsername(), memberOther.getUser().getUsername());
+        assertEquals(other.getId(), memberOther.getUser().getUserId());
+
+        MessageThreadMember memberSelf = members.get(1);
+        assertEquals(messageThread.getId(), memberSelf.getThreadId());
+        assertEquals(self.getUsername(), memberSelf.getUser().getUsername());
+        assertEquals(self.getId(), memberSelf.getUser().getUserId());
+    }
 
 
 }

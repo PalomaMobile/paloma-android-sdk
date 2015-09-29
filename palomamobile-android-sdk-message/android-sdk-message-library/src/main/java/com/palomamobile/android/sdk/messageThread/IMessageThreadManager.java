@@ -23,4 +23,6 @@ public interface IMessageThreadManager extends IServiceManager<IMessageThreadSer
 
     JobGetMessageThreadMembers createJobGetMessageThreadMembers(long messageThreadId);
 
+    JobAddMessageThreadMember createJobAddMessageThreadMember(long messageThreadId, long userId);
+
 }

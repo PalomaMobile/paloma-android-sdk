@@ -49,7 +49,7 @@ public interface IMessageThreadService {
 
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @PUT("/threads/{threadId}/members/{userId}")
-    MessageThreadMember addMessageThreadMember(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("threadId") long threadId, @Path("userId") long userId);
+    MessageThreadMember addMessageThreadMember(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("threadId") long threadId, @Path("userId") long userId, @Body String emptyBody);
 
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @DELETE("/threads/{threadId}/members/{userId}")

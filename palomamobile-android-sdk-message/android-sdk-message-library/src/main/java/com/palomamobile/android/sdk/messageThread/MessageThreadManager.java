@@ -46,4 +46,9 @@ public class MessageThreadManager implements IMessageThreadManager {
     public JobGetMessageThreadMembers createJobGetMessageThreadMembers(long messageThreadId) {
         return new JobGetMessageThreadMembers(messageThreadId);
     }
+
+    @Override
+    public JobAddMessageThreadMember createJobAddMessageThreadMember(long messageThreadId, long userId) {
+        return new JobAddMessageThreadMember(messageThreadId, userId);
+    }
 }

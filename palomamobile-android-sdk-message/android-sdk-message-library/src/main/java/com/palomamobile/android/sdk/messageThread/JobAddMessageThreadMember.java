@@ -5,7 +5,7 @@ import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.path.android.jobqueue.Params;
 
 /**
- * Convenience wrapper around {@link IMessageThreadService#addMessageThreadMember(String, long, long)}
+ * Convenience wrapper around {@link IMessageThreadService#addMessageThreadMember(String, long, long, String)}
  * Once this job is completed (with success or failure) it posts {@link EventMessageThreadUpdated} on the
  * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
@@ -31,7 +31,7 @@ public class JobAddMessageThreadMember extends BaseRetryPolicyAwareJob<MessageTh
     @Override
     public MessageThreadMember syncRun(boolean postEvent) throws Throwable {
         IMessageThreadManager messageThreadManager = ServiceSupport.Instance.getServiceManager(IMessageThreadManager.class);
-        MessageThreadMember result = messageThreadManager.getService().addMessageThreadMember(getRetryId(), messageThreadId, userId);
+        MessageThreadMember result = messageThreadManager.getService().addMessageThreadMember(getRetryId(), messageThreadId, userId, "");
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventMessageThreadMemberAdded(this, result));
         }
