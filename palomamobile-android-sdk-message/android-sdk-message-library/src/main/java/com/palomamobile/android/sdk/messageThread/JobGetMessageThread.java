@@ -5,7 +5,10 @@ import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.path.android.jobqueue.Params;
 
 /**
- * Created by Karel Herink
+ * Convenience wrapper around {@link IMessageThreadService#getMessageThread(String, long)}
+ * Once this job is completed (with success or failure) it posts {@link EventMessageThreadReceived} on the
+ * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
+ * </br>
  */
 public class JobGetMessageThread extends BaseRetryPolicyAwareJob<MessageThread> {
 

@@ -8,8 +8,8 @@ import com.palomamobile.android.sdk.message.MessageSent;
 /**
  * Event published on the {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()})
  * once the list of messageThread messages is received on the client.
- * The event contains either a current list of messageThread messages returned by {@link #getSuccess()} on success or {@code throwable} on
- * failure.
+ * {@link #getSuccess()}  will return a {@link PaginatedResponse<MessageSent>>} on success, or {@code null} on failure<br/>
+ * {@link #getFailure()} will return a {@code null} on success, on failure a non-null {@code throwable}.<br/>
  * To refresh a list of messageThread messages use {@link IMessageThreadManager#createJobGetMessageThreadMessages(long)}
  * <br/>
  *

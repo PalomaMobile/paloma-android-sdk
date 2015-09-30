@@ -52,7 +52,12 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         HashMap<String, String> custom = new HashMap<>();
         custom.put("greeting", "hello");
         custom.put("mood", "positive");
-        JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(tmp, null, "testType", custom, null);
+        NewMessageThread newMessageThread = new NewMessageThread();
+        newMessageThread.setName(tmp);
+        newMessageThread.setType("testType");
+        newMessageThread.setCustom(custom);
+
+        JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(newMessageThread);
 
         final LatchedBusListener<EventMessageThreadPosted> latchedBusListener = new LatchedBusListener<>(EventMessageThreadPosted.class);
         eventBus.register(latchedBusListener);
@@ -84,7 +89,12 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         custom.put("greeting", "hello");
         custom.put("mood", "positive");
 
-        JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(tmp, null, "testType", custom, null);
+        NewMessageThread newMessageThread = new NewMessageThread();
+        newMessageThread.setName(tmp);
+        newMessageThread.setType("testType");
+        newMessageThread.setCustom(custom);
+
+        JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(newMessageThread);
 
         final LatchedBusListener<EventMessageThreadPosted> latchedBusListener = new LatchedBusListener<>(EventMessageThreadPosted.class);
         eventBus.register(latchedBusListener);
@@ -119,13 +129,24 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         User self = TestUtilities.registerUserSynchronous(this);
 
         String name = "blah_" + Long.toString(System.currentTimeMillis());
-        MessageThread messageThreadBlah = messageThreadManager.createJobPostMessageThread(name, null, "blah", null, null).syncRun(false);
+        NewMessageThread newMessageThread = new NewMessageThread();
+        newMessageThread.setName(name);
+        newMessageThread.setType("blah");
+
+        MessageThread messageThreadBlah = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun(false);
 
         String tmp = Long.toString(System.currentTimeMillis());
         HashMap<String, String> custom = new HashMap<>();
         custom.put("greeting", "hello");
         custom.put("mood", "positive");
-        JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(tmp, messageThreadBlah.getId(), "testType", custom, null);
+
+        NewMessageThread customMessageThread = new NewMessageThread();
+        customMessageThread.setName(tmp);
+        customMessageThread.setRelatedTo(messageThreadBlah.getId());
+        customMessageThread.setType("testType");
+        customMessageThread.setCustom(custom);
+
+        JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(customMessageThread);
 
         final LatchedBusListener<EventMessageThreadPosted> latchedBusListenerPost = new LatchedBusListener<>(EventMessageThreadPosted.class);
         eventBus.register(latchedBusListenerPost);
@@ -176,13 +197,24 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         TestUtilities.registerUserSynchronous(this);
 
         String name = "blah_" + Long.toString(System.currentTimeMillis());
-        MessageThread messageThreadBlah = messageThreadManager.createJobPostMessageThread(name, null, "blah", null, null).syncRun(false);
+        NewMessageThread newMessageThread = new NewMessageThread();
+        newMessageThread.setName(name);
+        newMessageThread.setType("blah");
+
+        MessageThread messageThreadBlah = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun(false);
 
         String tmp = Long.toString(System.currentTimeMillis());
         HashMap<String, String> custom = new HashMap<>();
         custom.put("greeting", "hello");
         custom.put("mood", "positive");
-        JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(tmp, messageThreadBlah.getId(), "testType", custom, null);
+
+        NewMessageThread customMessageThread = new NewMessageThread();
+        customMessageThread.setName(tmp);
+        customMessageThread.setRelatedTo(messageThreadBlah.getId());
+        customMessageThread.setType("testType");
+        customMessageThread.setCustom(custom);
+
+        JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(customMessageThread);
         MessageThread messageThread = jobPostMessageThread.syncRun(false);
 
         JobDeleteMessageThread jobDeleteMessageThread = messageThreadManager.createJobDeleteMessageThread(messageThread.getId());
@@ -213,7 +245,12 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
     public void testMessageThreadGetMembers() throws Throwable {
         User user = TestUtilities.registerUserSynchronous(this);
         String name = "blah_" + Long.toString(System.currentTimeMillis());
-        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(name, null, "blah", null, null).syncRun(false);
+        NewMessageThread newMessageThread = new NewMessageThread();
+        newMessageThread.setName(name);
+        newMessageThread.setType("blah");
+
+        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun(false);
+
 
         JobGetMessageThreadMembers jobGetMessageThreadMembers = messageThreadManager.createJobGetMessageThreadMembers(messageThread.getId());
 
@@ -240,7 +277,10 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         User self = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(u2, u2));
 
         String threadName = "blah_" + Long.toString(System.currentTimeMillis());
-        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(threadName, null, "blah", null, null).syncRun(false);
+        NewMessageThread newMessageThread = new NewMessageThread();
+        newMessageThread.setName(threadName);
+        newMessageThread.setType("blah");
+        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun(false);
 
 
         JobAddMessageThreadMember jobAddMessageThreadMember = messageThreadManager.createJobAddMessageThreadMember(messageThread.getId(), other.getId());
@@ -304,8 +344,13 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         HashMap<String, String> custom = new HashMap<>();
         custom.put("greeting", "hello");
         custom.put("mood", "positive");
-        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(tmp, null, "testType", custom, null).syncRun(false);
 
+        NewMessageThread newMessageThread = new NewMessageThread();
+        newMessageThread.setName(tmp);
+        newMessageThread.setType("blah");
+        newMessageThread.setCustom(custom);
+
+        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun(false);
 
         MessageSent toSend = new MessageSent();
         List<MessageContentDetail> contentDetailList = new ArrayList<>();
@@ -331,6 +376,61 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         assertEquals("text/html", messageContentDetail.getContentType());
         assertEquals("http://www.google.com", messageContentDetail.getUrl());
 
+        JobGetMessageThreadMessages jobGetMessageThreadMessages = messageThreadManager.createJobGetMessageThreadMessages(messageThread.getId());
+        final LatchedBusListener<EventMessageThreadMessagesReceived> latchedBusListenerReceived = new LatchedBusListener<>(EventMessageThreadMessagesReceived.class);
+        eventBus.register(latchedBusListenerReceived);
+        jobManager.addJobInBackground(jobGetMessageThreadMessages);
+        latchedBusListenerReceived.await(10, TimeUnit.SECONDS);
+        eventBus.unregister(latchedBusListenerReceived);
+
+        EventMessageThreadMessagesReceived eventMessagesReceived = latchedBusListenerReceived.getEvent();
+        assertNull(eventMessagesReceived.getFailure());
+        PaginatedResponse<MessageSent> response = eventMessagesReceived.getSuccess();
+        assertNotNull(response);
+        assertNull(eventMessagesReceived.getFailure());
+        assertNotNull(response);
+        List<MessageSent> items = response.getEmbedded().getItems();
+        assertEquals(1, items.size());
+        assertEquals(toSend.getMessageThreadId(), items.get(0).getMessageThreadId());
+
+        MessageContentDetail detail = items.get(0).getContentList().get(0);
+        assertEquals("text/html", messageContentDetail.getContentType());
+        assertEquals("http://www.google.com", messageContentDetail.getUrl());
+
+    }
+
+
+    public void testDeleteMessageThreads() throws Throwable {
+        User self = TestUtilities.registerUserSynchronous(this);
+
+        String tmp = Long.toString(System.currentTimeMillis());
+        HashMap<String, String> custom = new HashMap<>();
+        custom.put("greeting", "hello");
+        custom.put("mood", "positive");
+
+        NewMessageThread newMessageThread = new NewMessageThread();
+        newMessageThread.setName(tmp);
+        newMessageThread.setType("blah");
+        newMessageThread.setCustom(custom);
+
+        messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun(false);
+        messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun(false);
+
+        PaginatedResponse<MessageThread> messageThreadPaginatedResponse = messageThreadManager.createJobGetMessageThreads().syncRun(false);
+        assertEquals(2, messageThreadPaginatedResponse.getEmbedded().getItems().size());
+
+        JobDeleteMessageThreads jobDeleteMessageThreads = messageThreadManager.createJobDeleteMessageThreads();
+        final LatchedBusListener<EventMessageThreadsDeleted> latchedBusListenerDeleted = new LatchedBusListener<>(EventMessageThreadsDeleted.class);
+        eventBus.register(latchedBusListenerDeleted);
+        jobManager.addJobInBackground(jobDeleteMessageThreads);
+        latchedBusListenerDeleted.await(10, TimeUnit.SECONDS);
+        eventBus.unregister(latchedBusListenerDeleted);
+
+        EventMessageThreadsDeleted eventMessagesReceived = latchedBusListenerDeleted.getEvent();
+        assertNull(eventMessagesReceived.getFailure());
+
+        PaginatedResponse<MessageThread> afterDelete = messageThreadManager.createJobGetMessageThreads().syncRun(false);
+        assertEquals(null, afterDelete.getEmbedded());
     }
 
 }

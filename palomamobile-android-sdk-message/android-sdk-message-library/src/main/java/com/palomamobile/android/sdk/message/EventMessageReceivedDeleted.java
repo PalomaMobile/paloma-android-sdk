@@ -6,9 +6,8 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
 /**
  * Event published on the {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()})
  * once the list of messages received changes as a result of message deletion.
- * {@link #getFailure()} will return a {@code null} on success, on failure a non-null {@code throwable}.
+ * {@link #getFailure()} will return a {@code null} on success, on failure a non-null {@code throwable}.<br/>
  * To delete a message use {@link IMessageManager#createJobDeleteMessageReceived(long)}
- * To refresh a list of received messages use {@link IMessageManager#createJobGetMessagesReceived()}
  * <br/>
  *
  */

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Abstract class {@code Message} represents the information available about a message in the context of the Message SDK.
+ * Abstract class {@code BaseMessage} represents common information available about a message in the context of the Message SDK.
  * <br/>
  *
  */

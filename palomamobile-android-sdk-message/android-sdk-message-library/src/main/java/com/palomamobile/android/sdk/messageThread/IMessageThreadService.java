@@ -27,6 +27,12 @@ import java.util.Map;
  */
 public interface IMessageThreadService {
 
+    /**
+     *
+     * @param requestId
+     * @param newMessageThread
+     * @return
+     */
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/threads")
     MessageThread postMessageThread(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Body NewMessageThread newMessageThread);

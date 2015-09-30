@@ -3,9 +3,6 @@ package com.palomamobile.android.sdk.messageThread;
 import com.palomamobile.android.sdk.core.IServiceManager;
 import com.palomamobile.android.sdk.message.MessageSent;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * Created by Karel Herink
  */
@@ -13,8 +10,6 @@ public interface IMessageThreadManager extends IServiceManager<IMessageThreadSer
 
     @Override
     public IMessageThreadService getService();
-
-    JobPostMessageThread createJobPostMessageThread(String name, Long relatedTo, String type, Map<String, String> custom, List<Long> members);
 
     JobPostMessageThread createJobPostMessageThread(NewMessageThread newMessageThread);
 
@@ -33,4 +28,8 @@ public interface IMessageThreadManager extends IServiceManager<IMessageThreadSer
     JobGetMessageThreadMessages createJobGetMessageThreadMessages(long messageThreadId);
 
     JobPostMessageThreadMessage createJobPostMessageThreadMessage(long messageThreadId, MessageSent newMessage);
+
+    JobGetMessageThreads createJobGetMessageThreads();
+
+    JobDeleteMessageThreads createJobDeleteMessageThreads();
 }

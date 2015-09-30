@@ -5,18 +5,18 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
 
 /**
  * Event published on the {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()})
- * once the list of messageThreads changes as a result of messageThread deletion.
+ * once all users messageThreads are deleted.
  * {@link #getFailure()} will return a {@code null} on success, on failure a non-null {@code throwable}.<br/>
- * To delete a message use {@link IMessageThreadManager#createJobDeleteMessageThread(long)}
+ * To delete all users messageThreads use {@link IMessageThreadManager#createJobDeleteMessageThreads()}
  * <br/>
  */
-public class EventMessageThreadDeleted extends BaseJobEvent<JobDeleteMessageThread, Void> {
+public class EventMessageThreadsDeleted extends BaseJobEvent<JobDeleteMessageThreads, Void> {
 
-    protected EventMessageThreadDeleted(JobDeleteMessageThread job, Throwable failure) {
+    protected EventMessageThreadsDeleted(JobDeleteMessageThreads job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventMessageThreadDeleted(JobDeleteMessageThread job) {
+    protected EventMessageThreadsDeleted(JobDeleteMessageThreads job) {
         super(job, (Void) null);
     }
 }

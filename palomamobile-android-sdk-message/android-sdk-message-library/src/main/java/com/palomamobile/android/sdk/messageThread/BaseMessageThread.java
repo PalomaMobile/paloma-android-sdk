@@ -4,7 +4,9 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- *
+ * Abstract class {@code BaseMessageThread} represents common information available about a messageThread in the context of the Message SDK.
+ * <br/>
+
  */
 public abstract class BaseMessageThread implements Serializable {
     protected String name;
