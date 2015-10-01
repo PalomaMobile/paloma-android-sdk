@@ -64,6 +64,20 @@ public interface IFriendService {
     Relationship addRelationship(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @Path("reciprocalUserId") long reciprocalUserId, @Body RelationAttributes relationAttributes);
 
     /**
+     * Update the attributes of user's relationship with another user.
+     * <br/>{@link JobPutRelationship} provides a convenient wrapper, consider using it instead.
+     *
+     * @param requestId for the purposes of identifying retries
+     * @param userId
+     * @param reciprocalUsername
+     * @param relationAttributes
+     * @return
+     */
+    @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
+    @PUT("/users/{userId}/relationships/username/{reciprocalUsername}")
+    Relationship addRelationship(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @Path("reciprocalUsername") String reciprocalUsername, @Body RelationAttributes relationAttributes);
+
+    /**
      * Get the list of relationships this user has with other users.
      * <br/>{@link JobGetRelationships} provides a convenient wrapper, consider using it instead.
      *

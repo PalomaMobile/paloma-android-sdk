@@ -3,9 +3,6 @@ package com.palomamobile.android.sdk.friend;
 import android.support.annotation.NonNull;
 import com.palomamobile.android.sdk.core.IServiceSupport;
 
-/**
- *
- */
 class FriendManager implements IFriendManager {
 
     private static final String TAG = FriendManager.class.getSimpleName();
@@ -30,6 +27,11 @@ class FriendManager implements IFriendManager {
     @Override
     public JobPutRelationship createJobPutRelationship(long reciprocalUserId, RelationAttributes relationAttributes) {
         return new JobPutRelationship(reciprocalUserId, relationAttributes);
+    }
+
+    @Override
+    public JobPutRelationship createJobPutRelationship(String reciprocalUsername, RelationAttributes relationAttributes) {
+        return new JobPutRelationship(reciprocalUsername, relationAttributes);
     }
 
     @Override

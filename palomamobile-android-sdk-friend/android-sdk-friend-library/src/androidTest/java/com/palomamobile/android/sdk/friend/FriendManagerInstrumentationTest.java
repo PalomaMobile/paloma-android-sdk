@@ -19,9 +19,6 @@ import com.palomamobile.android.sdk.user.User;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- *
- */
 public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
 
     public static final String TAG = FriendManagerInstrumentationTest.class.getSimpleName();
@@ -207,7 +204,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         ).executeAndWait();
     }
 
-    public void testRequestPutRelationship() throws Throwable {
+    public void testRequestPutRelationshipUserId() throws Throwable {
         //Create paloma user A (login / pwd)
         String tmp = String.valueOf(System.currentTimeMillis());
         PasswordUserCredential passwordUserCredentialA = new PasswordUserCredential(tmp, tmp);
@@ -304,4 +301,103 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         assertEquals(userA.getUsername(), friendsB.getEmbedded().getItems().get(0).getUsername());
 
     }
+
+    public void testRequestPutRelationshipUsername() throws Throwable {
+        //Create paloma user A (login / pwd)
+        String tmp = "userA_" + String.valueOf(System.currentTimeMillis());
+        PasswordUserCredential passwordUserCredentialA = new PasswordUserCredential(tmp, tmp);
+        final User userA = TestUtilities.registerUserSynchronous(this, passwordUserCredentialA);
+        Log.d(TAG, "registerUserSynchronous userA: " + userA);
+        assertNotNull(userA);
+
+        //Create paloma user B (login / pwd)
+        tmp = "userB_" + String.valueOf(System.currentTimeMillis());
+        PasswordUserCredential passwordUserCredentialB = new PasswordUserCredential(tmp, tmp);
+        final User userB = TestUtilities.registerUserSynchronous(this, passwordUserCredentialB);
+        Log.d(TAG, "registerUserSynchronous userB: " + userB);
+        assertNotNull(userB);
+
+
+        //request a friendship as user B with user A
+        final LatchedBusListener<EventRelationshipUpdated> latchedBusListenerRelationshipB = new LatchedBusListener<>(EventRelationshipUpdated.class);
+        ServiceSupport.Instance.getEventBus().register(latchedBusListenerRelationshipB);
+        JobPutRelationship jobPutRelationship = friendManager.createJobPutRelationship(userA.getUsername(), new RelationAttributes(RelationAttributes.Type.friend));
+        ServiceSupport.Instance.getJobManager().addJobInBackground(jobPutRelationship);
+        latchedBusListenerRelationshipB.await(10, TimeUnit.SECONDS);
+        ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerRelationshipB);
+
+        assertNotNull(latchedBusListenerRelationshipB.getEvent());
+        assertNull(latchedBusListenerRelationshipB.getEvent().getFailure());
+        Relationship relationshipB = latchedBusListenerRelationshipB.getEvent().getSuccess();
+        assertNotNull(relationshipB);
+
+        //build the relationshipExpectedB
+        RelationAttributes mineB = new RelationAttributes(RelationAttributes.Type.friend);
+        mineB.setTrigger(RelationAttributes.Trigger.request);
+        RelationAttributes reciA = new RelationAttributes(RelationAttributes.Type.unknown);
+        reciA.setTrigger(RelationAttributes.Trigger.reciprocal);
+        Relationship relationshipExpectedB = new Relationship(userB.getId(), mineB, userA.getId(), userA.getUsername(), reciA);
+        assertEquals(relationshipExpectedB, relationshipB);
+
+
+        //switch to be userA
+        TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(passwordUserCredentialA.getUsername(), passwordUserCredentialA.getUserPassword()));
+
+        //request a friendship as user A with user B (reciprocate)
+        final LatchedBusListener<EventRelationshipUpdated> latchedBusListenerRelationshipA = new LatchedBusListener<>(EventRelationshipUpdated.class);
+        ServiceSupport.Instance.getEventBus().register(latchedBusListenerRelationshipA);
+        jobPutRelationship = friendManager.createJobPutRelationship(userB.getUsername(), new RelationAttributes(RelationAttributes.Type.friend));
+        ServiceSupport.Instance.getJobManager().addJobInBackground(jobPutRelationship);
+        latchedBusListenerRelationshipA.await(10, TimeUnit.SECONDS);
+        ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerRelationshipA);
+
+        assertNotNull(latchedBusListenerRelationshipA.getEvent());
+        assertNull(latchedBusListenerRelationshipA.getEvent().getFailure());
+        Relationship relationshipA = latchedBusListenerRelationshipA.getEvent().getSuccess();
+        assertNotNull(relationshipA);
+
+        //build the relationshipExpectedB
+        RelationAttributes mineA = new RelationAttributes(RelationAttributes.Type.friend);
+        mineA.setTrigger(RelationAttributes.Trigger.request);
+        RelationAttributes reciB = new RelationAttributes(RelationAttributes.Type.friend);
+        reciB.setTrigger(RelationAttributes.Trigger.request);
+        Relationship relationshipExpectedA = new Relationship(userA.getId(), mineA, userB.getId(), userB.getUsername(), reciB);
+        assertEquals(relationshipExpectedA, relationshipA);
+
+        // if the relationships are all good then both A and B should have a friend in their list
+
+        //check friends for A
+        final LatchedBusListener<EventFriendsListReceived> latchedBusFriendsListenerA = new LatchedBusListener<>(EventFriendsListReceived.class);
+        ServiceSupport.Instance.getEventBus().register(latchedBusFriendsListenerA);
+        JobGetFriends jobGetFriends = friendManager.createJobGetFriends();
+        ServiceSupport.Instance.getJobManager().addJobInBackground(jobGetFriends);
+        latchedBusFriendsListenerA.await(10, TimeUnit.SECONDS);
+        ServiceSupport.Instance.getEventBus().unregister(latchedBusFriendsListenerA);
+
+        assertNotNull(latchedBusFriendsListenerA.getEvent());
+        assertNull(latchedBusFriendsListenerA.getEvent().getFailure());
+        PaginatedResponse<Friend> friendsA = latchedBusFriendsListenerA.getEvent().getSuccess();
+        assertEquals(1, friendsA.getEmbedded().getItems().size());
+        assertEquals(userB.getId(), friendsA.getEmbedded().getItems().get(0).getUserId());
+        assertEquals(userB.getUsername(), friendsA.getEmbedded().getItems().get(0).getUsername());
+
+        //check friends for B
+        //switch to be userB
+        TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(passwordUserCredentialB.getUsername(), passwordUserCredentialB.getUserPassword()));
+        final LatchedBusListener<EventFriendsListReceived> latchedBusFriendsListenerB = new LatchedBusListener<>(EventFriendsListReceived.class);
+        ServiceSupport.Instance.getEventBus().register(latchedBusFriendsListenerB);
+        jobGetFriends = friendManager.createJobGetFriends();
+        ServiceSupport.Instance.getJobManager().addJobInBackground(jobGetFriends);
+        latchedBusFriendsListenerB.await(10, TimeUnit.SECONDS);
+        ServiceSupport.Instance.getEventBus().unregister(latchedBusFriendsListenerB);
+
+        assertNotNull(latchedBusFriendsListenerB.getEvent());
+        assertNull(latchedBusFriendsListenerB.getEvent().getFailure());
+        PaginatedResponse<Friend> friendsB = latchedBusFriendsListenerB.getEvent().getSuccess();
+        assertEquals(1, friendsB.getEmbedded().getItems().size());
+        assertEquals(userA.getId(), friendsB.getEmbedded().getItems().get(0).getUserId());
+        assertEquals(userA.getUsername(), friendsB.getEmbedded().getItems().get(0).getUsername());
+
+    }
+
 }

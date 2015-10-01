@@ -43,6 +43,16 @@ public interface IFriendManager extends IServiceManager<IFriendService> {
     JobPutRelationship createJobPutRelationship(long reciprocalUserId, RelationAttributes relationAttributes);
 
     /**
+     * Create a new {@link JobPutRelationship}. This enables local user to set relationship attributes between
+     * themselves and another user to request or confirm friendship via {@link com.palomamobile.android.sdk.friend.RelationAttributes.Type#friend}
+     * or block another user via  {@link com.palomamobile.android.sdk.friend.RelationAttributes.Type#blocked}
+     * @param reciprocalUsername username of the user on the other end of this 1:1 relationship
+     * @param relationAttributes description of the relationship
+     * @return new job instance
+     */
+    JobPutRelationship createJobPutRelationship(String reciprocalUsername, RelationAttributes relationAttributes);
+
+    /**
      * Create a new {@link JobGetRelationships}.
      * @return new job instance
      */

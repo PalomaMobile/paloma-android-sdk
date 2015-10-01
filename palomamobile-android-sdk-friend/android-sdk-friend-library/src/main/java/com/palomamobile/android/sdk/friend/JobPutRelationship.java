@@ -17,7 +17,8 @@ import com.path.android.jobqueue.Params;
 public class JobPutRelationship extends BaseRetryPolicyAwareJob<Relationship> {
 
     public static final String TAG = JobPutRelationship.class.getSimpleName();
-    private final long reciprocalUserId;
+    private final Long reciprocalUserId;
+    private final String reciprocalUsername;
     private final RelationAttributes relationAttributes;
 
     /**
@@ -29,6 +30,20 @@ public class JobPutRelationship extends BaseRetryPolicyAwareJob<Relationship> {
     public JobPutRelationship(Params params, long reciprocalUserId, RelationAttributes relationAttributes) {
         super(params);
         this.reciprocalUserId = reciprocalUserId;
+        this.reciprocalUsername = null;
+        this.relationAttributes = relationAttributes;
+    }
+
+    /**
+     * Constructs a new job to create a relationship between the local user and a reciprocal user (eg: a friend)
+     * @param params custom job parameters
+     * @param reciprocalUsername username of the user on the other end of this 1:1 relationship
+     * @param relationAttributes description of the relationship
+     */
+    public JobPutRelationship(Params params, String reciprocalUsername, RelationAttributes relationAttributes) {
+        super(params);
+        this.reciprocalUserId = null;
+        this.reciprocalUsername = reciprocalUsername;
         this.relationAttributes = relationAttributes;
     }
 
@@ -41,11 +56,28 @@ public class JobPutRelationship extends BaseRetryPolicyAwareJob<Relationship> {
         this(new Params(0).requireNetwork(), reciprocalUserId, relationAttributes);
     }
 
+    /**
+     * Constructs a new job to create a relationship between the local user and a reciprocal user (eg: a friend)
+     * @param reciprocalUsername username of the user on the other end of this 1:1 relationship
+     * @param relationAttributes description of the relationship
+     */
+    public JobPutRelationship(String reciprocalUsername, RelationAttributes relationAttributes) {
+        this(new Params(0).requireNetwork(), reciprocalUsername, relationAttributes);
+    }
+
     @Override
     public Relationship syncRun(boolean postEvent) throws Throwable {
         User user = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser();
         FriendManager friendManager = (FriendManager) ServiceSupport.Instance.getServiceManager(IFriendManager.class);
-        Relationship result = friendManager.getService().addRelationship(getRetryId(), user.getId(), reciprocalUserId, relationAttributes);
+        Relationship result = null;
+        if (reciprocalUsername != null) {
+            result = friendManager.getService().addRelationship(getRetryId(), user.getId(), reciprocalUsername, relationAttributes);
+        }
+        else {
+            result = friendManager.getService().addRelationship(getRetryId(), user.getId(), reciprocalUserId, relationAttributes);
+        }
+
+
         Log.d(TAG, "Received relationship from server: " + result);
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventRelationshipUpdated(this, result));
