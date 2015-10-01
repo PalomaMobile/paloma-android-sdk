@@ -5,5 +5,6 @@ com.palomamobile.android.sdk.core.util
 com.palomamobile.android.sdk.friend
 com.palomamobile.android.sdk.media
 com.palomamobile.android.sdk.message
+com.palomamobile.android.sdk.messageThread
 com.palomamobile.android.sdk.notification
 com.palomamobile.android.sdk.user
