@@ -1,13 +1,9 @@
 package com.palomamobile.android.sdk.message;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.palomamobile.android.sdk.core.IServiceSupport;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.user.IUserManager;
-
-import java.util.ArrayList;
-import java.util.List;
 
 class MessageManager implements IMessageManager {
 
@@ -19,16 +15,9 @@ class MessageManager implements IMessageManager {
     }
 
     @Override
-    public JobPostMessage createJobPostMessageToFriend(@Nullable String contentType, @NonNull String payload,  @Nullable String url, long friendId) {
-        List<Long> friendIds = new ArrayList<>(1);
-        friendIds.add(friendId);
-        return createJobPostMessageToFriends(contentType, payload, url, friendIds);
-    }
-
-    @Override
-    public JobPostMessage createJobPostMessageToFriends(@Nullable String contentType, @NonNull String payload, @Nullable String url, @NonNull List<Long> friendIds) {
+    public JobPostMessage createJobPostMessage(MessageSent message) {
         IUserManager userManager = ServiceSupport.Instance.getServiceManager(IUserManager.class);
-        return new JobPostMessage(userManager.getUser().getId(), contentType, payload, url, friendIds);
+        return new JobPostMessage(userManager.getUser().getId(), message);
     }
 
     @Override

@@ -22,7 +22,9 @@ import com.palomamobile.android.sdk.message.IMessageManager;
 import com.palomamobile.android.sdk.message.JobDeleteMessageReceived;
 import com.palomamobile.android.sdk.message.JobGetMessagesReceived;
 import com.palomamobile.android.sdk.message.JobPostMessage;
+import com.palomamobile.android.sdk.message.MessageContentDetail;
 import com.palomamobile.android.sdk.message.MessageReceived;
+import com.palomamobile.android.sdk.message.MessageSent;
 import com.palomamobile.android.sdk.user.IUserManager;
 
 import java.util.ArrayList;
@@ -110,7 +112,14 @@ public class MessageSampleActivity extends Activity {
                     for (Friend friend : friends) {
                         friendIds.add(friend.getUserId());
                     }
-                    JobPostMessage jobPostMessageToFriends = messageManager.createJobPostMessageToFriends("text/plain", editTextMessage.getText().toString(), null, friendIds);
+                    List<MessageContentDetail> contentDetails = new ArrayList<>();
+                    contentDetails.add(new MessageContentDetail("text/plain", editTextMessage.getText().toString(), null));
+                    MessageSent messageSent = new MessageSent();
+                    messageSent.setType("pic_share");
+                    messageSent.setContentList(contentDetails);
+                    messageSent.setRecipients(friendIds);
+
+                    JobPostMessage jobPostMessageToFriends = messageManager.createJobPostMessage(messageSent);
                     ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostMessageToFriends);
                 }
             }

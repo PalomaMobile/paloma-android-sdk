@@ -1,15 +1,18 @@
 package com.palomamobile.android.sdk.message;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.test.InstrumentationTestCase;
 import android.util.Log;
 import com.palomamobile.android.sdk.auth.PasswordUserCredential;
 import com.palomamobile.android.sdk.core.PaginatedResponse;
 import com.palomamobile.android.sdk.core.ServiceRequestParams;
 import com.palomamobile.android.sdk.core.ServiceSupport;
+import com.palomamobile.android.sdk.core.util.LatchedBusListener;
 import com.palomamobile.android.sdk.user.TestUtilities;
 import com.palomamobile.android.sdk.user.User;
-import com.palomamobile.android.sdk.core.util.LatchedBusListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -79,13 +82,13 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
 
         //login as friend1 and send some messages to self
         TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmp1, tmp1));
-        messageManager.createJobPostMessageToFriend("text/plain", "test1", "https://bit.ly/1", selfId).syncRun(false);
-        messageManager.createJobPostMessageToFriend("text/plain", "test2", "https://bit.ly/2", selfId).syncRun(false);
+        createJobPostMessageToFriend(null, "test1", "https://bit.ly/1", selfId, "text/plain").syncRun(false);
+        createJobPostMessageToFriend(null, "test2", "https://bit.ly/2", selfId, "text/plain").syncRun(false);
 
         //login as friend2 and send some messages to self
         TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmp2, tmp2));
-        messageManager.createJobPostMessageToFriend("text/plain", "test1", "https://other.com/1", selfId).syncRun(false);
-        messageManager.createJobPostMessageToFriend("text/plain", "test2", "https://other.com/2", selfId).syncRun(false);
+        createJobPostMessageToFriend(null, "test1", "https://other.com/1", selfId, "text/plain").syncRun(false);
+        createJobPostMessageToFriend(null, "test2", "https://other.com/2", selfId, "text/plain").syncRun(false);
 
         //login as self and check messages
         self = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmpSelf, tmpSelf));
@@ -147,21 +150,22 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
 
         //https://duckduckgo.com/?q=1&ia=about
         int counter = 0;
-        messageManager.createJobPostMessageToFriend(contentType, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId).syncRun(false);
-        messageManager.createJobPostMessageToFriend(contentType, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId).syncRun(false);
-        messageManager.createJobPostMessageToFriend(contentType, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId).syncRun(false);
+        createJobPostMessageToFriend("x", null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, contentType).syncRun(false);
+        createJobPostMessageToFriend("z", null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, contentType).syncRun(false);
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, contentType).syncRun(false);
 
-        messageManager.createJobPostMessageToFriend(contentType, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId).syncRun(false);
-        messageManager.createJobPostMessageToFriend("text/css", null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId).syncRun(false);
-        messageManager.createJobPostMessageToFriend("application/octet-stream", null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId).syncRun(false);
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, contentType).syncRun(false);
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "text/css").syncRun(false);
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "application/octet-stream").syncRun(false);
 
-        messageManager.createJobPostMessageToFriend("image/gif", null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId).syncRun(false);
-        messageManager.createJobPostMessageToFriend("image/svg+xml", null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId).syncRun(false);
-        messageManager.createJobPostMessageToFriend("text/plain", null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId).syncRun(false);
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "image/gif").syncRun(false);
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "image/svg+xml").syncRun(false);
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "text/plain").syncRun(false);
 
-        messageManager.createJobPostMessageToFriend(contentType, null, "https://duckduckgo.com/?q=" + counter + "&ia=about", friendId).syncRun(false);
-        messageManager.createJobPostMessageToFriend("image/png", null, "https://www.google.com/images/srpr/logo11w.png", friendId).syncRun(false);
-        messageManager.createJobPostMessageToFriend("image/png", null, "http://www.workjoke.com/images/logo.png", friendId).syncRun(false);
+        MessageSent messageSentA = createJobPostMessageToFriend("a a", null, "https://duckduckgo.com/?q=" + counter + "&ia=about", friendId, contentType).syncRun(false);
+
+        MessageSent messageSentB = createJobPostMessageToFriend("bbb b", null, "https://www.google.com/images/srpr/logo11w.png", friendId, "image/png").syncRun(false);
+        MessageSent messageSentC = createJobPostMessageToFriend("ab", null, "http://www.workjoke.com/images/logo.png", friendId, "image/png").syncRun(false);
 
         PaginatedResponse<MessageSent> messageSentPaginatedResponse = messageManager.createJobGetMessagesSent().setServiceRequestParams(
                 new ServiceRequestParams()
@@ -172,24 +176,17 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         assertEquals("https://duckduckgo.com/?q=9&ia=about",messageSentPaginatedResponse.getEmbedded().getItems().get(1).getContentList().get(0).getUrl());
 
         //test the filtering on messages sent once implemented
-        if (false) {
+        {
             PaginatedResponse<MessageSent> filteredPaginatedResponse = messageManager.createJobGetMessagesSent().setServiceRequestParams(
                     new ServiceRequestParams()
-                            .setPageIndex(1).setResultsPerPage(3).setFilterQuery("(content.contentType='text/html'|content.contentType='image/png')")
+                            .setPageIndex(0).setResultsPerPage(3).setFilterQuery("timeSent>='" + messageSentA.getTimeSent() + "'").sort("timeSent", ServiceRequestParams.Sort.Order.Asc)
             ).syncRun(false);
             assertEquals(3, filteredPaginatedResponse.getEmbedded().getItems().size());
 
-            MessageContentDetail messageContentDetail = filteredPaginatedResponse.getEmbedded().getItems().get(0).getContentList().get(0);
-            assertEquals("https://duckduckgo.com/?q=3&ia=about", messageContentDetail.getUrl());
-            assertEquals("text/html", messageContentDetail.getContentType());
+            assertEquals(messageSentA, filteredPaginatedResponse.getEmbedded().getItems().get(0));
+            assertEquals(messageSentB, filteredPaginatedResponse.getEmbedded().getItems().get(1));
+            assertEquals(messageSentC, filteredPaginatedResponse.getEmbedded().getItems().get(2));
 
-            messageContentDetail = filteredPaginatedResponse.getEmbedded().getItems().get(1).getContentList().get(0);
-            assertEquals("https://duckduckgo.com/?q=9&ia=about", messageContentDetail.getUrl());
-            assertEquals("text/html", messageContentDetail.getContentType());
-
-            messageContentDetail = filteredPaginatedResponse.getEmbedded().getItems().get(2).getContentList().get(0);
-            assertEquals("https://duckduckgo.com/?q=10&ia=about", messageContentDetail.getUrl());
-            assertEquals("image/png", messageContentDetail.getContentType());
         }
 
         //log back in as a friend
@@ -218,38 +215,52 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
 
 
         //test the filtering on messages received once implemented
-        if (false) {
+        {
             PaginatedResponse<MessageReceived> filteredPaginatedResponse = messageManager.createJobGetMessagesReceived().setServiceRequestParams(
                     new ServiceRequestParams()
-                            .setPageIndex(1).setResultsPerPage(3).setFilterQuery("(contentType='text/html'|contentType='image/png')")
+                            .setPageIndex(0).setResultsPerPage(3).setFilterQuery("(type~'%a%'|type~'%b%')").sort("timeSent", ServiceRequestParams.Sort.Order.Asc)
             ).syncRun(false);
             assertEquals(3, filteredPaginatedResponse.getEmbedded().getItems().size());
 
             MessageContentDetail messageContentDetail = filteredPaginatedResponse.getEmbedded().getItems().get(0).getContentList().get(0);
-            assertEquals("https://duckduckgo.com/?q=3&ia=about", messageContentDetail.getUrl());
-            assertEquals("text/html", messageContentDetail.getContentType());
+            assertEquals(messageSentA.getContentList().get(0).getUrl(), messageContentDetail.getUrl());
+            assertEquals(messageSentA.getContentList().get(0).getContentType(), messageContentDetail.getContentType());
 
             messageContentDetail = filteredPaginatedResponse.getEmbedded().getItems().get(1).getContentList().get(0);
-            assertEquals("https://duckduckgo.com/?q=9&ia=about", messageContentDetail.getUrl());
-            assertEquals("text/html", messageContentDetail.getContentType());
+            assertEquals(messageSentB.getContentList().get(0).getUrl(), messageContentDetail.getUrl());
+            assertEquals(messageSentB.getContentList().get(0).getContentType(), messageContentDetail.getContentType());
 
             messageContentDetail = filteredPaginatedResponse.getEmbedded().getItems().get(2).getContentList().get(0);
-            assertEquals("https://duckduckgo.com/?q=10&ia=about", messageContentDetail.getUrl());
-            assertEquals("image/png", messageContentDetail.getContentType());
+            assertEquals(messageSentC.getContentList().get(0).getUrl(), messageContentDetail.getUrl());
+            assertEquals(messageSentC.getContentList().get(0).getContentType(), messageContentDetail.getContentType());
         }
 
 
 
         messageManager.createJobDeleteMessageReceived(paginatedResponse.getEmbedded().getItems().get(0).getId()).syncRun(false);
 
-        messageManager.createJobPostMessageToFriend("text/plain", null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId).syncRun(false);
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "text/plain").syncRun(false);
 
-        messageManager.createJobPostMessageToFriend(contentType, null, "https://duckduckgo.com/?q=" + counter + "&ia=about", friendId).syncRun(false);
-        messageManager.createJobPostMessageToFriend("image/png", null, "https://www.google.com/images/srpr/logo11w.png", friendId).syncRun(false);
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter + "&ia=about", friendId, contentType).syncRun(false);
+        createJobPostMessageToFriend(null, null, "https://www.google.com/images/srpr/logo11w.png", friendId, "image/png").syncRun(false);
 
     }
 
+    JobPostMessage createJobPostMessageToFriend(String messageType, @Nullable String payload, @Nullable String url, long friendId, @Nullable String contentType) {
+        List<Long> friends = new ArrayList<>();
+        friends.add(friendId);
+        return createJobPostMessageToFriends(messageType, contentType, payload, url, friends);
+    }
 
+    JobPostMessage createJobPostMessageToFriends(String messageType, @Nullable String contentType, @NonNull String payload, @Nullable String url, @NonNull List<Long> friendIds) {
+        List<MessageContentDetail> contentDetails = new ArrayList<>();
+        contentDetails.add(new MessageContentDetail(contentType, url, payload));
+        MessageSent messageSent = new MessageSent();
+        messageSent.setType(messageType);
+        messageSent.setContentList(contentDetails);
+        messageSent.setRecipients(friendIds);
+        return messageManager.createJobPostMessage(messageSent);
+    }
 
 
     public void testRequestShareWithFriend() throws Throwable {
@@ -272,7 +283,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
 
         final LatchedBusListener<EventMessageSentPosted> latchedBusListener = new LatchedBusListener<>(EventMessageSentPosted.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListener);
-        JobPostMessage jobShareWithFriend = messageManager.createJobPostMessageToFriend(contentType, null, url, friendId);
+        JobPostMessage jobShareWithFriend = createJobPostMessageToFriend(null, null, url, friendId, contentType);
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobShareWithFriend);
         latchedBusListener.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListener);

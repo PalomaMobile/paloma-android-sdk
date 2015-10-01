@@ -83,9 +83,21 @@ public class PaginatedResponse<T> {
      */
     @SuppressWarnings("unused")
     public static class Page {
+        /**
+         * Page size as requested by the client.
+         */
         private int size;
+        /**
+         * Total number of elements across all pages.
+         */
         private int totalElements;
+        /**
+         * Total number of pages.
+         */
         private int totalPages;
+        /**
+         * Page index starting at zero.
+         */
         private int number;
 
         public int getNumber() {

@@ -37,4 +37,25 @@ public class MessageSent extends BaseMessage {
         sb.append('}');
         return sb.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        MessageSent that = (MessageSent) o;
+
+        if (includeRecipients != that.includeRecipients) return false;
+        return !(recipients != null ? !recipients.equals(that.recipients) : that.recipients != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (recipients != null ? recipients.hashCode() : 0);
+        result = 31 * result + (includeRecipients ? 1 : 0);
+        return result;
+    }
 }

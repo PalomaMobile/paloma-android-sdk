@@ -73,4 +73,27 @@ public class MessageContentDetail implements Serializable {
         sb.append('}');
         return sb.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MessageContentDetail detail = (MessageContentDetail) o;
+
+        if (url != null ? !url.equals(detail.url) : detail.url != null) return false;
+        if (contentType != null ? !contentType.equals(detail.contentType) : detail.contentType != null) return false;
+        if (payload != null ? !payload.equals(detail.payload) : detail.payload != null) return false;
+        return !(custom != null ? !custom.equals(detail.custom) : detail.custom != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = url != null ? url.hashCode() : 0;
+        result = 31 * result + (contentType != null ? contentType.hashCode() : 0);
+        result = 31 * result + (payload != null ? payload.hashCode() : 0);
+        result = 31 * result + (custom != null ? custom.hashCode() : 0);
+        return result;
+    }
 }

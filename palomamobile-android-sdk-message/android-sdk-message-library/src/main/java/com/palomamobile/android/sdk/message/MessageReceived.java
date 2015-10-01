@@ -12,7 +12,6 @@ import java.util.List;
 public class MessageReceived extends BaseMessage {
 
     private UserDetails sender;
-    private long timeSent;
     private long replyToRootId;
     private long sentMessageId;
     private List<Long> otherRecipients;
@@ -23,14 +22,6 @@ public class MessageReceived extends BaseMessage {
 
     public void setSender(UserDetails sender) {
         this.sender = sender;
-    }
-
-    public long getTimeSent() {
-        return timeSent;
-    }
-
-    public void setTimeSent(long timeSent) {
-        this.timeSent = timeSent;
     }
 
     public List<Long> getOtherRecipients() {
@@ -61,7 +52,6 @@ public class MessageReceived extends BaseMessage {
     public String toString() {
         final StringBuilder sb = new StringBuilder("MessageReceived{");
         sb.append("sender=").append(sender);
-        sb.append(", timeSent=").append(timeSent);
         sb.append(", replyToRootId=").append(replyToRootId);
         sb.append(", sentMessageId=").append(sentMessageId);
         sb.append(", otherRecipients=").append(otherRecipients);
