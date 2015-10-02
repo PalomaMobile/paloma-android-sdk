@@ -1,3 +1,5 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/media/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/media)
+
 # Paloma Media SDK for Android
 
 ## Overview

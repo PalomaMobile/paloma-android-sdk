@@ -1,3 +1,5 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/user/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/user)
+
 # Paloma User SDK for Android
 
 ## Overview

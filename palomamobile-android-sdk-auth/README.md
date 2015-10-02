@@ -1,3 +1,5 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/auth/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/auth)
+
 # Paloma Auth SDK for Android
 ## Overview
 The Auth SDK module is not normally called directly from client apps. It is required by other SDK modules in order to authenticate

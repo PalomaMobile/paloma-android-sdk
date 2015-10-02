@@ -5,10 +5,7 @@ import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.message.MessageSent;
 import com.palomamobile.android.sdk.user.IUserManager;
 
-/**
- *
- */
-public class MessageThreadManager implements IMessageThreadManager {
+class MessageThreadManager implements IMessageThreadManager {
 
     private IMessageThreadService messageThreadService;
 

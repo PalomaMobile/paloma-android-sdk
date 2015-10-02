@@ -1,3 +1,5 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/core)
+
 # Paloma Core SDK for Android
 ## Overview
 The Core SDK module provides, as the name suggests, core functionality such as SDK initialization and SDK module management.

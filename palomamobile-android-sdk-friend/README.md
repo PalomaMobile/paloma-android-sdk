@@ -1,3 +1,5 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/friend/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/friend)
+
 # Paloma Friend SDK for Android
 
 ## Overview

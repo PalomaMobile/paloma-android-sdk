@@ -1,14 +1,6 @@
 [![Build Status](https://magnum.travis-ci.com/PalomaMobile/paloma-android-sdk.svg?token=MqkF7WcptxY6tzunqsBa)](https://magnum.travis-ci.com/PalomaMobile/paloma-android-sdk)
 [![Coverage Status](https://coveralls.io/repos/PalomaMobile/paloma-android-sdk/badge.svg)](https://coveralls.io/r/PalomaMobile/paloma-android-sdk)
 
-[![Maven Central Core](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/core)
-[![Maven Central Auth](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/auth/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/auth)
-[![Maven Central User](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/user/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/user)
-[![Maven Central Friend](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/friend/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/friend)
-[![Maven Central Message](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/message/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/message)
-[![Maven Central Media](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/media/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/media)
-[![Maven Central Notification](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/notification/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/notification)
-
 
 # Paloma SDK for Android
 

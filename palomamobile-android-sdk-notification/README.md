@@ -1,3 +1,5 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/notification/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/notification)
+
 # Paloma Notification SDK for Android
 
 ## Overview
