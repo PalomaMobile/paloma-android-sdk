@@ -118,6 +118,10 @@ Switch to the SDK directory
 
 `cd paloma-android-sdk/`
 
+Create a file called `local.properties` add this line to it (replace the path value):
+
+`sdk.dir=/your/path/to/android_sdk`
+
 To build of all library .aar files and sample app .apk files run:
 
 `./gradlew clean build`
