@@ -68,9 +68,23 @@ afterEvaluate { project ->
         sign configurations.archives
     }
 
+
     task androidJavadocs(type: Javadoc) {
-        source = android.sourceSets.main.java.sourceFiles
+        source = android.sourceSets.main.java.srcDirs
+        classpath += configurations.compile
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        destinationDir = file("../javadoc/")
+        options.linksOffline("http://d.android.com/reference", "${android.sdkDirectory}/docs/reference");
+
+        exclude '**/BuildConfig.java'
+        exclude '**/R.java'
+        exclude '**/package.html'
+        failOnError false
     }
+
+//    task androidJavadocs(type: Javadoc) {
+//        source = android.sourceSets.main.java.sourceFiles
+//    }
 
     task androidJavadocsJar(type: Jar) {
         classifier = 'javadoc'

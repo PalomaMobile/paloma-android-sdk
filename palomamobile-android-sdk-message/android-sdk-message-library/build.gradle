@@ -14,22 +14,22 @@ dependencies {
   compile project(':palomamobile-android-sdk-media:android-sdk-media-library')
 }
 
-android.libraryVariants.all { variant ->
-  task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
-    description "Generates Javadoc for $variant.name."
-    source = 'src/main/java'
-    destinationDir = file("build/" + POM_ARTIFACT_ID + '-docs')
-    ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-    classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
-    options.linksOffline("http://d.android.com/reference", "${android.sdkDirectory}/docs/reference");
-    options.linksOffline("http://palomamobile.github.io/paloma-android-sdk/core-docs/", "../../palomamobile-android-sdk-core/android-sdk-core-library/build/core-docs");
-    options.linksOffline("http://palomamobile.github.io/paloma-android-sdk/auth-docs/", "../../palomamobile-android-sdk-auth/android-sdk-auth-library/build/auth-docs");
-    options.linksOffline("http://palomamobile.github.io/paloma-android-sdk/user-docs/", "../../palomamobile-android-sdk-user/android-sdk-user-library/build/user-docs");
-    options.linksOffline("http://palomamobile.github.io/paloma-android-sdk/media-docs/", "../../palomamobile-android-sdk-media/android-sdk-media-library/build/media-docs");
-
-    // exclude generated files
-    exclude '**/BuildConfig.java'
-    exclude '**/package.html'
-    exclude '**/R.java'
-  }
-}
+//android.libraryVariants.all { variant ->
+//  task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+//    description "Generates Javadoc for $variant.name."
+//    source = 'src/main/java'
+//    destinationDir = file("build/" + POM_ARTIFACT_ID + '-docs')
+//    ext.androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
+//    classpath = files(variant.javaCompile.classpath.files) + files(ext.androidJar)
+//    options.linksOffline("http://d.android.com/reference", "${android.sdkDirectory}/docs/reference");
+//    options.linksOffline("http://palomamobile.github.io/paloma-android-sdk/core-docs/", "../../palomamobile-android-sdk-core/android-sdk-core-library/build/core-docs");
+//    options.linksOffline("http://palomamobile.github.io/paloma-android-sdk/auth-docs/", "../../palomamobile-android-sdk-auth/android-sdk-auth-library/build/auth-docs");
+//    options.linksOffline("http://palomamobile.github.io/paloma-android-sdk/user-docs/", "../../palomamobile-android-sdk-user/android-sdk-user-library/build/user-docs");
+//    options.linksOffline("http://palomamobile.github.io/paloma-android-sdk/media-docs/", "../../palomamobile-android-sdk-media/android-sdk-media-library/build/media-docs");
+//
+//    // exclude generated files
+//    exclude '**/BuildConfig.java'
+//    exclude '**/package.html'
+//    exclude '**/R.java'
+//  }
+//}

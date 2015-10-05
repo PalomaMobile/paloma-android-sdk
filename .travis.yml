@@ -1,5 +1,6 @@
 language: android
-script: "./gradlew clean assembleDebug testDebug connectedAndroidTest build"
+#script: "./gradlew clean assembleDebug testDebug connectedAndroidTest build javadoc"
+script: "./gradlew clean build"
 android:
   components:
   - build-tools-22.0.1
