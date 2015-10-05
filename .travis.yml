@@ -1,6 +1,5 @@
 language: android
-#script: "./gradlew clean assembleDebug testDebug connectedAndroidTest build javadoc"
-script: "./gradlew clean build"
+script: "./gradlew clean assembleDebug testDebug connectedAndroidTest build"
 android:
   components:
   - build-tools-22.0.1
@@ -28,7 +27,7 @@ before_install:
 - openssl aes-256-cbc -pass pass:$ENCRYPT_PASSWORD -in .utility/pubring.gpg.enc -out .utility/generated.pubring.gpg -d
 after_success:
 - ".utility/initiate-publish.sh"
-- gradle clean test jacoco:report coveralls:report
+#- gradle clean test jacoco:report coveralls:report
 env:
   global:
   - MALLOC_ARENA_MAX=2
