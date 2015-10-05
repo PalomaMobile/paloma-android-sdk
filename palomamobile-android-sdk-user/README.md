@@ -60,9 +60,9 @@ dependencies {
     compile 'com.birbit:android-priority-jobqueue:1.3.3'
 
     //Paloma Platform SDK modules
-    compile 'com.palomamobile.android.sdk:core:2.5@aar'
-    compile 'com.palomamobile.android.sdk:auth:2.5@aar'
-    compile 'com.palomamobile.android.sdk:user:2.5@aar'
+    compile 'com.palomamobile.android.sdk:core:2.6@aar'
+    compile 'com.palomamobile.android.sdk:auth:2.6@aar'
+    compile 'com.palomamobile.android.sdk:user:2.6@aar'
     
     ...
     
