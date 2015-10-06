@@ -73,7 +73,6 @@ afterEvaluate { project ->
         source = android.sourceSets.main.java.srcDirs
         classpath += configurations.compile
         classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//        destinationDir = file("../javadoc/")
         options.linksOffline("http://d.android.com/reference", "${android.sdkDirectory}/docs/reference");
 
         exclude '**/BuildConfig.java'
@@ -81,10 +80,6 @@ afterEvaluate { project ->
         exclude '**/package.html'
         failOnError false
     }
-
-//    task androidJavadocs(type: Javadoc) {
-//        source = android.sourceSets.main.java.sourceFiles
-//    }
 
     task androidJavadocsJar(type: Jar) {
         classifier = 'javadoc'
@@ -94,7 +89,6 @@ afterEvaluate { project ->
 
     task androidSourcesJar(type: Jar) {
         classifier = 'sources'
-        //basename = artifact_id
         from android.sourceSets.main.java.sourceFiles
     }
 
