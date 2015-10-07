@@ -17,7 +17,7 @@ public class RelationAttributes implements Serializable {
      * Type of relationship.
      */
     public enum Type {
-        friend, blocked, unknown
+        friend, blocked, unknown, ignored
     }
 
     /**
