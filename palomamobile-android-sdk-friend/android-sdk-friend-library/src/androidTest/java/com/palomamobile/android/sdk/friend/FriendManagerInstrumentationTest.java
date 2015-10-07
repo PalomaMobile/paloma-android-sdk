@@ -143,7 +143,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
             Throwable failure = latchedBusListenerFriendsA.getEvent().getFailure();
             //no errors expected yet
             assertNull(failure);
-            PaginatedResponse<Friend> friendPaginatedResponse = friendManager.createJobGetFriends().syncRun(false);
+            PaginatedResponse<Friend> friendPaginatedResponse = friendManager.createJobGetFriends().syncRun();
             assertNull(friendPaginatedResponse.getEmbedded());
 
             //Create paloma user B (login / pwd)
@@ -160,7 +160,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
             assertNotNull(latchedBusListenerFriendsB.getEvent());
             assertNull(latchedBusListenerFriendsB.getEvent().getFailure());
 
-            PaginatedResponse<Friend> friendsB = friendManager.createJobGetFriends().syncRun(false);
+            PaginatedResponse<Friend> friendsB = friendManager.createJobGetFriends().syncRun();
             assertNotNull(friendsB);
             //expect to find userA as a friend
             assertEquals(1, friendsB.getEmbedded().getItems().size());
@@ -181,8 +181,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
             //expect to find userB as a friend
             assertEquals(1, friendsA.getEmbedded().getItems().size());
             assertEquals(userB.getId(), friendsA.getEmbedded().getItems().get(0).getUserId());
-        }
-        finally {
+        } finally {
             deleteFbTestUser(accessTokenA);
             deleteFbTestUser(accessTokenB);
         }
@@ -190,17 +189,17 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
 
     private void deleteFbTestUser(AccessToken accessTokenForPrivateUser) {
         new GraphRequest(
-            accessTokenForPrivateUser,
-            "/" + accessTokenForPrivateUser.getUserId(),
-            null,
-            HttpMethod.DELETE,
-            new GraphRequest.Callback() {
-                @Override
-                public void onCompleted(GraphResponse graphResponse) {
-                    Log.d(TAG, graphResponse.getRawResponse());
-                    assertNull(graphResponse.getError());
+                accessTokenForPrivateUser,
+                "/" + accessTokenForPrivateUser.getUserId(),
+                null,
+                HttpMethod.DELETE,
+                new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse graphResponse) {
+                        Log.d(TAG, graphResponse.getRawResponse());
+                        assertNull(graphResponse.getError());
+                    }
                 }
-            }
         ).executeAndWait();
     }
 

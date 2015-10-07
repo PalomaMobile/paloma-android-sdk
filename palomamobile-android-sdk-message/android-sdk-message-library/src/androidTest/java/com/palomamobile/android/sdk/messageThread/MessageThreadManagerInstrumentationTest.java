@@ -133,7 +133,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         newMessageThread.setName(name);
         newMessageThread.setType("blah");
 
-        MessageThread messageThreadBlah = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun(false);
+        MessageThread messageThreadBlah = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun();
 
         String tmp = Long.toString(System.currentTimeMillis());
         HashMap<String, String> custom = new HashMap<>();
@@ -201,7 +201,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         newMessageThread.setName(name);
         newMessageThread.setType("blah");
 
-        MessageThread messageThreadBlah = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun(false);
+        MessageThread messageThreadBlah = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun();
 
         String tmp = Long.toString(System.currentTimeMillis());
         HashMap<String, String> custom = new HashMap<>();
@@ -249,7 +249,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         newMessageThread.setName(name);
         newMessageThread.setType("blah");
 
-        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun(false);
+        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun();
 
 
         JobGetMessageThreadMembers jobGetMessageThreadMembers = messageThreadManager.createJobGetMessageThreadMembers(messageThread.getId());
@@ -280,7 +280,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         NewMessageThread newMessageThread = new NewMessageThread();
         newMessageThread.setName(threadName);
         newMessageThread.setType("blah");
-        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun(false);
+        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun();
 
 
         JobAddMessageThreadMember jobAddMessageThreadMember = messageThreadManager.createJobAddMessageThreadMember(messageThread.getId(), other.getId());
@@ -298,7 +298,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         assertEquals(other.getId(), threadMember.getUser().getUserId());
         assertEquals(other.getUsername(), threadMember.getUser().getUsername());
 
-        PaginatedResponse<MessageThreadMember> messageThreadMemberPaginatedResponse = messageThreadManager.createJobGetMessageThreadMembers(messageThread.getId()).syncRun(false);
+        PaginatedResponse<MessageThreadMember> messageThreadMemberPaginatedResponse = messageThreadManager.createJobGetMessageThreadMembers(messageThread.getId()).syncRun();
         List<MessageThreadMember> members = messageThreadMemberPaginatedResponse.getEmbedded().getItems();
         assertEquals(2, members.size());
         //do our own sorting until server supports it for messageThreads
@@ -330,7 +330,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         assertNull(deleted.getFailure());
 
         try {
-            PaginatedResponse<MessageThreadMember> shouldFail = messageThreadManager.createJobGetMessageThreadMembers(messageThread.getId()).syncRun(false);
+            PaginatedResponse<MessageThreadMember> shouldFail = messageThreadManager.createJobGetMessageThreadMembers(messageThread.getId()).syncRun();
             fail("403 Forbidden expected");
         } catch (RetrofitError retrofitError) {
             assertEquals(403, retrofitError.getResponse().getStatus());
@@ -350,7 +350,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         newMessageThread.setType("blah");
         newMessageThread.setCustom(custom);
 
-        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun(false);
+        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun();
 
         MessageSent toSend = new MessageSent();
         List<MessageContentDetail> contentDetailList = new ArrayList<>();
@@ -413,10 +413,10 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         newMessageThread.setType("blah");
         newMessageThread.setCustom(custom);
 
-        messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun(false);
-        messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun(false);
+        messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun();
+        messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun();
 
-        PaginatedResponse<MessageThread> messageThreadPaginatedResponse = messageThreadManager.createJobGetMessageThreads().syncRun(false);
+        PaginatedResponse<MessageThread> messageThreadPaginatedResponse = messageThreadManager.createJobGetMessageThreads().syncRun();
         assertEquals(2, messageThreadPaginatedResponse.getEmbedded().getItems().size());
 
         JobDeleteMessageThreads jobDeleteMessageThreads = messageThreadManager.createJobDeleteMessageThreads();
@@ -429,7 +429,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         EventMessageThreadsDeleted eventMessagesReceived = latchedBusListenerDeleted.getEvent();
         assertNull(eventMessagesReceived.getFailure());
 
-        PaginatedResponse<MessageThread> afterDelete = messageThreadManager.createJobGetMessageThreads().syncRun(false);
+        PaginatedResponse<MessageThread> afterDelete = messageThreadManager.createJobGetMessageThreads().syncRun();
         assertEquals(null, afterDelete.getEmbedded());
     }
 

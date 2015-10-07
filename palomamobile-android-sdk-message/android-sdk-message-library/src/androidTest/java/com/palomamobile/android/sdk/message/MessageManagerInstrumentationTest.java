@@ -82,13 +82,13 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
 
         //login as friend1 and send some messages to self
         TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmp1, tmp1));
-        createJobPostMessageToFriend(null, "test1", "https://bit.ly/1", selfId, "text/plain").syncRun(false);
-        createJobPostMessageToFriend(null, "test2", "https://bit.ly/2", selfId, "text/plain").syncRun(false);
+        createJobPostMessageToFriend(null, "test1", "https://bit.ly/1", selfId, "text/plain").syncRun();
+        createJobPostMessageToFriend(null, "test2", "https://bit.ly/2", selfId, "text/plain").syncRun();
 
         //login as friend2 and send some messages to self
         TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmp2, tmp2));
-        createJobPostMessageToFriend(null, "test1", "https://other.com/1", selfId, "text/plain").syncRun(false);
-        createJobPostMessageToFriend(null, "test2", "https://other.com/2", selfId, "text/plain").syncRun(false);
+        createJobPostMessageToFriend(null, "test1", "https://other.com/1", selfId, "text/plain").syncRun();
+        createJobPostMessageToFriend(null, "test2", "https://other.com/2", selfId, "text/plain").syncRun();
 
         //login as self and check messages
         self = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmpSelf, tmpSelf));
@@ -99,7 +99,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
                         .setResultsPerPage(30)
                         .setFilterQuery("sender.userId='"+friendId1+"'")
                         .sort("id", ServiceRequestParams.Sort.Order.Desc)
-        ).syncRun(false);
+        ).syncRun();
         assertEquals(2, messageReceivedPaginatedResponse.getEmbedded().getItems().size());
         assertEquals("https://bit.ly/2", messageReceivedPaginatedResponse.getEmbedded().getItems().get(0).getContentList().get(0).getUrl());
         assertEquals("test2", messageReceivedPaginatedResponse.getEmbedded().getItems().get(0).getContentList().get(0).getPayload());
@@ -113,7 +113,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
                         .setResultsPerPage(30)
                         .setFilterQuery("sender.userId='"+friendId2+"'")
                         .sort("id", ServiceRequestParams.Sort.Order.Desc)
-        ).syncRun(false);
+        ).syncRun();
         assertEquals(2, messageReceivedPaginatedResponse.getEmbedded().getItems().size());
         assertEquals("https://other.com/2", messageReceivedPaginatedResponse.getEmbedded().getItems().get(0).getContentList().get(0).getUrl());
         assertEquals("https://other.com/1", messageReceivedPaginatedResponse.getEmbedded().getItems().get(1).getContentList().get(0).getUrl());
@@ -124,7 +124,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
                         .setResultsPerPage(30)
                         .setFilterQuery("sender.userId='"+friendId2+"'|sender.userId='"+friendId1+"'")
                         .sort("id", ServiceRequestParams.Sort.Order.Desc)
-        ).syncRun(false);
+        ).syncRun();
         assertEquals(4, messageReceivedPaginatedResponse.getEmbedded().getItems().size());
         assertEquals("https://other.com/2", messageReceivedPaginatedResponse.getEmbedded().getItems().get(0).getContentList().get(0).getUrl());
         assertEquals("https://other.com/1", messageReceivedPaginatedResponse.getEmbedded().getItems().get(1).getContentList().get(0).getUrl());
@@ -150,27 +150,27 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
 
         //https://duckduckgo.com/?q=1&ia=about
         int counter = 0;
-        createJobPostMessageToFriend("x", null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, contentType).syncRun(false);
-        createJobPostMessageToFriend("z", null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, contentType).syncRun(false);
-        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, contentType).syncRun(false);
+        createJobPostMessageToFriend("x", null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, contentType).syncRun();
+        createJobPostMessageToFriend("z", null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, contentType).syncRun();
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, contentType).syncRun();
 
-        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, contentType).syncRun(false);
-        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "text/css").syncRun(false);
-        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "application/octet-stream").syncRun(false);
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, contentType).syncRun();
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "text/css").syncRun();
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "application/octet-stream").syncRun();
 
-        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "image/gif").syncRun(false);
-        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "image/svg+xml").syncRun(false);
-        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "text/plain").syncRun(false);
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "image/gif").syncRun();
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "image/svg+xml").syncRun();
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "text/plain").syncRun();
 
-        MessageSent messageSentA = createJobPostMessageToFriend("a a", null, "https://duckduckgo.com/?q=" + counter + "&ia=about", friendId, contentType).syncRun(false);
+        MessageSent messageSentA = createJobPostMessageToFriend("a a", null, "https://duckduckgo.com/?q=" + counter + "&ia=about", friendId, contentType).syncRun();
 
-        MessageSent messageSentB = createJobPostMessageToFriend("bbb b", null, "https://www.google.com/images/srpr/logo11w.png", friendId, "image/png").syncRun(false);
-        MessageSent messageSentC = createJobPostMessageToFriend("ab", null, "http://www.workjoke.com/images/logo.png", friendId, "image/png").syncRun(false);
+        MessageSent messageSentB = createJobPostMessageToFriend("bbb b", null, "https://www.google.com/images/srpr/logo11w.png", friendId, "image/png").syncRun();
+        MessageSent messageSentC = createJobPostMessageToFriend("ab", null, "http://www.workjoke.com/images/logo.png", friendId, "image/png").syncRun();
 
         PaginatedResponse<MessageSent> messageSentPaginatedResponse = messageManager.createJobGetMessagesSent().setServiceRequestParams(
                 new ServiceRequestParams()
                         .setPageIndex(4).setResultsPerPage(2)
-        ).syncRun(false);
+        ).syncRun();
         assertEquals(2, messageSentPaginatedResponse.getEmbedded().getItems().size());
         assertEquals("https://duckduckgo.com/?q=8&ia=about",messageSentPaginatedResponse.getEmbedded().getItems().get(0).getContentList().get(0).getUrl());
         assertEquals("https://duckduckgo.com/?q=9&ia=about",messageSentPaginatedResponse.getEmbedded().getItems().get(1).getContentList().get(0).getUrl());
@@ -180,7 +180,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
             PaginatedResponse<MessageSent> filteredPaginatedResponse = messageManager.createJobGetMessagesSent().setServiceRequestParams(
                     new ServiceRequestParams()
                             .setPageIndex(0).setResultsPerPage(3).setFilterQuery("timeSent>='" + messageSentA.getTimeSent() + "'").sort("timeSent", ServiceRequestParams.Sort.Order.Asc)
-            ).syncRun(false);
+            ).syncRun();
             assertEquals(3, filteredPaginatedResponse.getEmbedded().getItems().size());
 
             assertEquals(messageSentA, filteredPaginatedResponse.getEmbedded().getItems().get(0));
@@ -197,7 +197,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
                         .setResultsPerPage(3)
                         .setPageIndex(2)
                 .sort("id", ServiceRequestParams.Sort.Order.Desc)
-        ).syncRun(false);
+        ).syncRun();
 
         assertEquals(3, paginatedResponse.getEmbedded().getItems().size());
         assertEquals(2, paginatedResponse.getPage().getNumber());
@@ -219,7 +219,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
             PaginatedResponse<MessageReceived> filteredPaginatedResponse = messageManager.createJobGetMessagesReceived().setServiceRequestParams(
                     new ServiceRequestParams()
                             .setPageIndex(0).setResultsPerPage(3).setFilterQuery("(type~'%a%'|type~'%b%')").sort("timeSent", ServiceRequestParams.Sort.Order.Asc)
-            ).syncRun(false);
+            ).syncRun();
             assertEquals(3, filteredPaginatedResponse.getEmbedded().getItems().size());
 
             MessageContentDetail messageContentDetail = filteredPaginatedResponse.getEmbedded().getItems().get(0).getContentList().get(0);
@@ -237,12 +237,12 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
 
 
 
-        messageManager.createJobDeleteMessageReceived(paginatedResponse.getEmbedded().getItems().get(0).getId()).syncRun(false);
+        messageManager.createJobDeleteMessageReceived(paginatedResponse.getEmbedded().getItems().get(0).getId()).syncRun();
 
-        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "text/plain").syncRun(false);
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "text/plain").syncRun();
 
-        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter + "&ia=about", friendId, contentType).syncRun(false);
-        createJobPostMessageToFriend(null, null, "https://www.google.com/images/srpr/logo11w.png", friendId, "image/png").syncRun(false);
+        createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter + "&ia=about", friendId, contentType).syncRun();
+        createJobPostMessageToFriend(null, null, "https://www.google.com/images/srpr/logo11w.png", friendId, "image/png").syncRun();
 
     }
 

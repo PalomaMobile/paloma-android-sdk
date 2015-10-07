@@ -131,6 +131,15 @@ public abstract class BaseRetryPolicyAwareJob<Result> extends Job {
     public abstract Result syncRun(boolean postEvent) throws Throwable;
 
     /**
+     * Same as calling {@link #syncRun(boolean)} with parameter {@code postEvent} set to {@code false}
+     * @return job result
+     * @throws Throwable
+     */
+    public Result syncRun() throws Throwable {
+        return syncRun(false);
+    }
+
+    /**
      * @return the same value as {@link #getMaxAttempts()}.
      */
     @Override
