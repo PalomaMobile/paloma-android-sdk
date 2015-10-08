@@ -1,11 +1,12 @@
-package com.palomamobile.android.sdk.auth;
+package com.palomamobile.android.sdk.user;
 
 import android.support.annotation.NonNull;
+import com.palomamobile.android.sdk.auth.AuthType;
 
 import java.util.HashMap;
 
 /**
- * Username & password user credentials required to retrieve an {@link AccessToken} for a given user, this token must be present in API calls
+ * Username & password user credentials required to retrieve an access token for a given user, this token must be present in API calls
  * that require {@link AuthType#User}.
  * <br/>
  *

@@ -1,7 +1,7 @@
 package com.palomamobile.android.sdk.messageThread;
 
 import android.test.InstrumentationTestCase;
-import com.palomamobile.android.sdk.auth.PasswordUserCredential;
+import com.palomamobile.android.sdk.user.PasswordUserCredential;
 import com.palomamobile.android.sdk.core.PaginatedResponse;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.util.LatchedBusListener;

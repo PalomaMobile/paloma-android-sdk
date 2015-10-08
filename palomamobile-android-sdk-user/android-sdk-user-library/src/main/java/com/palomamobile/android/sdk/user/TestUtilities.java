@@ -2,7 +2,6 @@ package com.palomamobile.android.sdk.user;
 
 import android.test.InstrumentationTestCase;
 import com.palomamobile.android.sdk.auth.IUserCredential;
-import com.palomamobile.android.sdk.auth.PasswordUserCredential;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 
 /**

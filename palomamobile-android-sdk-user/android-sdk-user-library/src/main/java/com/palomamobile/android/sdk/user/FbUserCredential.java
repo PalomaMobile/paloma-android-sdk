@@ -1,11 +1,12 @@
-package com.palomamobile.android.sdk.auth;
+package com.palomamobile.android.sdk.user;
 
 import android.support.annotation.NonNull;
+import com.palomamobile.android.sdk.auth.AuthType;
 
 import java.util.HashMap;
 
 /**
- * Facebook user credentials required to retrieve an {@link AccessToken} for a given user, this token must be present in API calls
+ * Facebook user credentials required to retrieve an access token for a given user, this token must be present in API calls
  * that require {@link AuthType#User}.
  * <br/>
  *
@@ -47,11 +48,6 @@ public class FbUserCredential extends BaseUserCredential {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("FbUserCredential{");
-        sb.append("username='").append(username).append('\'');
-        sb.append(", credential=").append(credential);
-        sb.append('}');
-        return sb.toString();
+        return "FbUserCredential{} " + super.toString();
     }
-
 }

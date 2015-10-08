@@ -8,8 +8,6 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.TestUserManager;
-import com.palomamobile.android.sdk.auth.FbUserCredential;
-import com.palomamobile.android.sdk.auth.PasswordUserCredential;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.util.LatchedBusListener;
 import com.palomamobile.android.sdk.core.util.Utilities;

@@ -2,10 +2,8 @@ package com.palomamobile.android.sdk.user;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import com.palomamobile.android.sdk.auth.FbUserCredential;
 import com.palomamobile.android.sdk.auth.IUserCredential;
 import com.palomamobile.android.sdk.auth.IUserCredentialsProvider;
-import com.palomamobile.android.sdk.auth.PasswordUserCredential;
 import com.palomamobile.android.sdk.core.IServiceManager;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;

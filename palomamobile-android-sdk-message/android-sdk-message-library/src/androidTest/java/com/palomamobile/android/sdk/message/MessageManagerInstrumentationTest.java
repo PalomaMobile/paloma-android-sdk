@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.test.InstrumentationTestCase;
 import android.util.Log;
-import com.palomamobile.android.sdk.auth.PasswordUserCredential;
+import com.palomamobile.android.sdk.user.PasswordUserCredential;
 import com.palomamobile.android.sdk.core.PaginatedResponse;
 import com.palomamobile.android.sdk.core.ServiceRequestParams;
 import com.palomamobile.android.sdk.core.ServiceSupport;
