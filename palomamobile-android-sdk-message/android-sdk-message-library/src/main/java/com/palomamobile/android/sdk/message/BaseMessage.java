@@ -12,8 +12,19 @@ public abstract class BaseMessage implements Serializable {
 
     private long id;
     private long messageThreadId;
-    private long timeSent;
     private String type;
+
+    @SuppressWarnings("unused")
+    private long timeSent;
+
+    private String replyTo;
+
+    @SuppressWarnings("unused")
+    private String replyToken;
+
+    @SuppressWarnings("unused")
+    private String replyChain;
+
     private List<MessageContentDetail> contentList;
 
     public long getId() {
@@ -48,23 +59,38 @@ public abstract class BaseMessage implements Serializable {
         this.messageThreadId = messageThreadId;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Message{");
-        sb.append("id=").append(id);
-        sb.append(", timeSent=").append(timeSent);
-        sb.append(", type=\'").append(type).append('\'');
-        sb.append(", contentList=").append(contentList);
-        sb.append('}');
-        return sb.toString();
+    public String getReplyTo() {
+        return replyTo;
+    }
+
+    public void setReplyTo(String replyTo) {
+        this.replyTo = replyTo;
+    }
+
+    public String getReplyChain() {
+        return replyChain;
+    }
+
+    public String getReplyToken() {
+        return replyToken;
     }
 
     public long getTimeSent() {
         return timeSent;
     }
 
-    public void setTimeSent(long timeSent) {
-        this.timeSent = timeSent;
+    @Override
+    public String toString() {
+        return "BaseMessage{" +
+                "id=" + id +
+                ", messageThreadId=" + messageThreadId +
+                ", timeSent=" + timeSent +
+                ", type='" + type + '\'' +
+                ", replyTo='" + replyTo + '\'' +
+                ", replyToken='" + replyToken + '\'' +
+                ", replyChain='" + replyChain + '\'' +
+                ", contentList=" + contentList +
+                '}';
     }
 
     @Override
@@ -78,6 +104,9 @@ public abstract class BaseMessage implements Serializable {
         if (messageThreadId != that.messageThreadId) return false;
         if (timeSent != that.timeSent) return false;
         if (type != null ? !type.equals(that.type) : that.type != null) return false;
+        if (replyTo != null ? !replyTo.equals(that.replyTo) : that.replyTo != null) return false;
+        if (replyToken != null ? !replyToken.equals(that.replyToken) : that.replyToken != null) return false;
+        if (replyChain != null ? !replyChain.equals(that.replyChain) : that.replyChain != null) return false;
         return !(contentList != null ? !contentList.equals(that.contentList) : that.contentList != null);
 
     }
@@ -88,6 +117,9 @@ public abstract class BaseMessage implements Serializable {
         result = 31 * result + (int) (messageThreadId ^ (messageThreadId >>> 32));
         result = 31 * result + (int) (timeSent ^ (timeSent >>> 32));
         result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (replyTo != null ? replyTo.hashCode() : 0);
+        result = 31 * result + (replyToken != null ? replyToken.hashCode() : 0);
+        result = 31 * result + (replyChain != null ? replyChain.hashCode() : 0);
         result = 31 * result + (contentList != null ? contentList.hashCode() : 0);
         return result;
     }

@@ -1,5 +1,6 @@
 package com.palomamobile.android.sdk.message;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,6 +21,10 @@ public class MessageSent extends BaseMessage {
         this.recipients = recipients;
     }
 
+    public void setRecipients(Long... recipients) {
+        setRecipients(Arrays.asList(recipients));
+    }
+
     public boolean isIncludeRecipients() {
         return includeRecipients;
     }
@@ -33,7 +38,7 @@ public class MessageSent extends BaseMessage {
         final StringBuilder sb = new StringBuilder("MessageRequest{");
         sb.append("recipients=").append(recipients);
         sb.append(", includeRecipients=").append(includeRecipients);
-        sb.append(", " + super.toString());
+        sb.append(", ").append(super.toString());
         sb.append('}');
         return sb.toString();
     }

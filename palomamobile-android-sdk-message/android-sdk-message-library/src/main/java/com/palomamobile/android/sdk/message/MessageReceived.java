@@ -11,52 +11,47 @@ import java.util.List;
  */
 public class MessageReceived extends BaseMessage {
 
+    @SuppressWarnings("unused")
     private UserDetails sender;
-    private long replyToRootId;
-    private long sentMessageId;
+
+    @SuppressWarnings("unused")
     private List<Long> otherRecipients;
 
     public UserDetails getSender() {
         return sender;
     }
 
-    public void setSender(UserDetails sender) {
-        this.sender = sender;
-    }
 
     public List<Long> getOtherRecipients() {
         return otherRecipients;
     }
 
-    public void setOtherRecipients(List<Long> otherRecipients) {
-        this.otherRecipients = otherRecipients;
-    }
-
-    public long getReplyToRootId() {
-        return replyToRootId;
-    }
-
-    public void setReplyToRootId(long replyToRootId) {
-        this.replyToRootId = replyToRootId;
-    }
-
-    public long getSentMessageId() {
-        return sentMessageId;
-    }
-
-    public void setSentMessageId(long sentMessageId) {
-        this.sentMessageId = sentMessageId;
+    @Override
+    public String toString() {
+        return "MessageReceived{" +
+                "otherRecipients=" + otherRecipients +
+                ", sender=" + sender +
+                "} " + super.toString();
     }
 
     @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("MessageReceived{");
-        sb.append("sender=").append(sender);
-        sb.append(", replyToRootId=").append(replyToRootId);
-        sb.append(", sentMessageId=").append(sentMessageId);
-        sb.append(", otherRecipients=").append(otherRecipients);
-        sb.append(", " + super.toString());
-        sb.append('}');
-        return sb.toString();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        MessageReceived that = (MessageReceived) o;
+
+        if (sender != null ? !sender.equals(that.sender) : that.sender != null) return false;
+        return !(otherRecipients != null ? !otherRecipients.equals(that.otherRecipients) : that.otherRecipients != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (sender != null ? sender.hashCode() : 0);
+        result = 31 * result + (otherRecipients != null ? otherRecipients.hashCode() : 0);
+        return result;
     }
 }

@@ -348,5 +348,72 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         assertEquals(expectedUrl, messageContentDetail.getUrl());
     }
 
+    public void testReplyChain() throws Throwable {
+        //create a "userA"
+        String userAStr = "userA_" + String.valueOf(System.currentTimeMillis());
+        final User a = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(userAStr, userAStr));
+        assertNotNull(a);
+
+        //create a "userB"
+        String userBStr = "userB_" + String.valueOf(System.currentTimeMillis());
+        final User b = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(userBStr, userBStr));
+        assertNotNull(b);
+
+        //create a "userC"
+        String userCStr = "userC_" + String.valueOf(System.currentTimeMillis());
+        final User c = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(userCStr, userCStr));
+        assertNotNull(c);
+
+
+        //as C send message to A and Bx2
+        MessageSent sentC1Out = new MessageSent();
+        sentC1Out.setRecipients(a.getId(), b.getId(), b.getId());
+        sentC1Out.setIncludeRecipients(true);
+        MessageSent sentC1 = messageManager.createJobPostMessage(sentC1Out).syncRun();
+        assertEquals(sentC1Out.getRecipients(), sentC1.getRecipients());
+        assertNotNull(sentC1.getReplyToken());
+        assertNotNull(sentC1.getReplyChain());
+
+
+        //login as B
+        TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(userBStr, userBStr));
+        PaginatedResponse<MessageReceived> b1Received = messageManager.createJobGetMessagesReceived().syncRun();
+        List<MessageReceived> b1ReceivedItems = b1Received.getEmbedded().getItems();
+        assertEquals(2, b1ReceivedItems.size());
+        assertEquals(b1ReceivedItems.get(0).getSender(), b1ReceivedItems.get(1).getSender());
+        assertEquals(b1ReceivedItems.get(0).getReplyChain(), b1ReceivedItems.get(1).getReplyChain());
+        assertEquals(b1ReceivedItems.get(0).getReplyToken(), b1ReceivedItems.get(1).getReplyToken());
+        assertEquals(1, b1ReceivedItems.get(0).getOtherRecipients().size());
+        assertEquals(b1ReceivedItems.get(0).getOtherRecipients(), b1ReceivedItems.get(1).getOtherRecipients());
+
+        //reply to both A & C
+        MessageSent sentB1Out = new MessageSent();
+        sentB1Out.setRecipients(a.getId(), c.getId());
+        sentB1Out.setIncludeRecipients(true);
+        sentB1Out.setReplyTo(b1ReceivedItems.get(0).getReplyToken());
+        MessageSent sentB1 = messageManager.createJobPostMessage(sentB1Out).syncRun();
+        assertEquals(sentB1Out.getRecipients(), sentB1.getRecipients());
+        assertNotNull(sentB1.getReplyToken());
+        assertEquals(sentC1.getReplyChain(), sentB1.getReplyChain());
+        assertFalse(sentB1.getReplyToken().equals(sentC1.getReplyToken()));
+
+
+        //login as A
+        TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(userAStr, userAStr));
+        PaginatedResponse<MessageReceived> a1Received = messageManager.createJobGetMessagesReceived().syncRun();
+        List<MessageReceived> a1ReceivedItems = a1Received.getEmbedded().getItems();
+        assertEquals(2, a1ReceivedItems.size());//initial message from C, reply from B to C & A
+        assertEquals(c.getId(), a1ReceivedItems.get(0).getSender().getUserId());
+        assertEquals(b.getId(), a1ReceivedItems.get(1).getSender().getUserId());
+        assertEquals(a1ReceivedItems.get(0).getReplyChain(), a1ReceivedItems.get(1).getReplyChain());
+        assertEquals(2, a1ReceivedItems.get(0).getOtherRecipients().size()); //Bx2
+        assertEquals(b.getId(), (long) a1ReceivedItems.get(0).getOtherRecipients().get(0));
+        assertEquals(b.getId(), (long) a1ReceivedItems.get(0).getOtherRecipients().get(1));
+        assertEquals(1, a1ReceivedItems.get(1).getOtherRecipients().size()); //C
+        assertEquals(c.getId(), (long) a1ReceivedItems.get(1).getOtherRecipients().get(0));
+
+        //log back in as C
+        //XXX check all the replies are correct
+    }
 
 }
