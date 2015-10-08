@@ -2,8 +2,10 @@ package com.palomamobile.android.sdk.user;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import com.palomamobile.android.sdk.auth.FbUserCredential;
 import com.palomamobile.android.sdk.auth.IUserCredential;
 import com.palomamobile.android.sdk.auth.IUserCredentialsProvider;
+import com.palomamobile.android.sdk.auth.PasswordUserCredential;
 import com.palomamobile.android.sdk.core.IServiceManager;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
@@ -32,28 +34,38 @@ public interface IUserManager extends IUserCredentialsProvider, IServiceManager<
     @Nullable User getUser();
 
     /**
-     * Convenience method constructs the right {@link IUserCredential} instance and calls {@link #createJobRegisterUser(IUserCredential)}
+     * Convenience method constructs the right {@link FbUserCredential} instance and calls {@link #createJobRegisterUserViaFacebook(FbUserCredential)}
      *
      * @param fbUserId
      * @param fbAuthToken
+     * @return new job to register a user
      */
     JobRegisterUser createJobRegisterUserViaFacebook(@NonNull String fbUserId, @NonNull String fbAuthToken);
 
     /**
-     * Convenience method constructs the right {@link IUserCredential} instance and calls {@link #createJobRegisterUser(IUserCredential)}
+     * Convenience method calls {@link #createJobRegisterUser(IUserCredential)}
      *
-     * @param fbUserId
-     * @param fbAuthToken
+     * @param credential
+     * @return new job to register a user
      */
-    JobRegisterUser createJobRegisterUserViaFacebook(@Nullable String userName, @NonNull String fbUserId, @NonNull String fbAuthToken);
+    JobRegisterUser createJobRegisterUserViaFacebook(@NonNull FbUserCredential credential);
 
     /**
-     * Convenience method constructs the correct {@link IUserCredential} instance and calls {@link #createJobRegisterUser(IUserCredential)}
+     * Convenience method constructs the correct {@link PasswordUserCredential} instance and calls {@link #createJobRegisterUserViaPassword(PasswordUserCredential)}
      *
      * @param userName
      * @param password
+     * @return new job to register a user
      */
     JobRegisterUser createJobRegisterUserViaPassword(@NonNull String userName, @NonNull String password);
+
+    /**
+     * Convenience method calls {@link #createJobRegisterUser(IUserCredential)}
+     *
+     * @param passwordUserCredential
+     * @return new job to register a user
+     */
+    JobRegisterUser createJobRegisterUserViaPassword(PasswordUserCredential passwordUserCredential);
 
     /**
      * Async request to register a user using the provided {@link IUserCredential}. Credential can represent a new user for sign-up
@@ -63,6 +75,7 @@ public interface IUserManager extends IUserCredentialsProvider, IServiceManager<
      * as returned by {@link ServiceSupport#getEventBus()}.
      *
      * @param userCredential
+     * @return new job to register a user
      */
     JobRegisterUser createJobRegisterUser(@NonNull IUserCredential userCredential);
 
@@ -71,7 +84,7 @@ public interface IUserManager extends IUserCredentialsProvider, IServiceManager<
      *
      * @param fbUserId
      * @param fbAuthToken
-     * @return
+     * @return new job to login a user
      */
     JobLoginUser createJobLoginUserViaFacebook(@NonNull String fbUserId, @NonNull String fbAuthToken);
 
@@ -80,7 +93,7 @@ public interface IUserManager extends IUserCredentialsProvider, IServiceManager<
      *
      * @param userName
      * @param password
-     * @return
+     * @return new job to login a user
      */
     JobLoginUser createJobLoginUserViaPassword(@NonNull String userName, @NonNull String password);
 
@@ -92,8 +105,12 @@ public interface IUserManager extends IUserCredentialsProvider, IServiceManager<
      * as returned by {@link ServiceSupport#getEventBus()}.
      *
      * @param userCredential
-     * @return
+     * @return new job to login a user
      */
     JobLoginUser createJobLoginUser(@NonNull IUserCredential userCredential);
+
+    JobGetUser createJobJobGetUser();
+
+    JobUpdateUser createJobUpdateUser(UserUpdate userUpdate);
 
 }

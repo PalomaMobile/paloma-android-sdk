@@ -24,7 +24,6 @@ class UserManager implements IUserManager {
 
     private IUserCredential userCredential;
 
-    private User localUser;
 
     public UserManager(IServiceSupport serviceSupport) {
         this.userService = serviceSupport.getRestAdapter().create(IUserService.class);
@@ -52,16 +51,19 @@ class UserManager implements IUserManager {
     }
 
     public JobRegisterUser createJobRegisterUserViaFacebook(@NonNull String fbUserId, @NonNull String fbAuthToken) {
-        return createJobRegisterUserViaFacebook(null, fbUserId, fbAuthToken);
+        return createJobRegisterUserViaFacebook(new FbUserCredential(fbUserId, fbAuthToken));
     }
 
-    public JobRegisterUser createJobRegisterUserViaFacebook(@Nullable String userName, @NonNull String fbUserId, @NonNull String fbAuthToken) {
-        FbUserCredential facebookCredential = new FbUserCredential(userName, fbUserId, fbAuthToken);
-        return createJobRegisterUser(facebookCredential);
+    public JobRegisterUser createJobRegisterUserViaFacebook(@NonNull FbUserCredential credential) {
+        return createJobRegisterUser(credential);
     }
 
     public JobRegisterUser createJobRegisterUserViaPassword(@NonNull String userName, @NonNull String password) {
         PasswordUserCredential passwordUserCredential = new PasswordUserCredential(userName, password);
+        return createJobRegisterUserViaPassword(passwordUserCredential);
+    }
+
+    public JobRegisterUser createJobRegisterUserViaPassword(PasswordUserCredential passwordUserCredential) {
         return createJobRegisterUser(passwordUserCredential);
     }
 
@@ -71,11 +73,7 @@ class UserManager implements IUserManager {
     }
 
     public JobLoginUser createJobLoginUserViaFacebook(@NonNull String fbUserId, @NonNull String fbAuthToken) {
-        return createJobLoginUserViaFacebook(null, fbUserId, fbAuthToken);
-    }
-
-    public JobLoginUser createJobLoginUserViaFacebook(@Nullable String userName, @NonNull String fbUserId, @NonNull String fbAuthToken) {
-        FbUserCredential facebookCredential = new FbUserCredential(userName, fbUserId, fbAuthToken);
+        FbUserCredential facebookCredential = new FbUserCredential(fbUserId, fbAuthToken);
         return createJobLoginUser(facebookCredential);
     }
 
@@ -90,6 +88,16 @@ class UserManager implements IUserManager {
     }
 
     @Override
+    public JobGetUser createJobJobGetUser() {
+        return new JobGetUser(getUser().getId());
+    }
+
+    @Override
+    public JobUpdateUser createJobUpdateUser(UserUpdate userUpdate) {
+        return new JobUpdateUser(getUser().getId(), userUpdate);
+    }
+
+    @Override
     @NonNull
     public IUserService getService() {
         return userService;
@@ -98,7 +106,6 @@ class UserManager implements IUserManager {
 
     void updateLocalUser(User updatedLocalUser) {
         this.userCredential.setUsername(updatedLocalUser.getUsername());
-        localUser = updatedLocalUser;
         ServiceSupport.Instance.getCache().put(CACHE_KEY_LOCAL_USER, updatedLocalUser);
     }
 

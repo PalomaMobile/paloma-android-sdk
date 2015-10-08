@@ -39,7 +39,7 @@ class AuthManager implements IAuthManager {
 
     public AuthManager(IServiceSupport serviceSupport) {
         this.context = serviceSupport.getContext();
-        setClientCredentials();
+        initClientCredentials();
         setServiceSupport(serviceSupport);
         serviceSupport.registerServiceManager(IAuthManager.class, this);
     }
@@ -50,7 +50,7 @@ class AuthManager implements IAuthManager {
         this.serviceSupport.getOkHttpClient().interceptors().add(new OAuth2Interceptor(this));
     }
 
-    private void setClientCredentials() {
+    private void initClientCredentials() {
         clientId = Utilities.getValueFromAppMetadata(context, CONFIG_NAME_CLIENT_ID);
         try {
             appSignature = getApplicationSignature(context);

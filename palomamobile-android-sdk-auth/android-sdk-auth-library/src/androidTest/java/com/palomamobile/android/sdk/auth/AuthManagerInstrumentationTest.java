@@ -29,5 +29,5 @@ public class AuthManagerInstrumentationTest extends InstrumentationTestCase {
         assertNull(authManager.getClientAccessToken(IAuthManager.TokenRetrievalMode.CACHE_ONLY, null));
     }
 
-    //testGetClientAccessToken(){} is effectively done in the User SDK
+    //testGetUserAccessToken(){} is effectively done in the User SDK
 }

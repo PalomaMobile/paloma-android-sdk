@@ -1,10 +1,8 @@
 package com.palomamobile.android.sdk.auth;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Facebook user credentials required to retrieve an {@link AccessToken} for a given user, this token must be present in API calls
@@ -12,35 +10,29 @@ import java.util.Map;
  * <br/>
  *
  */
-public class FbUserCredential implements IUserCredential {
+public class FbUserCredential extends BaseUserCredential {
     public static final String FB_CREDENTIAL_TYPE = "facebook";
-
-    @Nullable private String username;
-    private Map<String, String> credential;
 
     /**
      * Construct a {@code FbUserCredential} using Facebook credentials. See https://developers.facebook.com/docs/android/login-with-facebook/
      * <br/>
-     * @param username optional username for paloma platform, if {@code null} user name as returned by facebook is used
      * @param fbUserId as returned from com.facebook.AccessToken#getUserId()
      * @param fbAuthToken as returned from com.facebook.AccessToken#getToken()
      */
-    public FbUserCredential(@Nullable String username, @NonNull String fbUserId, @NonNull String fbAuthToken) {
-        this.username = username;
+    public FbUserCredential(@NonNull String fbUserId, @NonNull String fbAuthToken) {
         credential = new HashMap<>();
         credential.put(PROP_CREDENTIAL_TYPE, FB_CREDENTIAL_TYPE);
         credential.put("userId", fbUserId);
         credential.put("accessToken", fbAuthToken);
     }
 
+    /**
+     * Set optional username for paloma platform, if {@code null} user name as returned by facebook is used
+     * @param userName
+     */
     @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String userName) {
+        super.setUsername(userName);
     }
 
     @Override
@@ -61,4 +53,5 @@ public class FbUserCredential implements IUserCredential {
         sb.append('}');
         return sb.toString();
     }
+
 }
