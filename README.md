@@ -18,11 +18,18 @@ At a high level the SDK enables the following key features provided by the platf
 
 ## Architecture overview
 
+The Paloma SDK strives to enable simple integration with the libraries you already use. For example, the SDK communicates with client 
+app via events, the client app can specify it's own preferred event bus implementation by providing a simple adapter, the SDK comes pre-bundled with
+<i>OttoEventBusAdapter</i> for [Otto](http://square.github.io/otto/) and <i>GreenRobotEventBusAdapter</i> for [EventBus](https://github.com/greenrobot/EventBus).
+
+Currently the SDK uses the [android-priority-jobqueue](https://github.com/yigit/android-priority-jobqueue) for queueing and
+persisting jobs, our short term development plan is to remove this hard dependency and make the queueing mechanism configurable. 
+
 The Paloma SDK for Android is written and structured with the following goals in mind:
 
 - make it easy to expand module functionality without breaking existing code
 - make it easy to add more modules without breaking existing code
-- make it easy to provide custom 3rd party implementation for each module
+- make it easy to provide custom 3rd party implementation for each module 
 
 The SDK is split into several modules clearly defined by their function.
 
@@ -51,6 +58,7 @@ To get started you will need to set-up a [platform application](http://54.251.11
 The SDK depends on the following open source projects that we hold in high regard:
 
 * [EventBus](https://github.com/greenrobot/EventBus) for updating your app with changes, this is how the SDK communicates with your app. 
+* [Otto](http://square.github.io/otto/) alternative to EventBus. 
 * [gson](https://github.com/google/gson) for parsing and constructing JSON.
 * [okhttp](https://github.com/square/okhttp) for HTTP comms.
 * [retrofit](https://github.com/square/retrofit) to talk to our restful platform APIs.
