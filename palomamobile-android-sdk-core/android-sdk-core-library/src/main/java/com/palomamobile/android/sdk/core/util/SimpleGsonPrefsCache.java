@@ -5,21 +5,15 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import com.google.gson.Gson;
-import com.palomamobile.android.sdk.core.ICacheable;
 import com.palomamobile.android.sdk.core.ICache;
-import com.palomamobile.android.sdk.core.ServiceSupport;
 
 import java.lang.reflect.Type;
 
 /**
  * Simple, not very scalable, implementation of {@link ICache} interface. It can be used directly by invoking the {@link #put(String, Object)}
- * It also listens to the event bus {@link ServiceSupport#getEventBus()} and caches values from events that implement {@link ICacheable}.
- * Note: cache uses the highest receiver priority so that when another subscriber (unless it also listens with the highest priority)
- * receives an event it can expect the cache to already contain correct values as contained in the event.
  * Cache uses {@link Gson} as serialization mechanism and {@link SharedPreferences} for storage, in terms of performance this is fine for
  * caching tokens and other small bits and bobs but likely not much more than that.
  * <br/>
- *
  */
 public class SimpleGsonPrefsCache implements ICache {
 
@@ -33,12 +27,6 @@ public class SimpleGsonPrefsCache implements ICache {
     public SimpleGsonPrefsCache(Context context) {
         this.context = context;
         this.gson = new Gson();
-        ServiceSupport.Instance.getEventBus().register(this, Integer.MAX_VALUE);
-    }
-
-    @SuppressWarnings("unused")
-    public void onEvent(ICacheable cacheable) {
-        put(cacheable.getCacheKey(), cacheable.getCacheValue());
     }
 
     public <T> T get(@NonNull String key, @NonNull Class<T> type) {

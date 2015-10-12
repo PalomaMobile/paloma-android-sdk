@@ -1,4 +1,4 @@
-package com.palomamobile.android.sdk.core;
+package com.palomamobile.android.sdk.core.util;
 
 /**
  * Implement this interface to enable caching of specific objects.

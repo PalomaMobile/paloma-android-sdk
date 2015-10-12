@@ -42,13 +42,17 @@ public enum ServiceSupport implements IServiceSupport {
     private ICache cache;
     private RestAdapter restAdapter;
     private OkHttpClient okHttpClient;
+
     private JobManager jobManager;
-    private EventBus eventBus;
+    private IEventBus eventBus;
+    private EventBus internalEventBus;
+
     private IRetryPolicyProvider retryPolicyProvider;
     private Uri endpoint;
 
 
     public void init(Context context) {
+        internalEventBus = new EventBus();
         init(new ServiceSupportConfiguration(context));
     }
 
@@ -80,6 +84,14 @@ public enum ServiceSupport implements IServiceSupport {
                 .build();
 
         this.instantiateDeclaredServiceManagers();
+    }
+
+    @Override
+    public EventBus getInternalEventBus() {
+        if (!new Exception().getStackTrace()[0].getClassName().contains("com.palomamobile.android.sdk")) {
+            Log.i(TAG, "IServiceSupport.getInternalEventBus() is only useful if modifying SDK, maybe you want IServiceSupport.getEventBus()?");
+        }
+        return internalEventBus;
     }
 
     /**
@@ -139,7 +151,7 @@ public enum ServiceSupport implements IServiceSupport {
             throw new IllegalArgumentException();
         }
         serviceManagerMap.put(intrface, serviceManager);
-        eventBus.post(new EventServiceManagerRegistered(intrface));
+        internalEventBus.post(new EventServiceManagerRegistered(intrface));
     }
 
     @Override
@@ -160,7 +172,7 @@ public enum ServiceSupport implements IServiceSupport {
      * @see IServiceSupport#getEventBus()
      */
     @Override
-    public EventBus getEventBus() {
+    public IEventBus getEventBus() {
         initCheck();
         return eventBus;
     }

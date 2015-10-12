@@ -27,7 +27,7 @@ public interface IMessageManager extends IServiceManager<IMessageService> {
      * If both {@code payload} and {@code url} are set the content found at the {@code url} doesn't have to match the value of
      * {@code payload}, especially since the content at the {@code url} can change over time.
      * If only {@code payload} is set  then service will create a url with content type "text/plain" containing the payload.
-     * When the request is completed an {@link EventMessageSentPosted} is published on the {@link de.greenrobot.event.EventBus}
+     * When the request is completed an {@link EventMessageSentPosted} is published on the {@link com.palomamobile.android.sdk.core.IEventBus}
      * as returned by {@link ServiceSupport#getEventBus()}.
      *
      * @param message message to be sent
@@ -36,7 +36,7 @@ public interface IMessageManager extends IServiceManager<IMessageService> {
 
     /**
      * Async request to refresh the list of messages received by the current user.
-     * When the request is completed an {@link EventMessagesReceived} is published on the {@link de.greenrobot.event.EventBus}
+     * When the request is completed an {@link EventMessagesReceived} is published on the {@link com.palomamobile.android.sdk.core.IEventBus}
      * as returned by {@link ServiceSupport#getEventBus()}.
      */
     JobGetMessagesReceived createJobGetMessagesReceived();
@@ -44,7 +44,7 @@ public interface IMessageManager extends IServiceManager<IMessageService> {
 
     /**
      * Async request to refresh the list of messages sent by the current user.
-     * When the request is completed an {@link EventMessagesSent} is published on the {@link de.greenrobot.event.EventBus}
+     * When the request is completed an {@link EventMessagesSent} is published on the {@link com.palomamobile.android.sdk.core.IEventBus}
      * as returned by {@link ServiceSupport#getEventBus()}.
      */
     JobGetMessagesSent createJobGetMessagesSent();
@@ -52,7 +52,7 @@ public interface IMessageManager extends IServiceManager<IMessageService> {
     /**
      * Async request to delete a received message identified by {@code messageId}. Deletion of a message will publish
      * {@link EventMessagesReceived} with an updated list of messages immediately after the local caches are updated
-     * (prior to any network access). Event is published on the {@link de.greenrobot.event.EventBus}
+     * (prior to any network access). Event is published on the {@link com.palomamobile.android.sdk.core.IEventBus}
      * as returned by {@link ServiceSupport#getEventBus()}.
      *
      * @param messageId

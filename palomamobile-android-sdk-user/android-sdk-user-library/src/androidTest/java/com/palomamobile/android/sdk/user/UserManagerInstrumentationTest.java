@@ -38,7 +38,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
             facebookAppId = Utilities.getValueFromAppMetadata(getInstrumentation().getContext(), "facebook.app.id");
             facebookAppSecret = Utilities.getValueFromAppMetadata(getInstrumentation().getContext(), "facebook.app.secret");
         } catch (Exception e) {
-            Log.w(TAG, "FacebookApp NOT setup, will not be not running instrumentation tests that involve creating FB users, provide your own values for a Facebook test app id and secret .");
+            Log.w(TAG, "FacebookApp NOT setup, will not be not running instrumentation tests that involve creating FB users, provide your own values for a Facebook test app id and secret.");
         }
     }
 

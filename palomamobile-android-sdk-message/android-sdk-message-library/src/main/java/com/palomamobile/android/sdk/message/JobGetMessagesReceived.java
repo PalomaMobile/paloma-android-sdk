@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Convenience wrapper around {@link IMessageService#getMessagesReceived(String, long, Map, String, String...)}
  * Once this job is completed (with success or failure) it posts {@link EventMessagesReceived} on the
- * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
+ * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
  */
 public class JobGetMessagesReceived extends BaseRetryPolicyAwareJob<PaginatedResponse<MessageReceived>> {

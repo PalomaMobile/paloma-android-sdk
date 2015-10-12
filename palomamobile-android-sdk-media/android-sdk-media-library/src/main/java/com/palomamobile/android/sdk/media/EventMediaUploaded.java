@@ -4,7 +4,7 @@ import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
 
 /**
- * Event published on the {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()})
+ * Event published on the {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()})
  * once a previously requested media upload has finished.
  * The event contains either {@code mediaInfo} on success or {@code throwable} on
  * failure.

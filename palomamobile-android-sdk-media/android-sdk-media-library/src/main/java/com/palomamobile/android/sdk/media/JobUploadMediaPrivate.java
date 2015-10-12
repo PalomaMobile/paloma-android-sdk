@@ -14,7 +14,7 @@ import java.io.File;
  * Convenience wrapper around {@link IMediaService#postMediaPrivate(String, long, TypedInput)}}
  * used to post media that becomes available only to the posting user.
  * Once this job is completed (with success or failure) it posts {@link EventMediaUploaded} on the
- * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
+ * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
  */
 public class JobUploadMediaPrivate extends BaseJobUploadMedia {

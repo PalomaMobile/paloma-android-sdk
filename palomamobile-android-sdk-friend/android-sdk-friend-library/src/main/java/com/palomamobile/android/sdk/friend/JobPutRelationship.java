@@ -11,7 +11,7 @@ import com.path.android.jobqueue.Params;
  * Convenience wrapper around {@link IFriendService#addRelationship(String, long, long, RelationAttributes)}
  * used for friend requests, confirmations, user blocking etc.
  * Once this job is completed (with success or failure) it posts {@link EventRelationshipUpdated} on the
- * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
+ * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
  */
 public class JobPutRelationship extends BaseRetryPolicyAwareJob<Relationship> {

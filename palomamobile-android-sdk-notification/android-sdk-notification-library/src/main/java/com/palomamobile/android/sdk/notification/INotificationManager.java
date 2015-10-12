@@ -26,9 +26,9 @@ public interface INotificationManager extends IServiceManager<INotificationServi
      * This method exists solely to provide the ability to test Notifications on their own without the need for
      * additional triggers. This asynchronous method will ask the server to return the provided {@code echo} notification via
      * the configured channel (GCM, SMS, etc.).</br>
-     * When the request to send notification is posted to server an {@link EventEchoNotificationRequested} is published on the {@link de.greenrobot.event.EventBus}
+     * When the request to send notification is posted to server an {@link EventEchoNotificationRequested} is published on the {@link com.palomamobile.android.sdk.core.IEventBus}
      * as returned by {@link ServiceSupport#getEventBus()}.</br>
-     * When a notification is received {@link EventNotificationReceived} is published on the {@link de.greenrobot.event.EventBus}
+     * When a notification is received {@link EventNotificationReceived} is published on the {@link com.palomamobile.android.sdk.core.IEventBus}
      * as returned by {@link ServiceSupport#getEventBus()}.</br>
      *
      * @param echo notification sent to the server to be received back via a notification channel

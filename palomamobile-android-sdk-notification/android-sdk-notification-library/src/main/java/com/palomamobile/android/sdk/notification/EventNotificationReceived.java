@@ -4,7 +4,7 @@ import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.IEvent;
 
 /**
- * Event published on the {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()})
+ * Event published on the {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()})
  * whenever a {@link Notification} for the client application is received on any channel (GCM, SMS etc.)
  * The event contains either the {@code notification} on success or {@code throwable} on
  * failure.<br/>

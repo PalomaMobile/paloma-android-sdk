@@ -7,7 +7,7 @@ import com.path.android.jobqueue.Params;
 /**
  * Convenience wrapper around {@link IMessageThreadService#getMessageThread(String, long)}
  * Once this job is completed (with success or failure) it posts {@link EventMessageThreadReceived} on the
- * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
+ * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
  */
 public class JobGetMessageThread extends BaseRetryPolicyAwareJob<MessageThread> {

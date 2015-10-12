@@ -99,7 +99,7 @@ public abstract class BaseRetryPolicyAwareJob<Result> extends Job {
     }
 
     /**
-     * Implement this method to post a failure {@link IJobEvent} on the {@link de.greenrobot.event.EventBus}
+     * Implement this method to post a failure {@link IJobEvent} on the {@link com.palomamobile.android.sdk.core.IEventBus}
      * as returned by {@link ServiceSupport#getEventBus()}
      * @param throwable cause of job failure
      */

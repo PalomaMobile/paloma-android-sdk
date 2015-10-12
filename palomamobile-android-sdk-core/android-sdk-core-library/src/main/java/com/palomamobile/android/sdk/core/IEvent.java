@@ -1,7 +1,7 @@
 package com.palomamobile.android.sdk.core;
 
 /**
- * Event is posted on the {@link de.greenrobot.event.EventBus} in order to notify interested listeners
+ * Event is posted on the {@link com.palomamobile.android.sdk.core.IEventBus} in order to notify interested listeners
  * of changes in SDK state or data availability.
  *
  */

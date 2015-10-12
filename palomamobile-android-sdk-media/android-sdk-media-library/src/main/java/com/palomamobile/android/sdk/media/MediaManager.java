@@ -15,9 +15,6 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.util.UUID;
 
-/**
- *
- */
 class MediaManager implements IMediaManager {
 
     private IMediaService mediaService;
@@ -26,7 +23,7 @@ class MediaManager implements IMediaManager {
     public MediaManager(IServiceSupport serviceSupport) {
         this.mediaService = serviceSupport.getRestAdapter().create(IMediaService.class);
         serviceSupport.registerServiceManager(IMediaManager.class, this);
-        serviceSupport.getEventBus().register(this);
+        serviceSupport.getInternalEventBus().register(this);
     }
 
     public void onEvent(EventServiceManagerRegistered event) {

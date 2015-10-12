@@ -17,7 +17,7 @@ import com.path.android.jobqueue.Params;
  *
  * Convenience wrapper around {@link INotificationService#addGcmRegistrationId(String, Long, JsonObject)}
  * Once this job is completed (with success or failure) it posts {@link EventGcmRegistrationIdUpdated} on the
- * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
+ * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
  */
 public class JobUserUpdateGcmRegistrationId extends BaseRetryPolicyAwareJob<String> {

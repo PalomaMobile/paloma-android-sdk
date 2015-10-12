@@ -25,9 +25,8 @@ class NotificationManager implements INotificationManager {
 
     public NotificationManager(IServiceSupport serviceSupport) {
         this.notificationService = serviceSupport.getRestAdapter().create(INotificationService.class);
-        serviceSupport.getEventBus().register(this);
+        serviceSupport.getInternalEventBus().register(this);
         serviceSupport.registerServiceManager(INotificationManager.class, this);
-
 
         IUserManager userManager = serviceSupport.getServiceManager(IUserManager.class);
         if (userManager != null) {

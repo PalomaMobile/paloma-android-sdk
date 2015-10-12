@@ -13,7 +13,7 @@ import java.util.Map;
  * Convenience wrapper around {@link IFriendService#postSocialUserCredentials(String, long, SocialUserCredential, Map)}
  * request to post 3rd party service credentials to the Friend service for the purposes of friend discovery and friend matching.
  * Once this job is completed (with success or failure) it posts {@link EventSocialUserCredentialsPosted} on the
- * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
+ * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
  */
 public class JobPostSocialUserCredential extends BaseRetryPolicyAwareJob<Void> {

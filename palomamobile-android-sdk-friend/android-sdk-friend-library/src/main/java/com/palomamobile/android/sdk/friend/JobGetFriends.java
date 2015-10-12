@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Convenience wrapper around {@link IFriendService#getFriends(String, long, Map)}, request to refresh current users list of friends.
  * Once this job is completed (with success or failure) it posts {@link EventFriendsListReceived} on the
- * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
+ * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
  */
 public class JobGetFriends extends BaseRetryPolicyAwareJob<PaginatedResponse<Friend>> {

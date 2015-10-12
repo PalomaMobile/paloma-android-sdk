@@ -1,17 +1,17 @@
 package com.palomamobile.android.sdk.messageThread;
 
 import android.test.InstrumentationTestCase;
-import com.palomamobile.android.sdk.user.PasswordUserCredential;
+import com.palomamobile.android.sdk.core.IEventBus;
 import com.palomamobile.android.sdk.core.PaginatedResponse;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.util.LatchedBusListener;
 import com.palomamobile.android.sdk.message.EventMessageSentPosted;
 import com.palomamobile.android.sdk.message.MessageContentDetail;
 import com.palomamobile.android.sdk.message.MessageSent;
+import com.palomamobile.android.sdk.user.PasswordUserCredential;
 import com.palomamobile.android.sdk.user.TestUtilities;
 import com.palomamobile.android.sdk.user.User;
 import com.path.android.jobqueue.JobManager;
-import de.greenrobot.event.EventBus;
 import retrofit.RetrofitError;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class MessageThreadManagerInstrumentationTest extends InstrumentationTestCase {
     public static final String TAG = MessageThreadManagerInstrumentationTest.class.getSimpleName();
 
-    private EventBus eventBus;
+    private IEventBus eventBus;
     private JobManager jobManager;
     private IMessageThreadManager messageThreadManager;
 

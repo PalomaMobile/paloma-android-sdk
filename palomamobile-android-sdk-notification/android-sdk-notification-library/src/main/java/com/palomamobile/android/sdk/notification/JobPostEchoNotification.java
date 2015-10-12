@@ -9,7 +9,7 @@ import com.path.android.jobqueue.Params;
 /**
  * Convenience wrapper around {@link INotificationService#postEchoNotification(String, Long, Notification)}
  * Once this job is completed (with success or failure) it posts {@link EventEchoNotificationRequested} on the
- * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
+ * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * When the actual {@link Notification} is delivered (as a result of this request) a {@link EventNotificationReceived}
  * is posted on the event bus.
  * </br>

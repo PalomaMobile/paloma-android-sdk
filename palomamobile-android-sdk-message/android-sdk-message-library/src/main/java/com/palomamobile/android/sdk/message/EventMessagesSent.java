@@ -5,7 +5,7 @@ import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
 
 /**
- * Event published on the {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()})
+ * Event published on the {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()})
  * when the list of messages sent is refreshed.
  * The event contains either a current list of messages sent as returned by {@link #getSuccess()} on success or
  * {@code throwable} on failure.

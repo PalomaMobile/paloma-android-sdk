@@ -7,7 +7,7 @@ import com.path.android.jobqueue.Params;
 /**
  * Convenience wrapper around {@link IMessageThreadService#deleteMessageThreads(String, long)}
  * Once this job is completed (with success or failure) it posts {@link EventMessageThreadsDeleted} on the
- * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
+ * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
  */
 public class JobDeleteMessageThreads extends BaseRetryPolicyAwareJob<Void> {

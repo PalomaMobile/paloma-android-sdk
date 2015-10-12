@@ -16,9 +16,9 @@ import retrofit.client.Client;
 
 /**
  * Builder allows ServiceSupport initialisation with custom:
- * <ul><li/>{@link EventBus}
+ * <ul>
  * <li/>{@link Context}
- * <li/>{@link EventBus}
+ * <li/>{@link IEventBus}
  * <li/>{@link ICache}
  * <li/>{@link IRetryPolicyProvider}
  * <li/>{@link JobManager}
@@ -30,7 +30,7 @@ import retrofit.client.Client;
 public class ServiceSupportConfiguration {
 
     private Context context;
-    private EventBus eventBus;
+    private IEventBus eventBus;
     private ICache cache;
     private IRetryPolicyProvider retryPolicyProvider;
     private Configuration.Builder jobManagerBuilder;
@@ -46,7 +46,7 @@ public class ServiceSupportConfiguration {
      * @param eventBus
      * @return {@code this} for chaining calls
      */
-    public ServiceSupportConfiguration setEventBus(EventBus eventBus) {
+    public ServiceSupportConfiguration setEventBus(IEventBus eventBus) {
         this.eventBus = eventBus;
         return this;
     }
@@ -136,9 +136,9 @@ public class ServiceSupportConfiguration {
     /**
      * @return the optionally set eventBus or a default as returned by {@link EventBus#getDefault()}
      */
-    public EventBus getEventBus() {
+    public IEventBus getEventBus() {
         if (eventBus == null) {
-            eventBus = EventBus.getDefault();
+            eventBus = new GreenRobotEventBusAdapter(EventBus.getDefault());
         }
         return eventBus;
     }

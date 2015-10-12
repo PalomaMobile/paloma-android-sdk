@@ -6,7 +6,7 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
 import com.palomamobile.android.sdk.message.MessageSent;
 
 /**
- * Event published on the {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()})
+ * Event published on the {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()})
  * once the list of messageThread messages is received on the client.
  * {@link #getSuccess()}  will return a {@link PaginatedResponse<MessageSent>>} on success, or {@code null} on failure<br/>
  * {@link #getFailure()} will return a {@code null} on success, on failure a non-null {@code throwable}.<br/>

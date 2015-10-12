@@ -12,7 +12,7 @@ import retrofit.RetrofitError;
  * used to clear local caches and then attempt to register a new user user. If the credentials match an existing user a new user will not be created,
  * instead the existing user will be returned.
  * Once this job is completed (with success or failure) it posts {@link EventLocalUserUpdated} on the
- * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
+ * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
  */
 public class JobRegisterUser extends BaseRetryPolicyAwareJob<User> {

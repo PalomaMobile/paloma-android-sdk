@@ -18,6 +18,13 @@ import retrofit.RestAdapter;
 public interface IServiceSupport {
 
     /**
+     * Method only of interest to developers looking to modify or extend SDK functionality.
+     * @return {@code EventBus} instance that propagates events related to SDK infrastructure
+     * such as {@link EventServiceManagerRegistered}.
+     */
+    EventBus getInternalEventBus();
+
+    /**
      * @return cache implementation
      */
     ICache getCache();
@@ -46,7 +53,7 @@ public interface IServiceSupport {
 
     /**
      * Registers a new {@link IServiceManager} instance with the SDK. Once the registration is complete a {@link EventServiceManagerRegistered}
-     * is posted to the {@link EventBus} as returned by {@link #getEventBus()} this event can be used to implement dependency management
+     * is posted to the {@link EventBus} as returned by {@link #getInternalEventBus()} this event can be used to implement dependency management
      * among various service managers. For an example see the code in {@code com.palomamobile.android.sdk.notification.NotificationManager}
      * as it implements its dependency on {@code com.palomamobile.android.sdk.user.IUserManager} implementation.
      * After registering this way the service manager is globally available via the {@link #getServiceManager(Class)} method.
@@ -67,7 +74,7 @@ public interface IServiceSupport {
     /**
      * @return event bus used to propagate SDK related {@link IEvent}s
      */
-    EventBus getEventBus();
+    IEventBus getEventBus();
 
     /**
      * @return retry policy provider. Controls the global retry policy, per job retry policy can be implemented by overriding

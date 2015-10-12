@@ -4,7 +4,7 @@ import com.palomamobile.android.sdk.core.IEvent;
 import com.palomamobile.android.sdk.core.IServiceSupport;
 
 /**
- * JobEvent is posted on the {@link de.greenrobot.event.EventBus} returned by {@link IServiceSupport#getEventBus()}
+ * JobEvent is posted on the {@link com.palomamobile.android.sdk.core.IEventBus} returned by {@link IServiceSupport#getEventBus()}
  * in order to notify interested listeners
  * of changes in SDK state or data availability as a direct result of executing a {@link BaseRetryPolicyAwareJob}
  *

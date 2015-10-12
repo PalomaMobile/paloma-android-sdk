@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Convenience wrapper around {@link IFriendService#getRelationships(String, long, Map)} to retrieve a list of local users relationships.
  * Once this job is completed (with success or failure) it posts {@link EventRelationshipsListReceived} on the
- * {@link de.greenrobot.event.EventBus} (as returned by {@link ServiceSupport#getEventBus()}).
+ * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
  */
 public class JobGetRelationships extends BaseRetryPolicyAwareJob<PaginatedResponse<Relationship>> {

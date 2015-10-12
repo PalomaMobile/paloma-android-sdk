@@ -25,7 +25,7 @@ class UserManager implements IUserManager {
 
     public UserManager(IServiceSupport serviceSupport) {
         this.userService = serviceSupport.getRestAdapter().create(IUserService.class);
-        serviceSupport.getEventBus().register(this);
+        serviceSupport.getInternalEventBus().register(this);
         serviceSupport.registerServiceManager(IUserManager.class, this);
         IAuthManager authManager = serviceSupport.getServiceManager(IAuthManager.class);
         if (authManager != null) {
