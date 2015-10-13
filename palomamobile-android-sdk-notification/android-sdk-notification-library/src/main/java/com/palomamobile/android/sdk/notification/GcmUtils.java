@@ -8,7 +8,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.palomamobile.android.sdk.core.util.Utilities;
 
 /**
- *
+ * GCM (Google Cloud Messaging) utilities.
  */
 public class GcmUtils {
 
