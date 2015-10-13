@@ -181,13 +181,12 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
         ServiceSupport.Instance.getEventBus().register(latchedBusListener);
         PasswordUserCredential credential = new PasswordUserCredential(userName, userPassword);
 
-//      XXX: put this back once server issue USR-88 is fixed
-//        credential.setDisplayName("toodles");
-//        credential.setDateOfBirth("1978-11-28");
-//        Map<String, String> custom = new HashMap<>();
-//        custom.put("hair", "red");
-//        custom.put("eyes", "green");
-//        credential.setCustom(custom);
+        credential.setDisplayName("toodles");
+        credential.setDateOfBirth("1978-11-28");
+        Map<String, String> custom = new HashMap<>();
+        custom.put("hair", "red");
+        custom.put("eyes", "green");
+        credential.setCustom(custom);
 
         JobRegisterUser jobRegisterUserViaPassword = userManager.createJobRegisterUserViaPassword(credential);
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaPassword);
@@ -199,12 +198,11 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
         assertNotNull(newUser);
         assertEquals(userName, newUser.getUsername());
 
-//      XXX: put this back once server issue USR-88 is fixed
-//        assertEquals("toodles", newUser.getDisplayName());
-//        assertEquals("1978-11-28", newUser.getDateOfBirth());
-//        assertEquals(2, newUser.getCustom().size());
-//        assertEquals("red", newUser.getCustom().get("hair"));
-//        assertEquals("green", newUser.getCustom().get("eyes"));
+        assertEquals("toodles", newUser.getDisplayName());
+        assertEquals("1978-11-28", newUser.getDateOfBirth());
+        assertEquals(2, newUser.getCustom().size());
+        assertEquals("red", newUser.getCustom().get("hair"));
+        assertEquals("green", newUser.getCustom().get("eyes"));
 
         assertNull(latchedBusListener.getEvent().getFailure());
 
