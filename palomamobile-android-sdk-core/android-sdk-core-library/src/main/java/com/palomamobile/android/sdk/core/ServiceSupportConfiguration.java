@@ -6,7 +6,6 @@ import com.palomamobile.android.sdk.core.qos.DefaultRetryPolicyProvider;
 import com.palomamobile.android.sdk.core.qos.IRetryPolicyProvider;
 import com.palomamobile.android.sdk.core.util.SimpleGsonPrefsCache;
 import com.palomamobile.android.sdk.core.util.TruncatedAndroidLog;
-import com.path.android.jobqueue.JobManager;
 import com.path.android.jobqueue.config.Configuration;
 import com.path.android.jobqueue.log.CustomLogger;
 import com.squareup.okhttp.OkHttpClient;
@@ -21,9 +20,9 @@ import retrofit.client.Client;
  * <li/>{@link IEventBus}
  * <li/>{@link ICache}
  * <li/>{@link IRetryPolicyProvider}
- * <li/>{@link JobManager}
- * <li/>{@link OkHttpClient}
- * <li/>{@link RestAdapter.Builder}
+ * <li/>(deprecated) {@link com.path.android.jobqueue.JobManager}
+ * <li/>{@link com.squareup.okhttp.OkHttpClient}
+ * <li/>{@link retrofit.RestAdapter.Builder}
  * </ul>
  * @see ServiceSupport#init(ServiceSupportConfiguration)
  */
@@ -74,6 +73,8 @@ public class ServiceSupportConfiguration {
     /**
      * Optionally set a custom job manager builder
      * @param jobManagerBuilder
+     * @deprecated future releases of the SDK will provide infrastructure to plug in different job manager implementations, there will
+     * no longer be a hard SDK dependency on {@code android-priority-jobqueue} library.
      * @return {@code this} for chaining calls
      */
     public ServiceSupportConfiguration setJobManagerBuilder(Configuration.Builder jobManagerBuilder) {
@@ -165,7 +166,9 @@ public class ServiceSupportConfiguration {
 
 
     /**
-     * @return the optionally set job manager configuration builder or a {@link JobManager} instance configured with a custom debug logger
+     * @deprecated future releases of the SDK will provide infrastructure to plug in different job manager implementations, there will
+     * no longer be a hard SDK dependency on {@code android-priority-jobqueue} library.
+     * @return the optionally set job manager configuration builder or a {@link com.path.android.jobqueue.JobManager} instance configured with a custom debug logger
      */
     public Configuration.Builder getJobManagerBuilder() {
         if (jobManagerBuilder == null) {

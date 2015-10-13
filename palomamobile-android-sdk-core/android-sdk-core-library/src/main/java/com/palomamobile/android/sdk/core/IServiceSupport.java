@@ -51,8 +51,11 @@ public interface IServiceSupport {
 
     /**
      * Return the job manager used to queue / persist / execute jobs provided by the SDK or the client app.
+     * @deprecated future releases of the SDK will provide infrastructure to plug in different job manager implementations, there will
+     * no longer be a hard SDK dependency on {@code android-priority-jobqueue} library.
      * @return job manager
      */
+    @Deprecated
     JobManager getJobManager();
 
 
