@@ -1,7 +1,8 @@
 package com.palomamobile.android.sdk.core;
 
 /**
- * Implement this interface to prove own event bus adapter.
+ * Implement this interface to provide own event bus adapter. For sample implementations have a look at {@link GreenRobotEventBusAdapter}
+ * and {@link OttoEventBusAdapter}
  */
 public interface IEventBus {
 
