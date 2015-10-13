@@ -25,27 +25,32 @@ public interface IServiceSupport {
     EventBus getInternalEventBus();
 
     /**
+     * Return SDK internal cache. By default implemented as {@link com.palomamobile.android.sdk.core.util.SimpleGsonPrefsCache}
      * @return cache implementation
      */
     ICache getCache();
 
     /**
-     * @return rest adapter used to connect to server APIs
+     * Return rest adapter used to connect to server APIs.
+     * @return rest adapter
      */
     RestAdapter getRestAdapter();
 
     /**
-     * @return http client used by the rest adapter to provide connectivity
+     * Return http client used by the rest adapter to provide connectivity
+     * @return http client
      * @see #getRestAdapter()
      */
     OkHttpClient getOkHttpClient();
 
     /**
+     * Return application context.
      * @return application context
      */
     Context getContext();
 
     /**
+     * Return the job manager used to queue / persist / execute jobs provided by the SDK or the client app.
      * @return job manager
      */
     JobManager getJobManager();
@@ -72,13 +77,15 @@ public interface IServiceSupport {
     <T extends IServiceManager> T getServiceManager(@NonNull Class<T> intrface);
 
     /**
+     * Return {@link IEventBus} implementation used to propagate events. Any events created as a result of a
      * @return event bus used to propagate SDK related {@link IEvent}s
      */
     IEventBus getEventBus();
 
     /**
-     * @return retry policy provider. Controls the global retry policy, per job retry policy can be implemented by overriding
+     * Return a global retry policy provider. Controls the global retry policy, per job retry policy can be implemented by overriding
      * {@link BaseRetryPolicyAwareJob#shouldReRunOnThrowable(Throwable, int, int)}
+     * @return global retry policy provider
      */
     IRetryPolicyProvider getRetryPolicyProvider();
 
@@ -90,7 +97,8 @@ public interface IServiceSupport {
     void setRetryPolicyProvider(IRetryPolicyProvider retryPolicyProvider);
 
     /**
-     * @return uri endpoint of the API services, as configured in the AndroidManifest.xml metadata element.
+     * Return uri endpoint of the API services, as configured in the AndroidManifest.xml metadata element.
+     * @return uri endpoint of the API services
      */
     Uri getEndpoint();
 }
