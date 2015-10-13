@@ -1,0 +1,5 @@
+apply from: '../../base_sample_app.gradle'
+
+dependencies {
+  compile project(":palomamobile-android-sdk-verification:android-sdk-verification-library")
+}

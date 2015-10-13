@@ -1,0 +1,2 @@
+include 'android-sdk-verification-library'
+include 'android-sdk-verification-sample-app'

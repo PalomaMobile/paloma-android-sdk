@@ -23,3 +23,7 @@ include 'palomamobile-android-sdk-friend:android-sdk-friend-sample-app'
 include 'palomamobile-android-sdk-notification'
 include 'palomamobile-android-sdk-notification:android-sdk-notification-library'
 include 'palomamobile-android-sdk-notification:android-sdk-notification-sample-app'
+
+include 'palomamobile-android-sdk-verification'
+include 'palomamobile-android-sdk-verification:android-sdk-verification-library'
+include 'palomamobile-android-sdk-verification:android-sdk-verification-sample-app'
