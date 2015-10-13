@@ -77,6 +77,7 @@ public class ServiceSupportConfiguration {
      * no longer be a hard SDK dependency on {@code android-priority-jobqueue} library.
      * @return {@code this} for chaining calls
      */
+    @Deprecated
     public ServiceSupportConfiguration setJobManagerBuilder(Configuration.Builder jobManagerBuilder) {
         this.jobManagerBuilder = jobManagerBuilder;
         return this;
@@ -170,6 +171,7 @@ public class ServiceSupportConfiguration {
      * no longer be a hard SDK dependency on {@code android-priority-jobqueue} library.
      * @return the optionally set job manager configuration builder or a {@link com.path.android.jobqueue.JobManager} instance configured with a custom debug logger
      */
+    @Deprecated
     public Configuration.Builder getJobManagerBuilder() {
         if (jobManagerBuilder == null) {
             jobManagerBuilder = new Configuration.Builder(context).customLogger(new CustomLogger() {
