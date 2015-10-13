@@ -56,10 +56,6 @@ class NotificationManager implements INotificationManager {
         }
     }
 
-    public INotificationService getNotificationService() {
-        return notificationService;
-    }
-
     @SuppressWarnings("unused")
     public void onEventBackgroundThread(EventLocalUserUpdated eventLocalUserUpdated) {
         Log.d(TAG, "onEventBackgroundThread(): " + eventLocalUserUpdated);

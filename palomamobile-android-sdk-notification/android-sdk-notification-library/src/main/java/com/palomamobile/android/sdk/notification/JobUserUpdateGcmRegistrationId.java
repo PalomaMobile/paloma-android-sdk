@@ -103,7 +103,7 @@ public class JobUserUpdateGcmRegistrationId extends BaseRetryPolicyAwareJob<Stri
         gcmRegistrationIdJson.addProperty("gcmRegistrationId", gcmRegistrationId);
         NotificationManager notificationManager = (NotificationManager) ServiceSupport.Instance.getServiceManager(INotificationManager.class);
 
-        GcmRegistrationIdResponse gcmRegistrationIdResponse = notificationManager.getNotificationService().addGcmRegistrationId(getRetryId(), userId, gcmRegistrationIdJson);
+        GcmRegistrationIdResponse gcmRegistrationIdResponse = notificationManager.getService().addGcmRegistrationId(getRetryId(), userId, gcmRegistrationIdJson);
         Log.d(TAG, "SUCCESS (update cache) addGcmRegistrationId() for userId: " + userId + ", gcmRegistrationId: " + gcmRegistrationId);
         ServiceSupport.Instance.getCache().put(NotificationManager.CACHE_KEY_GCM_REGISTRATION_ID, gcmRegistrationIdResponse.getGcmRegistrationId());
         if (postEvent) {

@@ -43,7 +43,7 @@ public class JobPostEchoNotification extends BaseRetryPolicyAwareJob<Void> {
         Log.d(TAG, "posting echo notification: " + echo);
         IUserManager userManager = ServiceSupport.Instance.getServiceManager(IUserManager.class);
         NotificationManager notificationManager = (NotificationManager) ServiceSupport.Instance.getServiceManager(INotificationManager.class);
-        notificationManager.getNotificationService().postEchoNotification(getRetryId(), userManager.getUser().getId(), echo);
+        notificationManager.getService().postEchoNotification(getRetryId(), userManager.getUser().getId(), echo);
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventEchoNotificationRequested(this, echo));
         }
