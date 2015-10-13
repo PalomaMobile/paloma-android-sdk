@@ -2,6 +2,9 @@ package com.palomamobile.android.sdk.core;
 
 import com.squareup.otto.Bus;
 
+/**
+ * Enables out-of-box integration with Otto.
+ */
 public class OttoEventBusAdapter implements IEventBus {
 
     private Bus bus;

@@ -18,7 +18,7 @@ public interface CustomHeader {
     String HEADER_PALOMA_SDK_MODULE_VERSION = "Paloma-SDK-Module-Version";
 
     /**
-     * Header with this name identifies each individual request for the purposes of deduping requests during retries.
+     * Header with this name identifies each individual request for the purposes of de-duping requests during retries.
      */
     String HEADER_NAME_PALOMA_REQUEST = "X-Paloma-Request";
 

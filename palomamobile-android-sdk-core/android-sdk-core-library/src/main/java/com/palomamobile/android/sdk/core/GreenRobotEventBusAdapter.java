@@ -2,6 +2,9 @@ package com.palomamobile.android.sdk.core;
 
 import de.greenrobot.event.EventBus;
 
+/**
+ * Enables out-of-box integration with EventBus.
+ */
 public class GreenRobotEventBusAdapter implements IEventBus {
 
     private EventBus eventBus;
