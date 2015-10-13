@@ -23,7 +23,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
 
     public static final String TAG = FriendManagerInstrumentationTest.class.getSimpleName();
 
-    //TODO: add values for these facebookAppId & facebookAppSecret in strings.xml (see comments)
+    //TODO: add values for these facebookAppId & facebookAppSecret in strings.xml (see comments in file)
     private static String facebookAppId = null;
     private static String facebookAppSecret = null;
 
