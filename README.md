@@ -57,8 +57,8 @@ To get started you will need to set-up a [platform application](http://54.251.11
 
 The SDK depends on the following open source projects that we hold in high regard:
 
-* [EventBus](https://github.com/greenrobot/EventBus) for updating your app with changes, this is how the SDK communicates with your app. 
-* [Otto](http://square.github.io/otto/) alternative to EventBus. 
+* [EventBus](https://github.com/greenrobot/EventBus) distribute events around your app, and indeed the SDK.
+* [Otto](http://square.github.io/otto/) alternative to EventBus.
 * [gson](https://github.com/google/gson) for parsing and constructing JSON.
 * [okhttp](https://github.com/square/okhttp) for HTTP comms.
 * [retrofit](https://github.com/square/retrofit) to talk to our restful platform APIs.
