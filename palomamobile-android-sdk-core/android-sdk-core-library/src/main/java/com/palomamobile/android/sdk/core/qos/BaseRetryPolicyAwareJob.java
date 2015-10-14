@@ -12,7 +12,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- *
+ * Base class extended by jobs in the SDK, provides retry facilities.
  */
 public abstract class BaseRetryPolicyAwareJob<Result> extends Job {
 
@@ -213,6 +213,12 @@ public abstract class BaseRetryPolicyAwareJob<Result> extends Job {
 
     }
 
+    /**
+     * Retry id identifies each individual job to the backend service, this id remains the same even if the client makes
+     * multiple network calls for the purpose of re-tries.
+     *
+     * @return unique persistent job id that remains constant for each individual job
+     */
     public String getRetryId() {
         return retryId;
     }
