@@ -19,4 +19,6 @@ public class VerificationManagerInstrumentationTest extends InstrumentationTestC
         verificationManager = (VerificationManager) ServiceSupport.Instance.getServiceManager(IVerificationManager.class);
     }
 
+    public void test() {
+    }
 }
