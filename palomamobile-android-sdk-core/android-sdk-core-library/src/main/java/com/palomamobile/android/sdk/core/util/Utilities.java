@@ -16,6 +16,8 @@ import com.palomamobile.android.sdk.core.R;
  */
 public class Utilities {
 
+    public static final String CONFIG_NAME_CLIENT_ID = "com.palomamobile.android.sdk.ClientId";
+
     public static int getAppVersion(Context context) {
         try {
             PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);

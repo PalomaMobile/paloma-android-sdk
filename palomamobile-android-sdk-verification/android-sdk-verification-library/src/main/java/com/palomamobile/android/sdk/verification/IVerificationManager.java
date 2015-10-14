@@ -14,4 +14,9 @@ import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
  * {@code ServiceSupport.Instance.getServiceManager(IVerificationManager.class)}
  */
 public interface IVerificationManager extends IServiceManager<IVerificationService> {
+
+    JobCreateEmailVerification createJobCreateEmailVerification(String emailAddress);
+
+    JobUpdateEmailVerification createJobUpdateEmailVerification(String emailAddress, String code);
+
 }

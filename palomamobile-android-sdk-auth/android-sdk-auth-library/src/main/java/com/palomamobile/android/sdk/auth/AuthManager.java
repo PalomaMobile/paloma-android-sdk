@@ -19,8 +19,6 @@ class AuthManager implements IAuthManager {
 
     public static final String TAG = AuthManager.class.getSimpleName();
 
-    public static final String CONFIG_NAME_CLIENT_ID = "com.palomamobile.android.sdk.ClientId";
-
     public static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
     public static final String GRANT_TYPE_PASSWORD = "password";
     public static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
@@ -51,7 +49,7 @@ class AuthManager implements IAuthManager {
     }
 
     private void initClientCredentials() {
-        clientId = Utilities.getValueFromAppMetadata(context, CONFIG_NAME_CLIENT_ID);
+        clientId = Utilities.getValueFromAppMetadata(context, Utilities.CONFIG_NAME_CLIENT_ID);
         try {
             appSignature = getApplicationSignature(context);
             Log.v(TAG, "Application signature: " + appSignature);

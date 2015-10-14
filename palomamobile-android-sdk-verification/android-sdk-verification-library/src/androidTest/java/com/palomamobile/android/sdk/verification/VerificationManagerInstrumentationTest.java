@@ -19,6 +19,7 @@ public class VerificationManagerInstrumentationTest extends InstrumentationTestC
         verificationManager = (VerificationManager) ServiceSupport.Instance.getServiceManager(IVerificationManager.class);
     }
 
-    public void test() {
+    public void testCreateEmailVerification() throws Throwable {
+        verificationManager.createJobCreateEmailVerification("karel.herink@gmail.com").syncRun();
     }
 }
