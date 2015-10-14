@@ -48,6 +48,15 @@ public class Utilities {
         return sb.toString();
     }
 
+    public static String getAppNameFromMetadata(Context context) {
+        String clientId = getClientIdFromMetadata(context);
+        return clientId.substring(0, clientId.indexOf('-'));
+    }
+
+    public static String getClientIdFromMetadata(Context context) {
+        return getValueFromAppMetadata(context, CONFIG_NAME_CLIENT_ID);
+    }
+
     public static String getValueFromAppMetadata(Context context, String name) {
         try {
             ApplicationInfo ai = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);

@@ -49,7 +49,7 @@ class AuthManager implements IAuthManager {
     }
 
     private void initClientCredentials() {
-        clientId = Utilities.getValueFromAppMetadata(context, Utilities.CONFIG_NAME_CLIENT_ID);
+        clientId = Utilities.getClientIdFromMetadata(context);
         try {
             appSignature = getApplicationSignature(context);
             Log.v(TAG, "Application signature: " + appSignature);

@@ -27,7 +27,7 @@ class VerificationManager implements IVerificationManager {
 
     @Override
     public JobUpdateEmailVerification createJobUpdateEmailVerification(String emailAddress, String code) {
-        String appName = Utilities.getValueFromAppMetadata(ServiceSupport.Instance.getContext(), Utilities.CONFIG_NAME_CLIENT_ID);
+        String appName = Utilities.getAppNameFromMetadata(ServiceSupport.Instance.getContext());
         return new JobUpdateEmailVerification(emailAddress, code, appName);
     }
 }
