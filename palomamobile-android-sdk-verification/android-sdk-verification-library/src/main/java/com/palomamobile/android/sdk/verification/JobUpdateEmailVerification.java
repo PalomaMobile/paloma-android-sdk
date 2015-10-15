@@ -5,7 +5,10 @@ import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.path.android.jobqueue.Params;
 
 /**
- * Created by Karel Herink
+ * Convenience wrapper around {@link IVerificationService#updateEmailVerification(String, String, VerificationEmailUpdate)}
+ * used to finalize an existing verification of an email address with a verification code (received on the email address being verified).
+ * Once this job is completed (with success or failure) it posts {@link EventEmailVerificationCreated} on the
+ * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  */
 public class JobUpdateEmailVerification extends BaseRetryPolicyAwareJob<Void> {
 
