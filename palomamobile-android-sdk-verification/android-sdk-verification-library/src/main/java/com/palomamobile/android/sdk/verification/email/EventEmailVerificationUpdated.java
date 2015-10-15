@@ -1,4 +1,4 @@
-package com.palomamobile.android.sdk.verification;
+package com.palomamobile.android.sdk.verification.email;
 
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseJobEvent;

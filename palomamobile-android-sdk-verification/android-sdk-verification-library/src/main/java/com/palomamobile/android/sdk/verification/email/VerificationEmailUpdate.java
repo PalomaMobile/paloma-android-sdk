@@ -1,4 +1,4 @@
-package com.palomamobile.android.sdk.verification;
+package com.palomamobile.android.sdk.verification.email;
 
 /**
  * Contains parameters for update of a verification email.

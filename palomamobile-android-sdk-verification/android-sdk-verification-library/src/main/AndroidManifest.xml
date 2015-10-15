@@ -10,8 +10,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
-        <meta-data android:name="com.palomamobile.android.sdk.manager-class.verification" android:value="com.palomamobile.android.sdk.verification.VerificationManager"/>
-
+        <meta-data android:name="com.palomamobile.android.sdk.manager-class.verification.email" android:value="com.palomamobile.android.sdk.verification.email.EmailVerificationManager"/>
 
     </application>
 

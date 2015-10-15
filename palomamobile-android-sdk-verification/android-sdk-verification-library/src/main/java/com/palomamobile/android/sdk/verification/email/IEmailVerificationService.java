@@ -1,7 +1,8 @@
-package com.palomamobile.android.sdk.verification;
+package com.palomamobile.android.sdk.verification.email;
 
 import com.palomamobile.android.sdk.auth.IAuthManager;
 import com.palomamobile.android.sdk.core.CustomHeader;
+import com.palomamobile.android.sdk.verification.BuildConfig;
 import retrofit.http.Body;
 import retrofit.http.Header;
 import retrofit.http.Headers;
@@ -11,13 +12,13 @@ import retrofit.http.Path;
 
 /**
  * This interface is consumed by the Retrofit library to provide access to the Paloma Mobile Platform Verification Service RESTful API.
- * All calls are synchronous. To get a concrete implementation of this interface call {@link IVerificationManager#getService()}
+ * All calls are synchronous. To get a concrete implementation of this interface call {@link IEmailVerificationManager#getService()}
  * This class provides somewhat low level access to the Server API it may be more convenient to use methods
- * in {@link IVerificationManager}.
+ * in {@link IEmailVerificationManager}.
  * <br/>
  * @see <a href="http://54.251.112.144/docs/verification-service/index.html">Paloma Mobile Platform Verification Service RESTful API</a>
  */
-public interface IVerificationService {
+public interface IEmailVerificationService {
 
     /**
      * Post an email address to be verified, this will trigger a verification email with a code to be sent to that email address.

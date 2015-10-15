@@ -1,4 +1,4 @@
-package com.palomamobile.android.sdk.verification;
+package com.palomamobile.android.sdk.verification.email;
 
 import android.test.InstrumentationTestCase;
 import com.palomamobile.android.sdk.core.ServiceSupport;
@@ -7,21 +7,21 @@ import com.palomamobile.android.sdk.core.util.LatchedBusListener;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class VerificationManagerInstrumentationTest extends InstrumentationTestCase {
+public class EmailVerificationManagerInstrumentationTest extends InstrumentationTestCase {
 
-    public static final String TAG = VerificationManagerInstrumentationTest.class.getSimpleName();
+    public static final String TAG = EmailVerificationManagerInstrumentationTest.class.getSimpleName();
 
-    private VerificationManager verificationManager;
+    private EmailVerificationManager verificationManager;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
         ServiceSupport.Instance.init(getInstrumentation().getContext());
-        verificationManager = (VerificationManager) ServiceSupport.Instance.getServiceManager(IVerificationManager.class);
+        verificationManager = (EmailVerificationManager) ServiceSupport.Instance.getServiceManager(IEmailVerificationManager.class);
     }
 
     public void testCreateEmailVerification() throws Throwable {
-        IVerificationTestHelperService verificationTestHelperService = ServiceSupport.Instance.getRestAdapter().create(IVerificationTestHelperService.class);
+        IEmailVerificationTestHelperService verificationTestHelperService = ServiceSupport.Instance.getRestAdapter().create(IEmailVerificationTestHelperService.class);
         String tmp = "tmp_" + Long.toString(System.currentTimeMillis());
         String emailAddress = tmp + "@example.com";
 

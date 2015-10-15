@@ -1,11 +1,11 @@
-package com.palomamobile.android.sdk.verification;
+package com.palomamobile.android.sdk.verification.email;
 
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.path.android.jobqueue.Params;
 
 /**
- * Convenience wrapper around {@link IVerificationService#updateEmailVerification(String, String, VerificationEmailUpdate)}
+ * Convenience wrapper around {@link IEmailVerificationService#updateEmailVerification(String, String, VerificationEmailUpdate)}
  * used to finalize an existing verification of an email address with a verification code (received on the email address being verified).
  * Once this job is completed (with success or failure) it posts {@link EventEmailVerificationCreated} on the
  * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
@@ -34,7 +34,7 @@ public class JobUpdateEmailVerification extends BaseRetryPolicyAwareJob<Void> {
 
     @Override
     public Void syncRun(boolean postEvent) throws Throwable {
-        IVerificationManager verificationManager = ServiceSupport.Instance.getServiceManager(IVerificationManager.class);
+        IEmailVerificationManager verificationManager = ServiceSupport.Instance.getServiceManager(IEmailVerificationManager.class);
         verificationManager.getService().updateEmailVerification(getRetryId(), emailAddress, new VerificationEmailUpdate(applicationName, code));
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventEmailVerificationUpdated(this, (Void) null));

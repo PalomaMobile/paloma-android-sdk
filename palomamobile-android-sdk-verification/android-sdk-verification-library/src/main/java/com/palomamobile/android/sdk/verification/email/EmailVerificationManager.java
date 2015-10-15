@@ -1,22 +1,22 @@
-package com.palomamobile.android.sdk.verification;
+package com.palomamobile.android.sdk.verification.email;
 
 import android.support.annotation.NonNull;
 import com.palomamobile.android.sdk.core.IServiceSupport;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.util.Utilities;
 
-class VerificationManager implements IVerificationManager {
+class EmailVerificationManager implements IEmailVerificationManager {
 
-    private IVerificationService verificationService;
+    private IEmailVerificationService verificationService;
 
-    public VerificationManager(IServiceSupport serviceSupport) {
-        this.verificationService = serviceSupport.getRestAdapter().create(IVerificationService.class);
-        serviceSupport.registerServiceManager(IVerificationManager.class, this);
+    public EmailVerificationManager(IServiceSupport serviceSupport) {
+        this.verificationService = serviceSupport.getRestAdapter().create(IEmailVerificationService.class);
+        serviceSupport.registerServiceManager(IEmailVerificationManager.class, this);
     }
 
     @Override
     @NonNull
-    public IVerificationService getService() {
+    public IEmailVerificationService getService() {
         return verificationService;
     }
 
