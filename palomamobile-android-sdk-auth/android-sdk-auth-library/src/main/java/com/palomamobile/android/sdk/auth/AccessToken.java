@@ -3,9 +3,9 @@ package com.palomamobile.android.sdk.auth;
 import com.google.gson.annotations.SerializedName;
 
 /**
- *
+ * Defines an access token (client or user) as implemented by PalomaMobile for OAuth2.
  */
-class AccessToken {
+public class AccessToken {
 
     @SerializedName("access_token")
     private String accessToken;
