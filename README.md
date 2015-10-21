@@ -29,7 +29,7 @@ The Paloma SDK for Android is written and structured with the following goals in
 
 - make it easy to expand module functionality without breaking existing code
 - make it easy to add more modules without breaking existing code
-- make it easy to provide custom 3rd party implementation for each module 
+- make it easy to provide custom 3rd party implementation for each module
 
 The SDK is split into several modules clearly defined by their function.
 
@@ -40,6 +40,7 @@ The SDK is split into several modules clearly defined by their function.
 * [Friend module and discovery](./palomamobile-android-sdk-friend)
 * [Media module](./palomamobile-android-sdk-media)
 * [Notification module](./palomamobile-android-sdk-notification)
+* [Verification module](./palomamobile-android-sdk-verification)
 
 When building an application it is possible to use only a subset of modules rather than the entire SDK.
 
