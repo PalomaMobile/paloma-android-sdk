@@ -91,8 +91,8 @@ class UserManager implements IUserManager {
     }
 
     @Override
-    public JobUpdateUser createJobUpdateUser(UserUpdate userUpdate) {
-        return new JobUpdateUser(getUser().getId(), userUpdate);
+    public JobPostUserUpdate createJobUpdateUser(UserUpdate userUpdate) {
+        return new JobPostUserUpdate(getUser().getId(), userUpdate);
     }
 
     @Override

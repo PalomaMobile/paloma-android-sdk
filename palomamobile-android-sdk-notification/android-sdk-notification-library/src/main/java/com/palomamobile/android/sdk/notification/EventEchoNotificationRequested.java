@@ -10,11 +10,11 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  * request failure.<br/>
  */
 public class EventEchoNotificationRequested extends BaseJobEvent<JobPostEchoNotification, Notification> {
-    protected EventEchoNotificationRequested(JobPostEchoNotification job, Throwable failure) {
+    public EventEchoNotificationRequested(JobPostEchoNotification job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventEchoNotificationRequested(JobPostEchoNotification job, Notification notification) {
+    public EventEchoNotificationRequested(JobPostEchoNotification job, Notification notification) {
         super(job, notification);
     }
 }

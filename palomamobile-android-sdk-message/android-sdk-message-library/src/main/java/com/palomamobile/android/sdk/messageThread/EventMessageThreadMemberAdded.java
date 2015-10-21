@@ -12,11 +12,11 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  * <br/>
  */
 public class EventMessageThreadMemberAdded extends BaseJobEvent<JobAddMessageThreadMember, MessageThreadMember> {
-    protected EventMessageThreadMemberAdded(JobAddMessageThreadMember job, Throwable failure) {
+    public EventMessageThreadMemberAdded(JobAddMessageThreadMember job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventMessageThreadMemberAdded(JobAddMessageThreadMember job, MessageThreadMember messageThreadMember) {
+    public EventMessageThreadMemberAdded(JobAddMessageThreadMember job, MessageThreadMember messageThreadMember) {
         super(job, messageThreadMember);
     }
 }

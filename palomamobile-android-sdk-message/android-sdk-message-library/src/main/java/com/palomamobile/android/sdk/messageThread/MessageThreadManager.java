@@ -31,8 +31,8 @@ class MessageThreadManager implements IMessageThreadManager {
 
 
     @Override
-    public JobUpdateMessageThread createJobUpdateMessageThread(long messageThreadId, MessageThreadUpdate update) {
-        return new JobUpdateMessageThread(messageThreadId, update);
+    public JobPostMessageThreadUpdate createJobUpdateMessageThread(long messageThreadId, MessageThreadUpdate update) {
+        return new JobPostMessageThreadUpdate(messageThreadId, update);
     }
 
     @Override

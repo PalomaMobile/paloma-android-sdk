@@ -13,11 +13,11 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  * <br/>
  */
 public class EventMessageThreadMembersReceived extends BaseJobEvent<JobGetMessageThreadMembers, PaginatedResponse<MessageThreadMember>> {
-    protected EventMessageThreadMembersReceived(JobGetMessageThreadMembers job, Throwable failure) {
+    public EventMessageThreadMembersReceived(JobGetMessageThreadMembers job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventMessageThreadMembersReceived(JobGetMessageThreadMembers job, PaginatedResponse<MessageThreadMember> membersReceivedPaginatedResponse) {
+    public EventMessageThreadMembersReceived(JobGetMessageThreadMembers job, PaginatedResponse<MessageThreadMember> membersReceivedPaginatedResponse) {
         super(job, membersReceivedPaginatedResponse);
     }
 }

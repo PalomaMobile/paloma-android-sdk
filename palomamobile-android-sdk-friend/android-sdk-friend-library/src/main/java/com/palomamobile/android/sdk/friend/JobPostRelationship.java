@@ -14,9 +14,9 @@ import com.path.android.jobqueue.Params;
  * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
  */
-public class JobPutRelationship extends BaseRetryPolicyAwareJob<Relationship> {
+public class JobPostRelationship extends BaseRetryPolicyAwareJob<Relationship> {
 
-    public static final String TAG = JobPutRelationship.class.getSimpleName();
+    public static final String TAG = JobPostRelationship.class.getSimpleName();
     private final Long reciprocalUserId;
     private final String reciprocalUsername;
     private final RelationAttributes relationAttributes;
@@ -27,7 +27,7 @@ public class JobPutRelationship extends BaseRetryPolicyAwareJob<Relationship> {
      * @param reciprocalUserId id of the user on the other end of this 1:1 relationship
      * @param relationAttributes description of the relationship
      */
-    public JobPutRelationship(Params params, long reciprocalUserId, RelationAttributes relationAttributes) {
+    public JobPostRelationship(Params params, long reciprocalUserId, RelationAttributes relationAttributes) {
         super(params);
         this.reciprocalUserId = reciprocalUserId;
         this.reciprocalUsername = null;
@@ -40,7 +40,7 @@ public class JobPutRelationship extends BaseRetryPolicyAwareJob<Relationship> {
      * @param reciprocalUsername username of the user on the other end of this 1:1 relationship
      * @param relationAttributes description of the relationship
      */
-    public JobPutRelationship(Params params, String reciprocalUsername, RelationAttributes relationAttributes) {
+    public JobPostRelationship(Params params, String reciprocalUsername, RelationAttributes relationAttributes) {
         super(params);
         this.reciprocalUserId = null;
         this.reciprocalUsername = reciprocalUsername;
@@ -52,7 +52,7 @@ public class JobPutRelationship extends BaseRetryPolicyAwareJob<Relationship> {
      * @param reciprocalUserId id of the user on the other end of this 1:1 relationship
      * @param relationAttributes description of the relationship
      */
-    public JobPutRelationship(long reciprocalUserId, RelationAttributes relationAttributes) {
+    public JobPostRelationship(long reciprocalUserId, RelationAttributes relationAttributes) {
         this(new Params(0).requireNetwork(), reciprocalUserId, relationAttributes);
     }
 
@@ -61,7 +61,7 @@ public class JobPutRelationship extends BaseRetryPolicyAwareJob<Relationship> {
      * @param reciprocalUsername username of the user on the other end of this 1:1 relationship
      * @param relationAttributes description of the relationship
      */
-    public JobPutRelationship(String reciprocalUsername, RelationAttributes relationAttributes) {
+    public JobPostRelationship(String reciprocalUsername, RelationAttributes relationAttributes) {
         this(new Params(0).requireNetwork(), reciprocalUsername, relationAttributes);
     }
 

@@ -33,24 +33,24 @@ public interface IFriendManager extends IServiceManager<IFriendService> {
     JobPostSocialUserCredential createJobPostSocialUserCredential(SocialUserCredential credential);
 
     /**
-     * Create a new {@link JobPutRelationship}. This enables local user to set relationship attributes between
+     * Create a new {@link JobPostRelationship}. This enables local user to set relationship attributes between
      * themselves and another user to request or confirm friendship via {@link com.palomamobile.android.sdk.friend.RelationAttributes.Type#friend}
      * or block another user via  {@link com.palomamobile.android.sdk.friend.RelationAttributes.Type#blocked}
      * @param reciprocalUserId id of the user on the other end of this 1:1 relationship
      * @param relationAttributes description of the relationship
      * @return new job instance
      */
-    JobPutRelationship createJobPutRelationship(long reciprocalUserId, RelationAttributes relationAttributes);
+    JobPostRelationship createJobPutRelationship(long reciprocalUserId, RelationAttributes relationAttributes);
 
     /**
-     * Create a new {@link JobPutRelationship}. This enables local user to set relationship attributes between
+     * Create a new {@link JobPostRelationship}. This enables local user to set relationship attributes between
      * themselves and another user to request or confirm friendship via {@link com.palomamobile.android.sdk.friend.RelationAttributes.Type#friend}
      * or block another user via  {@link com.palomamobile.android.sdk.friend.RelationAttributes.Type#blocked}
      * @param reciprocalUsername username of the user on the other end of this 1:1 relationship
      * @param relationAttributes description of the relationship
      * @return new job instance
      */
-    JobPutRelationship createJobPutRelationship(String reciprocalUsername, RelationAttributes relationAttributes);
+    JobPostRelationship createJobPutRelationship(String reciprocalUsername, RelationAttributes relationAttributes);
 
     /**
      * Create a new {@link JobGetRelationships}.

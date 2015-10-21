@@ -1,28 +1,23 @@
 package com.palomamobile.android.sdk.verification.email;
 
+import java.io.Serializable;
+
 /**
  * Contains parameters for update of a verification email.
  */
-public class VerificationEmailUpdate {
-
-    private String applicationName;
+public class VerificationEmailUpdate implements Serializable {
 
     /**
      * Code received in the verification email.
      */
     private String code;
 
-    public VerificationEmailUpdate(String applicationName, String code) {
-        this.applicationName = applicationName;
+    public VerificationEmailUpdate(String code) {
         this.code = code;
     }
 
     public String getCode() {
         return code;
-    }
-
-    public String getApplicationName() {
-        return applicationName;
     }
 
     @Override
@@ -32,24 +27,19 @@ public class VerificationEmailUpdate {
 
         VerificationEmailUpdate that = (VerificationEmailUpdate) o;
 
-        if (applicationName != null ? !applicationName.equals(that.applicationName) : that.applicationName != null)
-            return false;
         return !(code != null ? !code.equals(that.code) : that.code != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = applicationName != null ? applicationName.hashCode() : 0;
-        result = 31 * result + (code != null ? code.hashCode() : 0);
-        return result;
+        return code != null ? code.hashCode() : 0;
     }
 
     @Override
     public String toString() {
         return "VerificationEmailUpdate{" +
-                "applicationName='" + applicationName + '\'' +
-                ", code='" + code + '\'' +
+                "code='" + code + '\'' +
                 '}';
     }
 }

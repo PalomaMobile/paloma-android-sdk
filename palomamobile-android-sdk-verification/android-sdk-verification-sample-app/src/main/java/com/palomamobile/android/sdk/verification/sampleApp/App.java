@@ -1,4 +1,4 @@
-package com.palomamobile.android.sdk.user.sampleApp;
+package com.palomamobile.android.sdk.verification.sampleApp;
 
 import android.app.Application;
 import com.palomamobile.android.sdk.core.ServiceSupport;

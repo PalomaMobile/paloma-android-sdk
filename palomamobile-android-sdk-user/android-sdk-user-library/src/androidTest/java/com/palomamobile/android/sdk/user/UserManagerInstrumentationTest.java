@@ -237,8 +237,8 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
 
         final LatchedBusListener<EventLocalUserUpdated> latchedBusListenerUpdate = new LatchedBusListener<>(EventLocalUserUpdated.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListenerUpdate);
-        JobUpdateUser jobUpdateUser = userManager.createJobUpdateUser(update);
-        ServiceSupport.Instance.getJobManager().addJobInBackground(jobUpdateUser);
+        JobPostUserUpdate jobPostUserUpdate = userManager.createJobUpdateUser(update);
+        ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostUserUpdate);
         latchedBusListenerUpdate.await(20, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerUpdate);
 

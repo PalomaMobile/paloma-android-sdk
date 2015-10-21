@@ -12,11 +12,11 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  *
  */
 public class EventMessageReceivedDeleted extends BaseJobEvent<JobDeleteMessageReceived, Void> {
-    protected EventMessageReceivedDeleted(JobDeleteMessageReceived job, Throwable failure) {
+    public EventMessageReceivedDeleted(JobDeleteMessageReceived job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventMessageReceivedDeleted(JobDeleteMessageReceived job) {
+    public EventMessageReceivedDeleted(JobDeleteMessageReceived job) {
         super(job, (Void) null);
     }
 }

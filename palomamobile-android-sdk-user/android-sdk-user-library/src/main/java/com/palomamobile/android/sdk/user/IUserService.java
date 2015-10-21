@@ -68,7 +68,7 @@ public interface IUserService {
 
     /**
      * Update and return an existing {@link User} that matches the provided userId on success. Throws {@link retrofit.RetrofitError} on failure.
-     * <br/>{@link JobUpdateUser} provides a convenient wrapper, consider using it instead.
+     * <br/>{@link JobPostUserUpdate} provides a convenient wrapper, consider using it instead.
      *
      * @param requestId for the purposes of identifying retries
      * @param userId

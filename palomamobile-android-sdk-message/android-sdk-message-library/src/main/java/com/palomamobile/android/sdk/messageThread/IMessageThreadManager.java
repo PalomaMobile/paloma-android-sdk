@@ -28,13 +28,13 @@ public interface IMessageThreadManager extends IServiceManager<IMessageThreadSer
     JobGetMessageThread createJobGetMessageThread(long messageThreadId);
 
     /**
-     * A convenience method o create a new {@link JobUpdateMessageThread} 
+     * A convenience method o create a new {@link JobPostMessageThreadUpdate}
      *
      * @param messageThreadId
      * @param update
      * @return newly created job
      */
-    JobUpdateMessageThread createJobUpdateMessageThread(long messageThreadId, MessageThreadUpdate update);
+    JobPostMessageThreadUpdate createJobUpdateMessageThread(long messageThreadId, MessageThreadUpdate update);
 
     /**
      * A convenience method o create a new {@link JobDeleteMessageThread} 

@@ -10,19 +10,19 @@ import com.path.android.jobqueue.Params;
  * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
  */
-public class JobUpdateMessageThread extends BaseRetryPolicyAwareJob<MessageThread> {
+public class JobPostMessageThreadUpdate extends BaseRetryPolicyAwareJob<MessageThread> {
 
-    public static final String TAG = JobUpdateMessageThread.class.getSimpleName();
+    public static final String TAG = JobPostMessageThreadUpdate.class.getSimpleName();
 
     private long messageThreadId;
     private MessageThreadUpdate update;
 
 
-    public JobUpdateMessageThread(long messageThreadId, MessageThreadUpdate update) {
+    public JobPostMessageThreadUpdate(long messageThreadId, MessageThreadUpdate update) {
         this(new Params(0).requireNetwork().setPersistent(true), messageThreadId, update);
     }
 
-    public JobUpdateMessageThread(Params params, long messageThreadId, MessageThreadUpdate update) {
+    public JobPostMessageThreadUpdate(Params params, long messageThreadId, MessageThreadUpdate update) {
         super(params);
         this.messageThreadId = messageThreadId;
         this.update = update;

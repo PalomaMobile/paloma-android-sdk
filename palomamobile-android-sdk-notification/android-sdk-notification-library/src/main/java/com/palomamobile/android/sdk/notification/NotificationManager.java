@@ -30,7 +30,7 @@ class NotificationManager implements INotificationManager {
 
         IUserManager userManager = serviceSupport.getServiceManager(IUserManager.class);
         if (userManager != null) {
-            serviceSupport.getJobManager().addJobInBackground(new JobUserUpdateGcmRegistrationId());
+            serviceSupport.getJobManager().addJobInBackground(new JobPostUserGcmRegistrationIdUpdate());
         }
     }
 
@@ -39,7 +39,7 @@ class NotificationManager implements INotificationManager {
         Log.d(TAG, "onEventBackgroundThread(" + event + ")");
         if (IUserManager.class == event.getIntrface()) {
             Log.d(TAG, "IUserManager instance available -> addJobInBackground(new JobUpdateGcmRegistrationId())");
-            ServiceSupport.Instance.getJobManager().addJobInBackground(new JobUserUpdateGcmRegistrationId());
+            ServiceSupport.Instance.getJobManager().addJobInBackground(new JobPostUserGcmRegistrationIdUpdate());
         }
     }
 
@@ -60,7 +60,7 @@ class NotificationManager implements INotificationManager {
     public void onEventBackgroundThread(EventLocalUserUpdated eventLocalUserUpdated) {
         Log.d(TAG, "onEventBackgroundThread(): " + eventLocalUserUpdated);
         if (eventLocalUserUpdated.getSuccess() != null) {
-            ServiceSupport.Instance.getJobManager().addJobInBackground(new JobUserUpdateGcmRegistrationId());
+            ServiceSupport.Instance.getJobManager().addJobInBackground(new JobPostUserGcmRegistrationIdUpdate());
         }
     }
 

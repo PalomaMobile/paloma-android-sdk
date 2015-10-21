@@ -14,7 +14,7 @@ import com.palomamobile.android.sdk.friend.EventFriendsListReceived;
 import com.palomamobile.android.sdk.friend.Friend;
 import com.palomamobile.android.sdk.friend.IFriendManager;
 import com.palomamobile.android.sdk.friend.JobGetFriends;
-import com.palomamobile.android.sdk.friend.JobPutRelationship;
+import com.palomamobile.android.sdk.friend.JobPostRelationship;
 import com.palomamobile.android.sdk.friend.RelationAttributes;
 import com.palomamobile.android.sdk.user.IUserManager;
 
@@ -59,8 +59,8 @@ public class FriendSampleActivity extends Activity {
                 long reciprocalUserId;
                 try {
                     reciprocalUserId = Long.parseLong(editTextFriendUserId.getText().toString());
-                    JobPutRelationship jobPutRelationship = friendManager.createJobPutRelationship(reciprocalUserId, new RelationAttributes(RelationAttributes.Type.friend));
-                    ServiceSupport.Instance.getJobManager().addJobInBackground(jobPutRelationship);
+                    JobPostRelationship jobPostRelationship = friendManager.createJobPutRelationship(reciprocalUserId, new RelationAttributes(RelationAttributes.Type.friend));
+                    ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostRelationship);
                 } catch (Throwable throwable) {
                     Log.w(TAG, throwable);
                     Toast.makeText(FriendSampleActivity.this, "Friend User ID invalid.", Toast.LENGTH_LONG).show();

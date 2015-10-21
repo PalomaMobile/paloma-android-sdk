@@ -13,11 +13,11 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  *
  */
 public class EventMediaUploaded extends BaseJobEvent<BaseJobUploadMedia, MediaInfo> {
-    protected EventMediaUploaded(BaseJobUploadMedia job, Throwable failure) {
+    public EventMediaUploaded(BaseJobUploadMedia job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventMediaUploaded(BaseJobUploadMedia job, MediaInfo mediaInfo) {
+    public EventMediaUploaded(BaseJobUploadMedia job, MediaInfo mediaInfo) {
         super(job, mediaInfo);
     }
 }

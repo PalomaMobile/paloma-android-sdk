@@ -109,6 +109,6 @@ public interface IUserManager extends IUserCredentialsProvider, IServiceManager<
 
     JobGetUser createJobJobGetUser();
 
-    JobUpdateUser createJobUpdateUser(UserUpdate userUpdate);
+    JobPostUserUpdate createJobUpdateUser(UserUpdate userUpdate);
 
 }

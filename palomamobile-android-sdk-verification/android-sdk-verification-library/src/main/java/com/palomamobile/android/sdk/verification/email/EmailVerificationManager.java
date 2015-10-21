@@ -3,7 +3,7 @@ package com.palomamobile.android.sdk.verification.email;
 import android.support.annotation.NonNull;
 import com.palomamobile.android.sdk.core.IServiceSupport;
 import com.palomamobile.android.sdk.core.ServiceSupport;
-import com.palomamobile.android.sdk.core.util.Utilities;
+import com.palomamobile.android.sdk.user.IUserManager;
 
 class EmailVerificationManager implements IEmailVerificationManager {
 
@@ -26,8 +26,14 @@ class EmailVerificationManager implements IEmailVerificationManager {
     }
 
     @Override
-    public JobUpdateEmailVerification createJobUpdateEmailVerification(String emailAddress, String code) {
-        String appName = Utilities.getAppNameFromMetadata(ServiceSupport.Instance.getContext());
-        return new JobUpdateEmailVerification(emailAddress, code, appName);
+    public JobPostEmailVerificationUpdate createJobUpdateEmailVerification(String emailAddress, String code) {
+        return new JobPostEmailVerificationUpdate(emailAddress, code);
     }
+
+    @Override
+    public JobPostUserVerifiedEmail createJobPostUserVerifiedEmail(String emailAddress, String code) {
+        long userId = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser().getId();
+        return new JobPostUserVerifiedEmail(userId, emailAddress, code);
+    }
+
 }

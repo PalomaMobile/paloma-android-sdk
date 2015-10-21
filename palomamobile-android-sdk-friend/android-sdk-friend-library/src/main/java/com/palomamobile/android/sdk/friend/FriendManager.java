@@ -25,13 +25,13 @@ class FriendManager implements IFriendManager {
     }
 
     @Override
-    public JobPutRelationship createJobPutRelationship(long reciprocalUserId, RelationAttributes relationAttributes) {
-        return new JobPutRelationship(reciprocalUserId, relationAttributes);
+    public JobPostRelationship createJobPutRelationship(long reciprocalUserId, RelationAttributes relationAttributes) {
+        return new JobPostRelationship(reciprocalUserId, relationAttributes);
     }
 
     @Override
-    public JobPutRelationship createJobPutRelationship(String reciprocalUsername, RelationAttributes relationAttributes) {
-        return new JobPutRelationship(reciprocalUsername, relationAttributes);
+    public JobPostRelationship createJobPutRelationship(String reciprocalUsername, RelationAttributes relationAttributes) {
+        return new JobPostRelationship(reciprocalUsername, relationAttributes);
     }
 
     @Override

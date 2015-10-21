@@ -14,11 +14,11 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  *
  */
 public class EventMessagesReceived extends BaseJobEvent<JobGetMessagesReceived, PaginatedResponse<MessageReceived>> {
-    protected EventMessagesReceived(JobGetMessagesReceived job, Throwable failure) {
+    public EventMessagesReceived(JobGetMessagesReceived job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventMessagesReceived(JobGetMessagesReceived job, PaginatedResponse<MessageReceived> messageReceivedPaginatedResponse) {
+    public EventMessagesReceived(JobGetMessagesReceived job, PaginatedResponse<MessageReceived> messageReceivedPaginatedResponse) {
         super(job, messageReceivedPaginatedResponse);
     }
 }

@@ -11,12 +11,12 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  * To post a messageThread update use {@link IMessageThreadManager#createJobUpdateMessageThread(long, MessageThreadUpdate)}
  * <br/>
  */
-public class EventMessageThreadUpdated extends BaseJobEvent<JobUpdateMessageThread, MessageThread> {
-    protected EventMessageThreadUpdated(JobUpdateMessageThread job, Throwable failure) {
+public class EventMessageThreadUpdated extends BaseJobEvent<JobPostMessageThreadUpdate, MessageThread> {
+    public EventMessageThreadUpdated(JobPostMessageThreadUpdate job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventMessageThreadUpdated(JobUpdateMessageThread job, MessageThread messageThread) {
+    public EventMessageThreadUpdated(JobPostMessageThreadUpdate job, MessageThread messageThread) {
         super(job, messageThread);
     }
 }

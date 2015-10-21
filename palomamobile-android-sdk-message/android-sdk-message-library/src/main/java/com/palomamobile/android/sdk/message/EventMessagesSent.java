@@ -13,11 +13,11 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  * <br/>
  */
 public class EventMessagesSent extends BaseJobEvent<JobGetMessagesSent, PaginatedResponse<MessageSent>> {
-    protected EventMessagesSent(JobGetMessagesSent job, Throwable failure) {
+    public EventMessagesSent(JobGetMessagesSent job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventMessagesSent(JobGetMessagesSent job, PaginatedResponse<MessageSent> messageSentPaginatedResponse) {
+    public EventMessagesSent(JobGetMessagesSent job, PaginatedResponse<MessageSent> messageSentPaginatedResponse) {
         super(job, messageSentPaginatedResponse);
     }
 }

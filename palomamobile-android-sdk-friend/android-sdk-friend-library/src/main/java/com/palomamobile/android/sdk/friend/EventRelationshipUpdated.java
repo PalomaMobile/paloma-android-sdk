@@ -11,13 +11,13 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  * <br/>
  *
  */
-public class EventRelationshipUpdated extends BaseJobEvent<JobPutRelationship, Relationship> {
+public class EventRelationshipUpdated extends BaseJobEvent<JobPostRelationship, Relationship> {
 
-    protected EventRelationshipUpdated(JobPutRelationship job, Relationship relationship) {
+    public EventRelationshipUpdated(JobPostRelationship job, Relationship relationship) {
         super(job, relationship);
     }
 
-    protected EventRelationshipUpdated(JobPutRelationship job, Throwable failure) {
+    public EventRelationshipUpdated(JobPostRelationship job, Throwable failure) {
         super(job, failure);
     }
 }

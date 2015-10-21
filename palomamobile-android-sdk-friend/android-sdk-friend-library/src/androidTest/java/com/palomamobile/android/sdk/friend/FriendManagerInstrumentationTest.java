@@ -222,8 +222,8 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         //request a friendship as user B with user A
         final LatchedBusListener<EventRelationshipUpdated> latchedBusListenerRelationshipB = new LatchedBusListener<>(EventRelationshipUpdated.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListenerRelationshipB);
-        JobPutRelationship jobPutRelationship = friendManager.createJobPutRelationship(userA.getId(), new RelationAttributes(RelationAttributes.Type.friend));
-        ServiceSupport.Instance.getJobManager().addJobInBackground(jobPutRelationship);
+        JobPostRelationship jobPostRelationship = friendManager.createJobPutRelationship(userA.getId(), new RelationAttributes(RelationAttributes.Type.friend));
+        ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostRelationship);
         latchedBusListenerRelationshipB.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerRelationshipB);
 
@@ -247,8 +247,8 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         //request a friendship as user A with user B (reciprocate)
         final LatchedBusListener<EventRelationshipUpdated> latchedBusListenerRelationshipA = new LatchedBusListener<>(EventRelationshipUpdated.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListenerRelationshipA);
-        jobPutRelationship = friendManager.createJobPutRelationship(userB.getId(), new RelationAttributes(RelationAttributes.Type.friend));
-        ServiceSupport.Instance.getJobManager().addJobInBackground(jobPutRelationship);
+        jobPostRelationship = friendManager.createJobPutRelationship(userB.getId(), new RelationAttributes(RelationAttributes.Type.friend));
+        ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostRelationship);
         latchedBusListenerRelationshipA.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerRelationshipA);
 
@@ -320,8 +320,8 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         //request a friendship as user B with user A
         final LatchedBusListener<EventRelationshipUpdated> latchedBusListenerRelationshipB = new LatchedBusListener<>(EventRelationshipUpdated.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListenerRelationshipB);
-        JobPutRelationship jobPutRelationship = friendManager.createJobPutRelationship(userA.getUsername(), new RelationAttributes(RelationAttributes.Type.friend));
-        ServiceSupport.Instance.getJobManager().addJobInBackground(jobPutRelationship);
+        JobPostRelationship jobPostRelationship = friendManager.createJobPutRelationship(userA.getUsername(), new RelationAttributes(RelationAttributes.Type.friend));
+        ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostRelationship);
         latchedBusListenerRelationshipB.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerRelationshipB);
 
@@ -345,8 +345,8 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         //request a friendship as user A with user B (reciprocate)
         final LatchedBusListener<EventRelationshipUpdated> latchedBusListenerRelationshipA = new LatchedBusListener<>(EventRelationshipUpdated.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListenerRelationshipA);
-        jobPutRelationship = friendManager.createJobPutRelationship(userB.getUsername(), new RelationAttributes(RelationAttributes.Type.friend));
-        ServiceSupport.Instance.getJobManager().addJobInBackground(jobPutRelationship);
+        jobPostRelationship = friendManager.createJobPutRelationship(userB.getUsername(), new RelationAttributes(RelationAttributes.Type.friend));
+        ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostRelationship);
         latchedBusListenerRelationshipA.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerRelationshipA);
 

@@ -20,15 +20,15 @@ import com.path.android.jobqueue.Params;
  * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
  */
-public class JobUserUpdateGcmRegistrationId extends BaseRetryPolicyAwareJob<String> {
+public class JobPostUserGcmRegistrationIdUpdate extends BaseRetryPolicyAwareJob<String> {
 
-    public static final String TAG = JobUserUpdateGcmRegistrationId.class.getSimpleName();
+    public static final String TAG = JobPostUserGcmRegistrationIdUpdate.class.getSimpleName();
 
 
     /**
      * Create a new job to request that the client updates the service back-end with the current GcmRegistrationId.
      */
-    public JobUserUpdateGcmRegistrationId() {
+    public JobPostUserGcmRegistrationIdUpdate() {
         this(new Params(0).requireNetwork());
     }
 
@@ -36,7 +36,7 @@ public class JobUserUpdateGcmRegistrationId extends BaseRetryPolicyAwareJob<Stri
      * Create a new job to request that the client updates the service back-end with the current GcmRegistrationId.
      * @param params custom job params
      */
-    protected JobUserUpdateGcmRegistrationId(Params params) {
+    protected JobPostUserGcmRegistrationIdUpdate(Params params) {
         super(params);
     }
 

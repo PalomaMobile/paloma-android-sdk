@@ -51,7 +51,7 @@ public interface IFriendService {
 
     /**
      * Update the attributes of user's relationship with another user.
-     * <br/>{@link JobPutRelationship} provides a convenient wrapper, consider using it instead.
+     * <br/>{@link JobPostRelationship} provides a convenient wrapper, consider using it instead.
      *
      * @param requestId for the purposes of identifying retries
      * @param userId
@@ -65,7 +65,7 @@ public interface IFriendService {
 
     /**
      * Update the attributes of user's relationship with another user.
-     * <br/>{@link JobPutRelationship} provides a convenient wrapper, consider using it instead.
+     * <br/>{@link JobPostRelationship} provides a convenient wrapper, consider using it instead.
      *
      * @param requestId for the purposes of identifying retries
      * @param userId

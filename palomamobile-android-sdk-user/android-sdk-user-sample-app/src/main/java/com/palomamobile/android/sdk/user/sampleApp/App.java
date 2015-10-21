@@ -4,9 +4,6 @@ import android.app.Application;
 import com.facebook.FacebookSdk;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 
-/**
- *
- */
 public class App extends Application {
 
     @Override

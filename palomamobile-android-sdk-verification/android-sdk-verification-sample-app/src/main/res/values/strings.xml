@@ -7,4 +7,17 @@
 
 
     <string name="err_network">Network throwable.</string>
+
+    <string name="registering_user">Registering user…</string>
+    <string name="err_register_user">Unable to register user</string>
+    <string name="title_activity_verification_sample">VerificationSampleActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="verify">Verify</string>
+    <string name="enter_verification_code">Enter verification code</string>
+    <string name="request_verification_code">Request verification code</string>
+    <string name="enter_email_address">Enter email address</string>
+
+
 </resources>

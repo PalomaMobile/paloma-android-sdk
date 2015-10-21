@@ -13,11 +13,11 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  */
 public class EventMessageThreadMemberDeleted extends BaseJobEvent<JobDeleteMessageThreadMember, Void> {
 
-    protected EventMessageThreadMemberDeleted(JobDeleteMessageThreadMember job, Throwable failure) {
+    public EventMessageThreadMemberDeleted(JobDeleteMessageThreadMember job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventMessageThreadMemberDeleted(JobDeleteMessageThreadMember job) {
+    public EventMessageThreadMemberDeleted(JobDeleteMessageThreadMember job) {
         super(job, (Void) null);
     }
 }

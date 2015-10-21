@@ -15,11 +15,11 @@ import com.palomamobile.android.sdk.message.MessageSent;
  *
  */
 public class EventMessageThreadMessagesReceived extends BaseJobEvent<JobGetMessageThreadMessages, PaginatedResponse<MessageSent>> {
-    protected EventMessageThreadMessagesReceived(JobGetMessageThreadMessages job, Throwable failure) {
+    public EventMessageThreadMessagesReceived(JobGetMessageThreadMessages job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventMessageThreadMessagesReceived(JobGetMessageThreadMessages job, PaginatedResponse<MessageSent> messageReceivedPaginatedResponse) {
+    public EventMessageThreadMessagesReceived(JobGetMessageThreadMessages job, PaginatedResponse<MessageSent> messageReceivedPaginatedResponse) {
         super(job, messageReceivedPaginatedResponse);
     }
 }

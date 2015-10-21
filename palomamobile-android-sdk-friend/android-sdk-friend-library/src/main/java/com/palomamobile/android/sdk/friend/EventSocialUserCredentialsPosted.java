@@ -12,11 +12,11 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  *
  */
 public class EventSocialUserCredentialsPosted extends BaseJobEvent<JobPostSocialUserCredential, Void> {
-    protected EventSocialUserCredentialsPosted(JobPostSocialUserCredential job, Throwable failure) {
+    public EventSocialUserCredentialsPosted(JobPostSocialUserCredential job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventSocialUserCredentialsPosted(JobPostSocialUserCredential job) {
+    public EventSocialUserCredentialsPosted(JobPostSocialUserCredential job) {
         super(job, (Void) null);
     }
 }

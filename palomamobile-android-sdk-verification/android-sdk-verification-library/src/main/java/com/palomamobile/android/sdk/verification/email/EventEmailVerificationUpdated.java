@@ -6,16 +6,16 @@ import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 
 /**
  * Event published on the {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()})
- * whenever email address verification updated request is completed.
+ * whenever email address verification update request is completed.
  * The event contains {@code throwable} on request failure.<br/>
  */
 public class EventEmailVerificationUpdated extends BaseJobEvent<BaseRetryPolicyAwareJob<Void>, Void> {
 
-    protected EventEmailVerificationUpdated(BaseRetryPolicyAwareJob<Void> job, Throwable failure) {
+    public EventEmailVerificationUpdated(BaseRetryPolicyAwareJob<Void> job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventEmailVerificationUpdated(BaseRetryPolicyAwareJob<Void> job, Void aVoid) {
+    public EventEmailVerificationUpdated(BaseRetryPolicyAwareJob<Void> job, Void aVoid) {
         super(job, aVoid);
     }
 }

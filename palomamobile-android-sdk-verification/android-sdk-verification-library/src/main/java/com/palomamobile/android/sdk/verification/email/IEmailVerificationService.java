@@ -2,6 +2,7 @@ package com.palomamobile.android.sdk.verification.email;
 
 import com.palomamobile.android.sdk.auth.IAuthManager;
 import com.palomamobile.android.sdk.core.CustomHeader;
+import com.palomamobile.android.sdk.user.User;
 import com.palomamobile.android.sdk.verification.BuildConfig;
 import retrofit.http.Body;
 import retrofit.http.Header;
@@ -43,7 +44,7 @@ public interface IEmailVerificationService {
      * @param emailAddress email address to verify
      * @param verificationEmailUpdate parameters for update of a verification email
      * @return void
-     * {@link JobUpdateEmailVerification} provides a convenient wrapper, consider using it instead.
+     * {@link JobPostEmailVerificationUpdate} provides a convenient wrapper, consider using it instead.
      */
     @Headers({
             IAuthManager.AUTH_REQUIREMENT_HEADER_NAME + ": " + "Client",
@@ -51,5 +52,22 @@ public interface IEmailVerificationService {
     })
     @PUT("/verification/emails/{address}")
     Void updateEmailVerification(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("address") String emailAddress, @Body VerificationEmailUpdate verificationEmailUpdate);
+
+
+    /**
+     * Update user verified email address and return the updated {@link User} that matches the provided userId on success. Throws {@link retrofit.RetrofitError} on failure.
+     * <br/>{@link JobPostUserVerifiedEmail} provides a convenient wrapper, consider using it instead.
+     *
+     * @param requestId for the purposes of identifying retries
+     * @param userId
+     * @param userVerifiedEmailUpdate
+     * @return existing user
+     */
+    @Headers({
+            IAuthManager.AUTH_REQUIREMENT_HEADER_NAME + ": " + "User",
+            CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + com.palomamobile.android.sdk.user.BuildConfig.TARGET_SERVICE_VERSION,
+            CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + com.palomamobile.android.sdk.user.BuildConfig.VERSION_NAME})
+    @PUT("/users/{userId}/email")
+    User updateUserEmail(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @Body UserVerifiedEmailUpdate userVerifiedEmailUpdate);
 
 }

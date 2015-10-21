@@ -7,22 +7,20 @@ import com.path.android.jobqueue.Params;
 /**
  * Convenience wrapper around {@link IEmailVerificationService#updateEmailVerification(String, String, VerificationEmailUpdate)}
  * used to finalize an existing verification of an email address with a verification code (received on the email address being verified).
- * Once this job is completed (with success or failure) it posts {@link EventEmailVerificationCreated} on the
+ * Once this job is completed (with success or failure) it posts {@link EventEmailVerificationUpdated} on the
  * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  */
-public class JobUpdateEmailVerification extends BaseRetryPolicyAwareJob<Void> {
+public class JobPostEmailVerificationUpdate extends BaseRetryPolicyAwareJob<Void> {
 
     private String emailAddress;
     private String code;
-    private String applicationName;
 
-    public JobUpdateEmailVerification(String emailAddress, String code, String applicationName) {
-        this(new Params(0).requireNetwork().persist(), emailAddress, code, applicationName);
+    public JobPostEmailVerificationUpdate(String emailAddress, String code) {
+        this(new Params(0).requireNetwork().persist(), emailAddress, code);
     }
 
-    public JobUpdateEmailVerification(Params params, String emailAddress, String code, String applicationName) {
+    public JobPostEmailVerificationUpdate(Params params, String emailAddress, String code) {
         super(params);
-        this.applicationName = applicationName;
         this.emailAddress = emailAddress;
         this.code = code;
     }
@@ -35,7 +33,7 @@ public class JobUpdateEmailVerification extends BaseRetryPolicyAwareJob<Void> {
     @Override
     public Void syncRun(boolean postEvent) throws Throwable {
         IEmailVerificationManager verificationManager = ServiceSupport.Instance.getServiceManager(IEmailVerificationManager.class);
-        verificationManager.getService().updateEmailVerification(getRetryId(), emailAddress, new VerificationEmailUpdate(applicationName, code));
+        verificationManager.getService().updateEmailVerification(getRetryId(), emailAddress, new VerificationEmailUpdate(code));
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventEmailVerificationUpdated(this, (Void) null));
         }
@@ -46,19 +44,14 @@ public class JobUpdateEmailVerification extends BaseRetryPolicyAwareJob<Void> {
         return emailAddress;
     }
 
-    public String getApplicationName() {
-        return applicationName;
-    }
-
     public String getCode() {
         return code;
     }
 
     @Override
     public String toString() {
-        return "JobUpdateEmailVerification{" +
-                "applicationName='" + applicationName + '\'' +
-                ", emailAddress='" + emailAddress + '\'' +
+        return "JobPostEmailVerificationUpdate{" +
+                "emailAddress='" + emailAddress + '\'' +
                 ", code='" + code + '\'' +
                 "} " + super.toString();
     }

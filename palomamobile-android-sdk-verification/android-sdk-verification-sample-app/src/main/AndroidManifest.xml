@@ -1,21 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.palomamobile.android.sdk.user.sampleApp"
+    package="com.palomamobile.android.sdk.verification.sampleApp"
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="22" />
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="22" />
 
+    <android:uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
 
     <application
+        android:name="com.palomamobile.android.sdk.verification.sampleApp.App"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name=".App">
+        android:theme="@style/AppTheme" >
+
+        <activity android:name=".RegisterUserActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <!-- Configure ServiceSupport -->
-        <meta-data android:name="com.palomamobile.android.sdk.ClientId" android:value="@string/palomamobile_client_id"/>
-        <meta-data android:name="com.palomamobile.android.sdk.Endpoint" android:value="@string/paloma_test_endpoint"/>
+        <meta-data
+            android:name="com.palomamobile.android.sdk.ClientId"
+            android:value="@string/palomamobile_client_id" />
+        <meta-data
+            android:name="com.palomamobile.android.sdk.Endpoint"
+            android:value="@string/paloma_test_endpoint" />
+
+        <activity
+            android:name="com.palomamobile.android.sdk.verification.sampleApp.VerificationSampleActivity"
+            android:label="@string/title_activity_verification_sample" >
+        </activity>
     </application>
 
 </manifest>

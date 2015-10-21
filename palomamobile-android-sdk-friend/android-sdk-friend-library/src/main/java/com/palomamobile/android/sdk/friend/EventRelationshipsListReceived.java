@@ -13,11 +13,11 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  *
  */
 public class EventRelationshipsListReceived extends BaseJobEvent<JobGetRelationships, PaginatedResponse<Relationship>> {
-    protected EventRelationshipsListReceived(JobGetRelationships job, Throwable failure) {
+    public EventRelationshipsListReceived(JobGetRelationships job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventRelationshipsListReceived(JobGetRelationships job, PaginatedResponse<Relationship> relationshipPaginatedResponse) {
+    public EventRelationshipsListReceived(JobGetRelationships job, PaginatedResponse<Relationship> relationshipPaginatedResponse) {
         super(job, relationshipPaginatedResponse);
     }
 }

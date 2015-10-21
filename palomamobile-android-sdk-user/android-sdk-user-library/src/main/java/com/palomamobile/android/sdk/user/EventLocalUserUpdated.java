@@ -16,11 +16,11 @@ import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
  */
 public class EventLocalUserUpdated extends BaseJobEvent<BaseRetryPolicyAwareJob<User>, User> {
 
-    protected EventLocalUserUpdated(BaseRetryPolicyAwareJob<User> job, Throwable failure) {
+    public EventLocalUserUpdated(BaseRetryPolicyAwareJob<User> job, Throwable failure) {
         super(job, failure);
     }
 
-    protected EventLocalUserUpdated(BaseRetryPolicyAwareJob<User> job, User user) {
+    public EventLocalUserUpdated(BaseRetryPolicyAwareJob<User> job, User user) {
         super(job, user);
     }
 }

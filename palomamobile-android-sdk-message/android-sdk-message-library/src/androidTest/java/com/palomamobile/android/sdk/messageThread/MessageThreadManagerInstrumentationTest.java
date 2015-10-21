@@ -165,10 +165,10 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         final MessageThreadUpdate update = new MessageThreadUpdate();
         update.withName(tmpUpdate).removeRelatedTo().withType("charismatic").withCustom("greeting", "yo").removeCustom("mood").withCustom("feeling", "happy");
 
-        JobUpdateMessageThread jobUpdateMessageThread = messageThreadManager.createJobUpdateMessageThread(posted.getId(), update);
+        JobPostMessageThreadUpdate jobPostMessageThreadUpdate = messageThreadManager.createJobUpdateMessageThread(posted.getId(), update);
         final LatchedBusListener<EventMessageThreadUpdated> latchedBusListenerUpdate = new LatchedBusListener<>(EventMessageThreadUpdated.class);
         eventBus.register(latchedBusListenerUpdate);
-        jobManager.addJobInBackground(jobUpdateMessageThread);
+        jobManager.addJobInBackground(jobPostMessageThreadUpdate);
         latchedBusListenerUpdate.await(10, TimeUnit.SECONDS);
         eventBus.unregister(latchedBusListenerUpdate);
 
