@@ -36,11 +36,11 @@ public class JobPostUserVerifiedEmail extends BaseRetryPolicyAwareJob<User> {
     @Override
     public User syncRun(boolean postEvent) throws Throwable {
         IEmailVerificationManager verificationManager = ServiceSupport.Instance.getServiceManager(IEmailVerificationManager.class);
-        verificationManager.getService().updateUserEmail(getRetryId(), userId, userVerifiedEmailUpdate);
+        User result = verificationManager.getService().updateUserEmail(getRetryId(), userId, userVerifiedEmailUpdate);
         if (postEvent) {
-            ServiceSupport.Instance.getEventBus().post(new EventLocalUserUpdated(this, (User) null));
+            ServiceSupport.Instance.getEventBus().post(new EventLocalUserUpdated(this, result));
         }
-        return null;
+        return result;
     }
 
     public UserVerifiedEmailUpdate getUserVerifiedEmailUpdate() {
