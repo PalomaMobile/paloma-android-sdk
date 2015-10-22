@@ -22,7 +22,7 @@ public interface IEmailVerificationTestHelperService {
      * @return update that includes the secret verification code
      */
     @Headers({
-            IAuthManager.AUTH_REQUIREMENT_HEADER_NAME + ": " + "Client",
+            IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME + ": " + "Client",
             CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME
     })
     @GET("/verification/emails/{address}")

@@ -7,6 +7,7 @@ import com.google.android.gms.iid.InstanceID;
 import com.google.gson.JsonObject;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
+import com.palomamobile.android.sdk.core.util.Utilities;
 import com.palomamobile.android.sdk.user.IUserManager;
 import com.palomamobile.android.sdk.user.User;
 import com.path.android.jobqueue.Params;
@@ -15,7 +16,7 @@ import com.path.android.jobqueue.Params;
  * The default provided implementation of the {@link INotificationManager} runs this job
  * whenever required to ensure the GcmRegistrationId is up to date on the back-end.
  *
- * Convenience wrapper around {@link INotificationService#addGcmRegistrationId(String, Long, JsonObject)}
+ * Convenience wrapper around {@link INotificationService#addGcmRegistrationId(String, Long, String, JsonObject)}
  * Once this job is completed (with success or failure) it posts {@link EventGcmRegistrationIdUpdated} on the
  * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
@@ -102,8 +103,9 @@ public class JobPostUserGcmRegistrationIdUpdate extends BaseRetryPolicyAwareJob<
         JsonObject gcmRegistrationIdJson = new JsonObject();
         gcmRegistrationIdJson.addProperty("gcmRegistrationId", gcmRegistrationId);
         NotificationManager notificationManager = (NotificationManager) ServiceSupport.Instance.getServiceManager(INotificationManager.class);
+        String deviceId = Utilities.getDeviceId(getApplicationContext());
 
-        GcmRegistrationIdResponse gcmRegistrationIdResponse = notificationManager.getService().addGcmRegistrationId(getRetryId(), userId, gcmRegistrationIdJson);
+        GcmRegistrationIdResponse gcmRegistrationIdResponse = notificationManager.getService().addGcmRegistrationId(getRetryId(), userId, deviceId, gcmRegistrationIdJson);
         Log.d(TAG, "SUCCESS (update cache) addGcmRegistrationId() for userId: " + userId + ", gcmRegistrationId: " + gcmRegistrationId);
         ServiceSupport.Instance.getCache().put(NotificationManager.CACHE_KEY_GCM_REGISTRATION_ID, gcmRegistrationIdResponse.getGcmRegistrationId());
         if (postEvent) {

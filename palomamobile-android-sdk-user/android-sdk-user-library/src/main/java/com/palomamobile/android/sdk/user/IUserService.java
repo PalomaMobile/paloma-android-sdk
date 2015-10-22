@@ -1,5 +1,6 @@
 package com.palomamobile.android.sdk.user;
 
+import com.palomamobile.android.sdk.auth.BuildConfig;
 import com.palomamobile.android.sdk.auth.IAuthManager;
 import com.palomamobile.android.sdk.auth.IUserCredential;
 import com.palomamobile.android.sdk.core.CustomHeader;
@@ -30,7 +31,7 @@ public interface IUserService {
      * @return new or existing user
      */
     @Headers({
-            IAuthManager.AUTH_REQUIREMENT_HEADER_NAME + ": " + "Client",
+            IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME + ": " + "Client",
             CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION,
             CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/users")
@@ -45,7 +46,7 @@ public interface IUserService {
      * @return existing user
      */
     @Headers({
-            IAuthManager.AUTH_REQUIREMENT_HEADER_NAME + ": " + "Client",
+            IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME + ": " + "Client",
             CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION,
             CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/users/me")
@@ -60,7 +61,7 @@ public interface IUserService {
      * @return existing user
      */
     @Headers({
-            IAuthManager.AUTH_REQUIREMENT_HEADER_NAME + ": " + "User",
+            IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME + ": " + "User",
             CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION,
             CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @GET("/users/{userId}")
@@ -75,7 +76,7 @@ public interface IUserService {
      * @return existing user
      */
     @Headers({
-            IAuthManager.AUTH_REQUIREMENT_HEADER_NAME + ": " + "User",
+            IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME + ": " + "User",
             CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION,
             CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @PUT("/users/{userId}")

@@ -30,7 +30,7 @@ public interface IEmailVerificationService {
      * {@link JobCreateEmailVerification} provides a convenient wrapper, consider using it instead.
      */
     @Headers({
-            IAuthManager.AUTH_REQUIREMENT_HEADER_NAME + ": " + "Client",
+            IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME + ": " + "Client",
             CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME
     })
     @POST("/verification/emails/{address}")
@@ -47,7 +47,7 @@ public interface IEmailVerificationService {
      * {@link JobPostEmailVerificationUpdate} provides a convenient wrapper, consider using it instead.
      */
     @Headers({
-            IAuthManager.AUTH_REQUIREMENT_HEADER_NAME + ": " + "Client",
+            IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME + ": " + "Client",
             CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME
     })
     @PUT("/verification/emails/{address}")
@@ -64,7 +64,7 @@ public interface IEmailVerificationService {
      * @return existing user
      */
     @Headers({
-            IAuthManager.AUTH_REQUIREMENT_HEADER_NAME + ": " + "User",
+            IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME + ": " + "User",
             CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + com.palomamobile.android.sdk.user.BuildConfig.TARGET_SERVICE_VERSION,
             CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + com.palomamobile.android.sdk.user.BuildConfig.VERSION_NAME})
     @PUT("/users/{userId}/email")

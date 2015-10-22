@@ -9,9 +9,6 @@ import com.palomamobile.android.sdk.core.EventServiceManagerRegistered;
 import com.palomamobile.android.sdk.core.IServiceSupport;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 
-/**
- *
- */
 class UserManager implements IUserManager {
 
     public static final String TAG = UserManager.class.getSimpleName();
@@ -24,7 +21,6 @@ class UserManager implements IUserManager {
 
 
     public UserManager(IServiceSupport serviceSupport) {
-        this.userService = serviceSupport.getRestAdapter().create(IUserService.class);
         serviceSupport.getInternalEventBus().register(this);
         serviceSupport.registerServiceManager(IUserManager.class, this);
         IAuthManager authManager = serviceSupport.getServiceManager(IAuthManager.class);
@@ -98,6 +94,9 @@ class UserManager implements IUserManager {
     @Override
     @NonNull
     public IUserService getService() {
+        if (userService == null) {
+            this.userService = ServiceSupport.Instance.cloneNonRedirectingRestAdapter().create(IUserService.class);
+        }
         return userService;
     }
 

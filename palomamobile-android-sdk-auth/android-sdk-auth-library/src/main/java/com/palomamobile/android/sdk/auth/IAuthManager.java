@@ -10,7 +10,13 @@ import com.palomamobile.android.sdk.core.IServiceManager;
  */
 public interface IAuthManager extends IServiceManager<IAuthService> {
 
-    String AUTH_REQUIREMENT_HEADER_NAME = "X-RequiredAuth";
+    /**
+     * Specifies the Auth requirements of a service call. For example if a call is known to require User Authentication (eg.
+     * to update user attributes) then adding this header to the service call with {@link AuthType#User} will cause
+     * the SDK to ensure the presence of the User Auth token header, this may lead to additional network calls if token is not yet cached.
+     * If no header value is specified then {@link AuthType#User} is assumed as default since it is required by most service calls.
+     */
+    String INTERNAL_AUTH_REQUIREMENT_HEADER_NAME = "Internal-RequiredAuth";
 
     /**
      * Removes both Client and User access token from cache so that the next call to {@link #getUserAccessToken(TokenRetrievalMode, String)}

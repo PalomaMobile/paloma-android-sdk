@@ -2,9 +2,7 @@ package com.palomamobile.android.sdk.media;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import com.palomamobile.android.sdk.auth.IAuthManager;
 import com.palomamobile.android.sdk.core.CustomHeader;
-import com.palomamobile.android.sdk.core.EventServiceManagerRegistered;
 import com.palomamobile.android.sdk.core.IServiceSupport;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.squareup.okhttp.Call;
@@ -26,15 +24,13 @@ class MediaManager implements IMediaManager {
         serviceSupport.getInternalEventBus().register(this);
     }
 
-    public void onEvent(EventServiceManagerRegistered event) {
-        if (event.getIntrface() == IAuthManager.class) {
-            //auth manager is ready, this means the okhttpclient is configured to handle authentication, let's take a copy
+    private void initNonRedirectingHttpClient() {
+        if (nonRedirectingHttpClient == null) {
             OkHttpClient okHttpClient = ServiceSupport.Instance.getOkHttpClient();
             nonRedirectingHttpClient = okHttpClient.clone();
             nonRedirectingHttpClient.setFollowRedirects(false);
         }
     }
-
 
     @Override
     public JobUploadMediaPublic createJobMediaUploadPublic(String mime, String filePath) {
@@ -48,8 +44,8 @@ class MediaManager implements IMediaManager {
 
     @Override
     public Uri requestExpiringPublicUrl(Uri mediaUri) throws IOException {
+        initNonRedirectingHttpClient();
         Uri resolved = mediaUri;
-
         Uri endpoint = ServiceSupport.Instance.getEndpoint();
         if (endpoint.getHost().equals(mediaUri.getHost())) {
             Call call = nonRedirectingHttpClient.newCall(new Request.Builder()

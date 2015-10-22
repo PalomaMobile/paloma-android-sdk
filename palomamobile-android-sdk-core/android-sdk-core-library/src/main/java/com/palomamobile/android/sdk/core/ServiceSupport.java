@@ -49,10 +49,11 @@ public enum ServiceSupport implements IServiceSupport {
 
     private IRetryPolicyProvider retryPolicyProvider;
     private Uri endpoint;
+    private ServiceSupportConfiguration configuration;
+    private String endpointValueFromAppMetadata;
 
 
     public void init(Context context) {
-        internalEventBus = new EventBus();
         init(new ServiceSupportConfiguration(context));
     }
 
@@ -61,6 +62,9 @@ public enum ServiceSupport implements IServiceSupport {
      * @param configuration
      */
     public void init(ServiceSupportConfiguration configuration) {
+        this.configuration = configuration;
+        this.internalEventBus = new EventBus();
+
         //start customizable
         this.context = configuration.getContext();
         this.eventBus = configuration.getEventBus();
@@ -71,18 +75,18 @@ public enum ServiceSupport implements IServiceSupport {
 
         //end customizable
 
-        okHttpClient.networkInterceptors().add(new CustomHeadersInterceptor(context));
+        this.okHttpClient.networkInterceptors().add(new CustomHeadersInterceptor(context));
 
         //configured via AppMetadata in the AndroidManifest.xml
-        String endpointValueFromAppMetadata = Utilities.getValueFromAppMetadata(context, CONFIG_NAME_ENDPOINT);
+        this.endpointValueFromAppMetadata = Utilities.getValueFromAppMetadata(context, CONFIG_NAME_ENDPOINT);
         this.endpoint = Uri.parse(endpointValueFromAppMetadata);
-        this.serviceManagerMap = new HashMap<>();
 
         this.restAdapter = configuration.getRestAdapterBuilder()
                 .setEndpoint(endpointValueFromAppMetadata)
                 .setClient(new OkClient(okHttpClient))
                 .build();
 
+        this.serviceManagerMap = new HashMap<>();
         this.instantiateDeclaredServiceManagers();
     }
 
@@ -114,6 +118,22 @@ public enum ServiceSupport implements IServiceSupport {
     public RestAdapter getRestAdapter() {
         initCheck();
         return restAdapter;
+    }
+
+    /**
+     * @return the RestAdapter. Returned value can be customized at time of initialization via
+     * {@link ServiceSupport#init(ServiceSupportConfiguration)}
+     * @see IServiceSupport#getRestAdapter()
+     */
+    public RestAdapter cloneNonRedirectingRestAdapter() {
+        initCheck();
+        OkHttpClient nonRedirectingHttpClient = getOkHttpClient().clone();
+        nonRedirectingHttpClient.setFollowRedirects(false);
+        RestAdapter nonRedirectingRestAdapter = configuration.getRestAdapterBuilder()
+                .setEndpoint(endpointValueFromAppMetadata)
+                .setClient(new OkClient(nonRedirectingHttpClient))
+                .build();
+        return nonRedirectingRestAdapter;
     }
 
     /**

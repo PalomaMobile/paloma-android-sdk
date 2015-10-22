@@ -24,7 +24,7 @@ public interface IAuthService {
      * @return client access token
      */
     @Headers({
-            IAuthManager.AUTH_REQUIREMENT_HEADER_NAME + ": " + "None",
+            IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME + ": " + "None",
             CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION
             , CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/oauth/token")
@@ -46,7 +46,7 @@ public interface IAuthService {
      * @return {@link AccessToken} which also includes a {@link AccessToken#refreshToken}
      */
     @Headers({
-            IAuthManager.AUTH_REQUIREMENT_HEADER_NAME + ": " + "None",
+            IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME + ": " + "None",
             CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION,
             CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/oauth/token")
@@ -71,7 +71,7 @@ public interface IAuthService {
      * @return
      */
     @Headers({
-            IAuthManager.AUTH_REQUIREMENT_HEADER_NAME + ": " + "None",
+            IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME + ": " + "None",
             CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION,
             CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/oauth/token")

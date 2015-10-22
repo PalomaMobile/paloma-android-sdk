@@ -10,9 +10,6 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.util.List;
 
-/**
- *
- */
 class OAuth2Interceptor implements Interceptor {
 
     public static final String TAG = OAuth2Interceptor.class.getSimpleName();
@@ -28,18 +25,7 @@ class OAuth2Interceptor implements Interceptor {
         Request request = chain.request();
         Log.d(TAG, "request => " + request);
 
-        AuthType authType = AuthType.User; //set AuthType.User as the default as most api calls use this
-        List<String> authTypeHeaders = request.headers(IAuthManager.AUTH_REQUIREMENT_HEADER_NAME);
-        if (authTypeHeaders != null && authTypeHeaders.size() > 0) {
-            if (authTypeHeaders.size() > 1) {
-                Log.e(TAG, "More than one X-RequiredAuth header present: " + authTypeHeaders);
-            }
-            try {
-                authType = AuthType.valueOf(authTypeHeaders.get(0));
-            } catch (IllegalArgumentException e) {
-                Log.e(TAG, "Illegal X-RequiredAuth header value: " + authTypeHeaders.get(0), e);
-            }
-        }
+        AuthType authType = getAuthType(request);
 
         String requestId = request.header(CustomHeader.HEADER_NAME_PALOMA_REQUEST);
         if (requestId == null) {
@@ -71,7 +57,7 @@ class OAuth2Interceptor implements Interceptor {
         }
 
         Request.Builder newRequestBuilder = request.newBuilder();
-        newRequestBuilder.removeHeader(IAuthManager.AUTH_REQUIREMENT_HEADER_NAME);
+        newRequestBuilder.removeHeader(IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME);
 
         if (authorizationHeader != null) {
             Log.d(TAG, "adding authorizationHeader: " + authorizationHeader.first + ": " + authorizationHeader.second);
@@ -108,6 +94,22 @@ class OAuth2Interceptor implements Interceptor {
             }
         }
         return response;
+    }
+
+    private AuthType getAuthType(Request request) {
+        AuthType authType = AuthType.User; //set AuthType.User as the default as most api calls use this
+        List<String> authTypeHeaders = request.headers(IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME);
+        if (authTypeHeaders != null && authTypeHeaders.size() > 0) {
+            if (authTypeHeaders.size() > 1) {
+                Log.e(TAG, "More than one X-RequiredAuth header present: " + authTypeHeaders);
+            }
+            try {
+                authType = AuthType.valueOf(authTypeHeaders.get(0));
+            } catch (IllegalArgumentException e) {
+                Log.e(TAG, "Illegal X-RequiredAuth header value: " + authTypeHeaders.get(0), e);
+            }
+        }
+        return authType;
     }
 
     private Response handleUserTokenExpired(Chain chain, Request.Builder newRequestBuilder, String requestId) throws IOException {

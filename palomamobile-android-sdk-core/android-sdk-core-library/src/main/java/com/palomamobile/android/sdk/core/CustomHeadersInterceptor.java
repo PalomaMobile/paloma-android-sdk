@@ -3,10 +3,8 @@ package com.palomamobile.android.sdk.core;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.provider.Settings;
 import android.util.Log;
-import android.view.Display;
-import android.view.WindowManager;
+import com.palomamobile.android.sdk.core.util.Utilities;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -14,9 +12,6 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.util.Locale;
 
-/**
- *
- */
 class CustomHeadersInterceptor implements Interceptor {
 
     private static final String TAG = CustomHeadersInterceptor.class.getSimpleName();
@@ -54,34 +49,9 @@ class CustomHeadersInterceptor implements Interceptor {
     }
 
     private static String getPalomaDeviceHeaderValue(Context context) {
-        StringBuilder value = new StringBuilder();
-
-        //despite the infamous http://stackoverflow.com/questions/2785485/is-there-a-unique-android-device-id
-        //for our purposes until proven wrong we go with Secure.ANDROID_ID (no additional permissions, simple code etc.)
-        value.append(Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID)).append(",")
-                .append(Locale.getDefault().getLanguage()).append(",")
-                .append(getDeviceDisplaySizeDescription(context));
-
+        String value = Utilities.getDeviceId(context) + "," + Locale.getDefault().getLanguage() + "," + Utilities.getDeviceDisplaySizeDescription(context);
         Log.d(TAG, HEADER_NAME_PALOMA_DEVICE + " : " + value);
-
-        return value.toString();
-    }
-
-    private static String getDeviceDisplaySizeDescription(Context context) {
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-
-        //this is available in API 13+
-        // Point size = new Point();
-        // display.getSize(size);
-        // int width = size.x;
-        // int height = size.y;
-
-        //but we support 9+
-        int width = display.getWidth();
-        int height = display.getHeight();
-
-        return width + "x" + height;
+        return value;
     }
 
     private String getUserAgentHeaderValue(Request originalRequest) {

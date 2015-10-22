@@ -5,9 +5,12 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.view.Display;
+import android.view.WindowManager;
+import com.palomamobile.android.sdk.core.R;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import com.palomamobile.android.sdk.core.R;
 
 /**
  * Assorted utilities.
@@ -47,6 +50,32 @@ public class Utilities {
         sb.append('}');
         return sb.toString();
     }
+
+    public static String getDeviceId(Context context) {
+        //despite the infamous http://stackoverflow.com/questions/2785485/is-there-a-unique-android-device-id
+        //for our purposes until proven wrong we go with Secure.ANDROID_ID (no additional permissions, simple code etc.)
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
+
+    public static String getDeviceDisplaySizeDescription(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+
+        //this is available in API 13+
+        // Point size = new Point();
+        // display.getSize(size);
+        // int width = size.x;
+        // int height = size.y;
+
+        //but we support 9+
+        int width = display.getWidth();
+        int height = display.getHeight();
+
+        //width and height are returned interchangeably depending on the current physical orientation of the device so
+        //we manually always return <bigger>x<smaller>
+        return width >= height ? (width + "x" + height) : (height + "x" + width);
+    }
+
 
     public static String getAppNameFromMetadata(Context context) {
         String clientId = getClientIdFromMetadata(context);
