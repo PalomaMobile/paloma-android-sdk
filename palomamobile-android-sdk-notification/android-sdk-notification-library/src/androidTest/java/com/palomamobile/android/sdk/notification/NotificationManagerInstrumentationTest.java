@@ -4,15 +4,13 @@ import android.os.Build;
 import android.test.InstrumentationTestCase;
 import android.util.Log;
 import com.palomamobile.android.sdk.core.ServiceSupport;
+import com.palomamobile.android.sdk.core.util.Utilities;
 import com.palomamobile.android.sdk.user.TestUtilities;
 import com.palomamobile.android.sdk.user.User;
 import com.palomamobile.android.sdk.core.util.LatchedBusListener;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- *
- */
 public class NotificationManagerInstrumentationTest extends InstrumentationTestCase {
 
     public static final String TAG = NotificationManagerInstrumentationTest.class.getSimpleName();
@@ -51,11 +49,18 @@ public class NotificationManagerInstrumentationTest extends InstrumentationTestC
         String curRegId = ServiceSupport.Instance.getCache().get(NotificationManager.CACHE_KEY_GCM_REGISTRATION_ID, String.class);
         if (curRegId == null) {
             Log.d(TAG, "We don't have a GCM_REGISTRATION_ID yet, waiting for it.");
-            gcmRegisteredLatchedBusListener.await(30, TimeUnit.SECONDS);
+            gcmRegisteredLatchedBusListener.await(60, TimeUnit.SECONDS);
             curRegId = ServiceSupport.Instance.getCache().get(NotificationManager.CACHE_KEY_GCM_REGISTRATION_ID, String.class);
         }
         ServiceSupport.Instance.getEventBus().unregister(gcmRegisteredLatchedBusListener);
         assertNotNull(curRegId);
+        assertNull(gcmRegisteredLatchedBusListener.getEvent().getFailure());
+        GcmRegistrationIdResponse gcmRegistrationIdResponse = gcmRegisteredLatchedBusListener.getEvent().getSuccess();
+        assertNotNull(gcmRegistrationIdResponse);
+        assertEquals(Utilities.getDeviceId(getInstrumentation().getContext()), gcmRegistrationIdResponse.getDeviceId());
+        assertEquals(user.getId(), gcmRegistrationIdResponse.getUserId());
+        assertEquals(GcmUtils.getRegistrationId(getInstrumentation().getContext()), gcmRegistrationIdResponse.getGcmRegistrationId());
+
 
         final LatchedBusListener<EventNotificationReceived> latchedBusListener = new LatchedBusListener<>(EventNotificationReceived.class);
 

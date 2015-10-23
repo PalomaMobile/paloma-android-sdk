@@ -21,7 +21,7 @@ import com.path.android.jobqueue.Params;
  * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
  */
-public class JobPostUserGcmRegistrationIdUpdate extends BaseRetryPolicyAwareJob<String> {
+public class JobPostUserGcmRegistrationIdUpdate extends BaseRetryPolicyAwareJob<GcmRegistrationIdResponse> {
 
     public static final String TAG = JobPostUserGcmRegistrationIdUpdate.class.getSimpleName();
 
@@ -41,7 +41,7 @@ public class JobPostUserGcmRegistrationIdUpdate extends BaseRetryPolicyAwareJob<
         super(params);
     }
 
-    public String syncRun(boolean postEvent) throws Throwable {
+    public GcmRegistrationIdResponse syncRun(boolean postEvent) throws Throwable {
         Log.i(TAG, "onRun()");
         Context context = ServiceSupport.Instance.getContext();
 
@@ -77,14 +77,8 @@ public class JobPostUserGcmRegistrationIdUpdate extends BaseRetryPolicyAwareJob<
         User localUser = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser();
         Log.d(TAG, "gcmRegistrationId: " + gcmRegistrationId + ", lastServerGcmRegistrationId: " + lastServerGcmRegistrationId + ", localUser: " + localUser);
         if (gcmRegistrationId != null && localUser != null) {
-            if (gcmRegistrationId.equals(lastServerGcmRegistrationId)) {
-                Log.d(TAG, "NOT asking server to update user's gcmRegistrationId as it has not changed");
-            }
-            else {
-                Log.d(TAG, "asking server to update user's gcmRegistrationId");
-                postGcmRegistrationIdUpdate(localUser.getId(), gcmRegistrationId, postEvent);
-            }
-            return gcmRegistrationId;
+            Log.d(TAG, "asking server to update user's gcmRegistrationId");
+            return postGcmRegistrationIdUpdate(localUser.getId(), gcmRegistrationId, postEvent);
         }
         else {
             String reason = null;
@@ -99,7 +93,7 @@ public class JobPostUserGcmRegistrationIdUpdate extends BaseRetryPolicyAwareJob<
         }
     }
 
-    private void postGcmRegistrationIdUpdate(final long userId, final String gcmRegistrationId, boolean postEvent) {
+    private GcmRegistrationIdResponse postGcmRegistrationIdUpdate(final long userId, final String gcmRegistrationId, boolean postEvent) {
         JsonObject gcmRegistrationIdJson = new JsonObject();
         gcmRegistrationIdJson.addProperty("gcmRegistrationId", gcmRegistrationId);
         NotificationManager notificationManager = (NotificationManager) ServiceSupport.Instance.getServiceManager(INotificationManager.class);
@@ -109,8 +103,9 @@ public class JobPostUserGcmRegistrationIdUpdate extends BaseRetryPolicyAwareJob<
         Log.d(TAG, "SUCCESS (update cache) addGcmRegistrationId() for userId: " + userId + ", gcmRegistrationId: " + gcmRegistrationId);
         ServiceSupport.Instance.getCache().put(NotificationManager.CACHE_KEY_GCM_REGISTRATION_ID, gcmRegistrationIdResponse.getGcmRegistrationId());
         if (postEvent) {
-            ServiceSupport.Instance.getEventBus().post(new EventGcmRegistrationIdUpdated(this, gcmRegistrationIdResponse.getGcmRegistrationId()));
+            ServiceSupport.Instance.getEventBus().post(new EventGcmRegistrationIdUpdated(this, gcmRegistrationIdResponse));
         }
+        return gcmRegistrationIdResponse;
     }
 
     @Override

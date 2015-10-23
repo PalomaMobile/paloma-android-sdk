@@ -9,13 +9,13 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  * The event contains either the current {@code gcmRegistrationId} on request success or {@code throwable} on
  * request failure.<br/>
  */
-public class EventGcmRegistrationIdUpdated extends BaseJobEvent<JobPostUserGcmRegistrationIdUpdate, String> {
+public class EventGcmRegistrationIdUpdated extends BaseJobEvent<JobPostUserGcmRegistrationIdUpdate, GcmRegistrationIdResponse> {
 
     public EventGcmRegistrationIdUpdated(JobPostUserGcmRegistrationIdUpdate job, Throwable failure) {
         super(job, failure);
     }
 
-    public EventGcmRegistrationIdUpdated(JobPostUserGcmRegistrationIdUpdate job, String s) {
-        super(job, s);
+    public EventGcmRegistrationIdUpdated(JobPostUserGcmRegistrationIdUpdate job, GcmRegistrationIdResponse gcmRegistrationIdResponse) {
+        super(job, gcmRegistrationIdResponse);
     }
 }

@@ -57,7 +57,6 @@ public class RegisterUserActivity extends Activity {
         }
     }
 
-
     private void onUserAvailable() {
         Intent intent = new Intent(this, NotificationSampleActivity.class);
         startActivity(intent);
