@@ -3,9 +3,10 @@ package com.palomamobile.android.sdk.core.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import com.google.gson.Gson;
 import com.palomamobile.android.sdk.core.ICache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 
@@ -17,7 +18,7 @@ import java.lang.reflect.Type;
  */
 public class SimpleGsonPrefsCache implements ICache {
 
-    public static final String TAG = SimpleGsonPrefsCache.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(SimpleGsonPrefsCache.class);
 
     private static final String CACHE_PREFS_NAME = "CACHE_PREFS";
 
@@ -30,10 +31,10 @@ public class SimpleGsonPrefsCache implements ICache {
     }
 
     public <T> T get(@NonNull String key, @NonNull Class<T> type) {
-        Log.d(TAG, "get key=" + key + ", type=" + type);
+        logger.debug("get key=" + key + ", type=" + type);
         SharedPreferences prefs = context.getSharedPreferences(CACHE_PREFS_NAME, Context.MODE_PRIVATE);
         String jsonValue = prefs.getString(key, null);
-        Log.d(TAG, "got: " + jsonValue);
+        logger.debug("got: " + jsonValue);
         if (jsonValue != null) {
             return gson.fromJson(jsonValue, type);
         }
@@ -41,10 +42,10 @@ public class SimpleGsonPrefsCache implements ICache {
     }
 
     public <T> T getTypedCollection(@NonNull String key, @NonNull Type typeOfT) {
-        Log.d(TAG, "get key=" + key + ", typeOfT=" + typeOfT);
+        logger.debug("get key=" + key + ", typeOfT=" + typeOfT);
         SharedPreferences prefs = context.getSharedPreferences(CACHE_PREFS_NAME, Context.MODE_PRIVATE);
         String jsonValue = prefs.getString(key, null);
-        Log.d(TAG, "got: " + jsonValue);
+        logger.debug("got: " + jsonValue);
         if (jsonValue != null) {
             return gson.fromJson(jsonValue, typeOfT);
         }
@@ -52,20 +53,20 @@ public class SimpleGsonPrefsCache implements ICache {
     }
 
     public void put(@NonNull String key, @NonNull Object value) {
-        Log.d(TAG, "put key=" + key + ", value=" + value);
+        logger.debug("put key=" + key + ", value=" + value);
         SharedPreferences prefs = context.getSharedPreferences(CACHE_PREFS_NAME, Context.MODE_PRIVATE);
         prefs.edit().putString(key, gson.toJson(value)).apply();
     }
 
     public void remove(@NonNull String key) {
-        Log.d(TAG, "remove key=" + key);
+        logger.debug("remove key=" + key);
         SharedPreferences prefs = context.getSharedPreferences(CACHE_PREFS_NAME, Context.MODE_PRIVATE);
         prefs.edit().remove(key).apply();
     }
 
     @Override
     public void clear() {
-        Log.d(TAG, "clear");
+        logger.debug("clear");
         SharedPreferences prefs = context.getSharedPreferences(CACHE_PREFS_NAME, Context.MODE_PRIVATE);
         prefs.edit().clear().apply();
     }

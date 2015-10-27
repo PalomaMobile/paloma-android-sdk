@@ -21,7 +21,6 @@ class MediaManager implements IMediaManager {
     public MediaManager(IServiceSupport serviceSupport) {
         this.mediaService = serviceSupport.getRestAdapter().create(IMediaService.class);
         serviceSupport.registerServiceManager(IMediaManager.class, this);
-        serviceSupport.getInternalEventBus().register(this);
     }
 
     private void initNonRedirectingHttpClient() {

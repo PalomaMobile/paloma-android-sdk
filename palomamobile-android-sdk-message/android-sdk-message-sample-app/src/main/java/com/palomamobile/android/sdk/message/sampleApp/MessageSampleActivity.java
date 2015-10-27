@@ -3,7 +3,6 @@ package com.palomamobile.android.sdk.message.sampleApp;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +25,8 @@ import com.palomamobile.android.sdk.message.MessageContentDetail;
 import com.palomamobile.android.sdk.message.MessageReceived;
 import com.palomamobile.android.sdk.message.MessageSent;
 import com.palomamobile.android.sdk.user.IUserManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.List;
  */
 public class MessageSampleActivity extends Activity {
 
-    private static final String TAG = MessageSampleActivity.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(MessageSampleActivity.class);
 
     private IUserManager userManager;
     private IFriendManager friendManager ;
@@ -85,7 +86,7 @@ public class MessageSampleActivity extends Activity {
                     JobPostRelationship jobPostRelationship = friendManager.createJobPutRelationship(reciprocalUserId, new RelationAttributes(RelationAttributes.Type.friend));
                     ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostRelationship);
                 } catch (Throwable throwable) {
-                    Log.w(TAG, throwable);
+                    logger.warn("Friend User ID invalid.", throwable);
                     Toast.makeText(MessageSampleActivity.this, "Friend User ID invalid.", Toast.LENGTH_LONG).show();
                 }
             }
@@ -164,14 +165,14 @@ public class MessageSampleActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        Log.d(TAG, "onDestroy");
+        logger.debug("onDestroy");
         ServiceSupport.Instance.getEventBus().unregister(this);
         super.onDestroy();
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(EventFriendsListReceived event) {
-        Log.d(TAG, "onEventMainThread(EventFriendsListReceived): " + event);
+        logger.debug("onEventMainThread(EventFriendsListReceived): " + event);
         Throwable throwable = event.getFailure();
         if (throwable == null) {
             this.friends = event.getSuccess().getEmbedded().getItems();
@@ -179,13 +180,13 @@ public class MessageSampleActivity extends Activity {
         }
         else {
             Toast.makeText(getApplicationContext(), "Err: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.w(TAG, throwable.getMessage());
+            logger.warn(throwable.getMessage());
         }
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(EventMessagesReceived event) {
-        Log.d(TAG, "onEventMainThread(EventMessagesReceived): " + event);
+        logger.debug("onEventMainThread(EventMessagesReceived): " + event);
         Throwable throwable = event.getFailure();
         if (throwable == null) {
             if (event.getSuccess().getEmbedded() != null) {
@@ -195,7 +196,7 @@ public class MessageSampleActivity extends Activity {
         }
         else {
             Toast.makeText(getApplicationContext(), "Err: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.w(TAG, throwable.getMessage());
+            logger.warn(throwable.getMessage());
         }
     }
 

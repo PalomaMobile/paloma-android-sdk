@@ -1,7 +1,6 @@
 package com.palomamobile.android.sdk.core;
 
 import android.content.Context;
-import android.util.Log;
 import com.palomamobile.android.sdk.core.qos.DefaultRetryPolicyProvider;
 import com.palomamobile.android.sdk.core.qos.IRetryPolicyProvider;
 import com.palomamobile.android.sdk.core.util.SimpleGsonPrefsCache;
@@ -10,6 +9,8 @@ import com.path.android.jobqueue.config.Configuration;
 import com.path.android.jobqueue.log.CustomLogger;
 import com.squareup.okhttp.OkHttpClient;
 import de.greenrobot.event.EventBus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit.RestAdapter;
 import retrofit.client.Client;
 
@@ -175,6 +176,8 @@ public class ServiceSupportConfiguration {
     public Configuration.Builder getJobManagerBuilder() {
         if (jobManagerBuilder == null) {
             jobManagerBuilder = new Configuration.Builder(context).customLogger(new CustomLogger() {
+                private Logger logger = LoggerFactory.getLogger(CustomLogger.class);
+
                 @Override
                 public boolean isDebugEnabled() {
                     return true;
@@ -182,17 +185,17 @@ public class ServiceSupportConfiguration {
 
                 @Override
                 public void d(String text, Object... args) {
-                    Log.d("JobManager", String.format(text, args));
+                    logger.debug(String.format(text, args));
                 }
 
                 @Override
                 public void e(Throwable t, String text, Object... args) {
-                    Log.e("JobManager", String.format(text, args), t);
+                    logger.error(String.format(text, args), t);
                 }
 
                 @Override
                 public void e(String text, Object... args) {
-                    Log.e("JobManager", String.format(text, args));
+                    logger.error(String.format(text, args));
                 }
             });
         }

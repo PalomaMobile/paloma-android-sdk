@@ -12,8 +12,6 @@ import com.path.android.jobqueue.Params;
  */
 public class JobPostMessageThread extends BaseRetryPolicyAwareJob<MessageThread> {
 
-    public static final String TAG = JobPostMessageThread.class.getSimpleName();
-
     private NewMessageThread newMessageThread;
 
 

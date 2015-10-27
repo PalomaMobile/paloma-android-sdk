@@ -1,18 +1,19 @@
 package com.palomamobile.android.sdk.auth;
 
-import android.util.Log;
 import android.util.Pair;
 import com.palomamobile.android.sdk.core.CustomHeader;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
 
 class OAuth2Interceptor implements Interceptor {
 
-    public static final String TAG = OAuth2Interceptor.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(OAuth2Interceptor.class);
 
     private IAuthManager authManager;
 
@@ -23,7 +24,7 @@ class OAuth2Interceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
-        Log.d(TAG, "request => " + request);
+        logger.debug("request => " + request);
 
         AuthType authType = getAuthType(request);
 
@@ -36,19 +37,19 @@ class OAuth2Interceptor implements Interceptor {
 
         switch (authType) {
             case Client: {
-                Log.d(TAG, "Client Auth required.");
+                logger.debug("Client Auth required.");
                 AccessToken clientAccessToken = authManager.getClientAccessToken(IAuthManager.TokenRetrievalMode.CACHE_THEN_NETWORK, requestId);
                 authorizationHeader = new Pair<>("Authorization", AuthUtils.getBearerAuthHeaderValue(clientAccessToken.getAccessToken()));
                 break;
             }
             case User: {
-                Log.d(TAG, "User Auth required.");
+                logger.debug("User Auth required.");
                 AccessToken userAccessToken = authManager.getUserAccessToken(IAuthManager.TokenRetrievalMode.CACHE_THEN_NETWORK, requestId);
                 authorizationHeader = new Pair<>("Authorization", AuthUtils.getBearerAuthHeaderValue(userAccessToken.getAccessToken()));
                 break;
             }
             case None: {
-                Log.d(TAG, "No Auth required.");
+                logger.debug("No Auth required.");
                 break;
             }
             default: {
@@ -60,20 +61,20 @@ class OAuth2Interceptor implements Interceptor {
         newRequestBuilder.removeHeader(IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME);
 
         if (authorizationHeader != null) {
-            Log.d(TAG, "adding authorizationHeader: " + authorizationHeader.first + ": " + authorizationHeader.second);
+            logger.debug("adding authorizationHeader: " + authorizationHeader.first + ": " + authorizationHeader.second);
             newRequestBuilder.header(authorizationHeader.first, authorizationHeader.second);
         }
         Request newRequest = newRequestBuilder.build();
-        Log.d(TAG, "newRequest => " + newRequest);
+        logger.debug("newRequest => " + newRequest);
 
         Response response = chain.proceed(newRequest);
-        Log.d(TAG, "response <= " + response);
+        logger.debug("response <= " + response);
 
         int respCode = response.code();
 
         ///This code deals with token expiry
         if (respCode == java.net.HttpURLConnection.HTTP_UNAUTHORIZED) {
-            Log.d(TAG, "Response was HTTP_UNAUTHORIZED (401) for AuthType." + authType.name());
+            logger.debug("Response was HTTP_UNAUTHORIZED (401) for AuthType." + authType.name());
             switch (authType) {
                 // Expired user token is reasonable as per spec
                 case User: {
@@ -88,7 +89,7 @@ class OAuth2Interceptor implements Interceptor {
                 //otherwise something is wrong most likely the client id and/or client signature are misconfigured
                 case None : {
                     IllegalStateException e = new IllegalStateException("HTTP_UNAUTHORIZED - most likely your client id and/or client signature are misconfigured");
-                    Log.e(TAG, "Configuration error.", e);
+                    logger.error("Configuration error.", e);
                     throw e;
                 }
             }
@@ -101,43 +102,43 @@ class OAuth2Interceptor implements Interceptor {
         List<String> authTypeHeaders = request.headers(IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME);
         if (authTypeHeaders != null && authTypeHeaders.size() > 0) {
             if (authTypeHeaders.size() > 1) {
-                Log.e(TAG, "More than one X-RequiredAuth header present: " + authTypeHeaders);
+                logger.error("More than one X-RequiredAuth header present: " + authTypeHeaders);
             }
             try {
                 authType = AuthType.valueOf(authTypeHeaders.get(0));
             } catch (IllegalArgumentException e) {
-                Log.e(TAG, "Illegal X-RequiredAuth header value: " + authTypeHeaders.get(0), e);
+                logger.error("Illegal X-RequiredAuth header value: " + authTypeHeaders.get(0), e);
             }
         }
         return authType;
     }
 
     private Response handleUserTokenExpired(Chain chain, Request.Builder newRequestBuilder, String requestId) throws IOException {
-        Log.d(TAG, "response was HTTP_UNAUTHORIZED for AuthType.User - OK need to refresh the User token");
+        logger.debug("response was HTTP_UNAUTHORIZED for AuthType.User - OK need to refresh the User token");
         AccessToken cachedUserAccessToken = authManager.getUserAccessToken(IAuthManager.TokenRetrievalMode.CACHE_ONLY, requestId);
         if (cachedUserAccessToken != null) {
-            Log.d(TAG, "we have a cached User token: " + cachedUserAccessToken);
+            logger.debug("we have a cached User token: " + cachedUserAccessToken);
             String refreshToken = cachedUserAccessToken.getRefreshToken();
             if (refreshToken != null) {
-                Log.d(TAG, "we have a refresh User token: " + refreshToken + ", doing a user token refresh");
+                logger.debug("we have a refresh User token: " + refreshToken + ", doing a user token refresh");
                 AccessToken refreshedUserAccessToken = authManager.refreshUserAccessToken(refreshToken, requestId);
                 Pair<String, String> authorizationHeader = new Pair<>("Authorization", AuthUtils.getBearerAuthHeaderValue(refreshedUserAccessToken.getAccessToken()));
                 newRequestBuilder.header(authorizationHeader.first, authorizationHeader.second);
 
                 Request newRequest = newRequestBuilder.build();
-                Log.d(TAG, "newRequest => " + newRequest);
+                logger.debug("newRequest => " + newRequest);
 
                 Response newResponse = chain.proceed(newRequest);
-                Log.d(TAG, "newResponse <= " + newResponse);
+                logger.debug("newResponse <= " + newResponse);
                 return newResponse;
             }
             else {
-                Log.e(TAG, "we DO NOT have a refresh User token, this should never happen!!!");
+                logger.error("we DO NOT have a refresh User token, this should never happen!!!");
             }
         }
         else {
-            Log.e(TAG, "we DO NOT have a cached User token, how did this happen?");
-            Log.e(TAG, "TODO: need to get a token by kicking off Auth flow in the UI and coming back here with user credentials.");
+            logger.error("we DO NOT have a cached User token, how did this happen?");
+            logger.error("TODO: need to get a token by kicking off Auth flow in the UI and coming back here with user credentials.");
         }
         return null;
     }
@@ -148,10 +149,10 @@ class OAuth2Interceptor implements Interceptor {
         newRequestBuilder.header(authorizationHeader.first, authorizationHeader.second);
 
         Request newRequest = newRequestBuilder.build();
-        Log.d(TAG, "newRequest => " + newRequest);
+        logger.debug("newRequest => " + newRequest);
 
         Response response = chain.proceed(newRequest);
-        Log.d(TAG, "newResponse <= " + response);
+        logger.debug("newResponse <= " + response);
 
         return response;
     }

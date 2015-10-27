@@ -12,8 +12,6 @@ import com.path.android.jobqueue.Params;
  */
 public class JobPostMessage extends BaseRetryPolicyAwareJob<MessageSent> {
 
-    public static final String TAG = JobPostMessage.class.getSimpleName();
-
     private long userId;
     private MessageSent message;
 

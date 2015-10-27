@@ -1,27 +1,28 @@
 package com.palomamobile.android.sdk.friend;
 
 import android.test.InstrumentationTestCase;
-import android.util.Log;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.TestUserManager;
-import com.palomamobile.android.sdk.user.FbUserCredential;
-import com.palomamobile.android.sdk.user.PasswordUserCredential;
 import com.palomamobile.android.sdk.core.PaginatedResponse;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.util.LatchedBusListener;
 import com.palomamobile.android.sdk.core.util.Utilities;
+import com.palomamobile.android.sdk.user.FbUserCredential;
+import com.palomamobile.android.sdk.user.PasswordUserCredential;
 import com.palomamobile.android.sdk.user.TestUtilities;
 import com.palomamobile.android.sdk.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
 public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
 
-    public static final String TAG = FriendManagerInstrumentationTest.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(FriendManagerInstrumentationTest.class);
 
     //TODO: add values for these facebookAppId & facebookAppSecret in strings.xml (see comments in file)
     private static String facebookAppId = null;
@@ -33,6 +34,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
 
     public void setUp() throws Exception {
         super.setUp();
+        logger.info("here we are setting up");
         ServiceSupport.Instance.init(getInstrumentation().getContext());
         friendManager = ServiceSupport.Instance.getServiceManager(IFriendManager.class);
 
@@ -40,7 +42,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
             facebookAppId = Utilities.getValueFromAppMetadata(getInstrumentation().getContext(), "facebook.app.id");
             facebookAppSecret = Utilities.getValueFromAppMetadata(getInstrumentation().getContext(), "facebook.app.secret");
         } catch (Exception e) {
-            Log.w(TAG, "FacebookApp NOT setup, will not be not running instrumentation tests that involve creating FB users, provide your own values for a Facebook test app id and secret .");
+            logger.warn("FacebookApp NOT setup, will not be not running instrumentation tests that involve creating FB users, provide your own values for a Facebook test app id and secret .");
         }
     }
 
@@ -66,7 +68,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
 
     public void testRequestPostSocialUserCredentialFb() throws Throwable {
         if (!isFacebookAppSetup()) {
-            Log.w(TAG, "FacebookApp NOT setup, not running Test: testRequestPostSocialUserCredentialFb()");
+            logger.warn("FacebookApp NOT setup, not running Test: testRequestPostSocialUserCredentialFb()");
             return;
         }
 
@@ -101,7 +103,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
                     HttpMethod.POST,
                     new GraphRequest.Callback() {
                         public void onCompleted(GraphResponse response) {
-                            Log.d(TAG, "request friend A -> B : " + response.getRawResponse());
+                            logger.debug("request friend A -> B : " + response.getRawResponse());
                             assertNull(response.getError());
                         }
                     }
@@ -115,7 +117,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
                     HttpMethod.POST,
                     new GraphRequest.Callback() {
                         public void onCompleted(GraphResponse response) {
-                            Log.d(TAG, "confirm friend B -> A : " + response.getRawResponse());
+                            logger.debug("confirm friend B -> A : " + response.getRawResponse());
                             assertNull(response.getError());
                         }
                     }
@@ -196,7 +198,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
                 new GraphRequest.Callback() {
                     @Override
                     public void onCompleted(GraphResponse graphResponse) {
-                        Log.d(TAG, graphResponse.getRawResponse());
+                        logger.debug(graphResponse.getRawResponse());
                         assertNull(graphResponse.getError());
                     }
                 }
@@ -208,14 +210,14 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         String tmp = String.valueOf(System.currentTimeMillis());
         PasswordUserCredential passwordUserCredentialA = new PasswordUserCredential(tmp, tmp);
         final User userA = TestUtilities.registerUserSynchronous(this, passwordUserCredentialA);
-        Log.d(TAG, "registerUserSynchronous userA: " + userA);
+        logger.debug("registerUserSynchronous userA: " + userA);
         assertNotNull(userA);
 
         //Create paloma user B (login / pwd)
         tmp = String.valueOf(System.currentTimeMillis());
         PasswordUserCredential passwordUserCredentialB = new PasswordUserCredential(tmp, tmp);
         final User userB = TestUtilities.registerUserSynchronous(this, passwordUserCredentialB);
-        Log.d(TAG, "registerUserSynchronous userB: " + userB);
+        logger.debug("registerUserSynchronous userB: " + userB);
         assertNotNull(userB);
 
 
@@ -306,14 +308,14 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         String tmp = "userA_" + String.valueOf(System.currentTimeMillis());
         PasswordUserCredential passwordUserCredentialA = new PasswordUserCredential(tmp, tmp);
         final User userA = TestUtilities.registerUserSynchronous(this, passwordUserCredentialA);
-        Log.d(TAG, "registerUserSynchronous userA: " + userA);
+        logger.debug("registerUserSynchronous userA: " + userA);
         assertNotNull(userA);
 
         //Create paloma user B (login / pwd)
         tmp = "userB_" + String.valueOf(System.currentTimeMillis());
         PasswordUserCredential passwordUserCredentialB = new PasswordUserCredential(tmp, tmp);
         final User userB = TestUtilities.registerUserSynchronous(this, passwordUserCredentialB);
-        Log.d(TAG, "registerUserSynchronous userB: " + userB);
+        logger.debug("registerUserSynchronous userB: " + userB);
         assertNotNull(userB);
 
 

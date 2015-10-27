@@ -3,18 +3,19 @@ package com.palomamobile.android.sdk.core;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.util.Log;
 import com.palomamobile.android.sdk.core.util.Utilities;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Locale;
 
 class CustomHeadersInterceptor implements Interceptor {
 
-    private static final String TAG = CustomHeadersInterceptor.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(CustomHeadersInterceptor.class);
 
     private static final String HEADER_NAME_USER_AGENT = "User-Agent";
     private static final String HEADER_NAME_PALOMA_DEVICE = "X-Paloma-Device";
@@ -50,7 +51,7 @@ class CustomHeadersInterceptor implements Interceptor {
 
     private static String getPalomaDeviceHeaderValue(Context context) {
         String value = Utilities.getDeviceId(context) + "," + Locale.getDefault().getLanguage() + "," + Utilities.getDeviceDisplaySizeDescription(context);
-        Log.d(TAG, HEADER_NAME_PALOMA_DEVICE + " : " + value);
+        logger.debug(HEADER_NAME_PALOMA_DEVICE + " : " + value);
         return value;
     }
 
@@ -66,7 +67,7 @@ class CustomHeadersInterceptor implements Interceptor {
         userAgent.append(" ").append(CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION).append("/").append(sdkVersion);
 
         userAgent.append(getClientAppVersionValues(context));
-        Log.d(TAG, HEADER_NAME_USER_AGENT + " : " + userAgent);
+        logger.debug(HEADER_NAME_USER_AGENT + " : " + userAgent);
         return userAgent.toString();
     }
 
@@ -76,7 +77,7 @@ class CustomHeadersInterceptor implements Interceptor {
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             versionValue.append(" ").append(HEADER_PALOMA_CLIENT_APP_VERSION).append("/").append(pInfo.versionCode);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.w(TAG, "Unable to determine application versionCode", e);
+            logger.warn("Unable to determine application versionCode", e);
         }
         return versionValue.toString();
     }

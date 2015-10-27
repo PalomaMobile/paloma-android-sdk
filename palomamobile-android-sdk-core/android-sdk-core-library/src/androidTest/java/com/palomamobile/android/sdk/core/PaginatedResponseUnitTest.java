@@ -43,7 +43,6 @@ public class PaginatedResponseUnitTest extends TestCase {
             "  }\n" +
             "}";
 
-    private static final String TAG = PaginatedResponseUnitTest.class.getSimpleName();
 
     public void testFromJson() {
         Gson gson = new Gson();

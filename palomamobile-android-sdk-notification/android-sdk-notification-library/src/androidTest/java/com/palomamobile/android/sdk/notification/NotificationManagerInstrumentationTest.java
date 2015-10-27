@@ -2,18 +2,19 @@ package com.palomamobile.android.sdk.notification;
 
 import android.os.Build;
 import android.test.InstrumentationTestCase;
-import android.util.Log;
 import com.palomamobile.android.sdk.core.ServiceSupport;
+import com.palomamobile.android.sdk.core.util.LatchedBusListener;
 import com.palomamobile.android.sdk.core.util.Utilities;
 import com.palomamobile.android.sdk.user.TestUtilities;
 import com.palomamobile.android.sdk.user.User;
-import com.palomamobile.android.sdk.core.util.LatchedBusListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
 public class NotificationManagerInstrumentationTest extends InstrumentationTestCase {
 
-    public static final String TAG = NotificationManagerInstrumentationTest.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(NotificationManagerInstrumentationTest.class);
 
     private NotificationManager notificationManager;
 
@@ -48,7 +49,7 @@ public class NotificationManagerInstrumentationTest extends InstrumentationTestC
         ServiceSupport.Instance.getEventBus().register(gcmRegisteredLatchedBusListener);
         String curRegId = ServiceSupport.Instance.getCache().get(NotificationManager.CACHE_KEY_GCM_REGISTRATION_ID, String.class);
         if (curRegId == null) {
-            Log.d(TAG, "We don't have a GCM_REGISTRATION_ID yet, waiting for it.");
+            logger.debug("We don't have a GCM_REGISTRATION_ID yet, waiting for it.");
             gcmRegisteredLatchedBusListener.await(60, TimeUnit.SECONDS);
             curRegId = ServiceSupport.Instance.getCache().get(NotificationManager.CACHE_KEY_GCM_REGISTRATION_ID, String.class);
         }

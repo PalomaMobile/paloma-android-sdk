@@ -3,25 +3,23 @@ package com.palomamobile.android.sdk.message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.test.InstrumentationTestCase;
-import android.util.Log;
-import com.palomamobile.android.sdk.user.PasswordUserCredential;
 import com.palomamobile.android.sdk.core.PaginatedResponse;
 import com.palomamobile.android.sdk.core.ServiceRequestParams;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.util.LatchedBusListener;
+import com.palomamobile.android.sdk.user.PasswordUserCredential;
 import com.palomamobile.android.sdk.user.TestUtilities;
 import com.palomamobile.android.sdk.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-/**
- *
- */
 public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
 
-    public static final String TAG = MessageManagerInstrumentationTest.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(MessageManagerInstrumentationTest.class);
 
     private IMessageManager messageManager;
 
@@ -60,21 +58,21 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         final String tmp1 = String.valueOf(System.currentTimeMillis());
         User friend1 = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmp1, tmp1));
         assertNotNull(friend1);
-        Log.i(TAG, "friend1 created!!");
+        logger.info("friend1 created!!");
         final long friendId1 = friend1.getId();
 
         //create a "friend 2"
         final String tmp2 = String.valueOf(System.currentTimeMillis());
         User friend2 = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmp2, tmp2));
         assertNotNull(friend2);
-        Log.i(TAG, "friend2 created!!");
+        logger.info("friend2 created!!");
         final long friendId2 = friend2.getId();
         assertFalse(friendId1 == friendId2);
 
         //create a local user
         final String tmpSelf = String.valueOf(System.currentTimeMillis());
         User self = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmpSelf, tmpSelf));
-        Log.i(TAG, "self created!!");
+        logger.info("self created!!");
         final long selfId = self.getId();
         assertNotNull(self);
         assertFalse(friendId1 == selfId);
@@ -137,12 +135,12 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         String tmp = String.valueOf(System.currentTimeMillis());
         User friend = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmp, tmp));
         assertNotNull(friend);
-        Log.i(TAG, "friend created!!");
+        logger.info("friend created!!");
         final long friendId = friend.getId();
 
         //create a local user
         User self = TestUtilities.registerUserSynchronous(this);
-        Log.i(TAG, "self created!!");
+        logger.info("self created!!");
         assertNotNull(self);
         assertTrue(friendId != self.getId());
 
@@ -268,12 +266,12 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         String tmp = String.valueOf(System.currentTimeMillis());
         User friend = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmp, tmp));
         assertNotNull(friend);
-        Log.i(TAG, "friend created!!");
+        logger.info("friend created!!");
         final long friendId = friend.getId();
 
         //create a local user
         User self = TestUtilities.registerUserSynchronous(this);
-        Log.i(TAG, "self created!!");
+        logger.info("self created!!");
         assertNotNull(self);
         assertTrue(friendId != self.getId());
 
@@ -297,7 +295,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         //log back in as a friend
         friend = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmp, tmp));
         assertNotNull(friend);
-        Log.i(TAG, "logged back in as a friend!!");
+        logger.info("logged back in as a friend!!");
         final LatchedBusListener<EventMessagesReceived> latchedEventMessagesReceivedBusListener = new LatchedBusListener<>(EventMessagesReceived.class);
 
         ServiceSupport.Instance.getEventBus().register(latchedEventMessagesReceivedBusListener);

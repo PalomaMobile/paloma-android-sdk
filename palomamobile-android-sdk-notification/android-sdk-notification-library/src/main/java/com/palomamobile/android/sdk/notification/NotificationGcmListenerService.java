@@ -1,9 +1,10 @@
 package com.palomamobile.android.sdk.notification;
 
 import android.os.Bundle;
-import android.util.Log;
 import com.google.android.gms.gcm.GcmListenerService;
 import com.palomamobile.android.sdk.core.ServiceSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Handles incoming Gcm notifications by publishing {@link EventNotificationReceived} with notification contents.
@@ -18,11 +19,11 @@ public class NotificationGcmListenerService extends GcmListenerService {
     private static final String GCM_KEY_SENDER_ID = "senderId";
     private static final String GCM_KEY_TIMESTAMP = "timestamp";
 
-    private static final String TAG = NotificationGcmListenerService.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(NotificationGcmListenerService.class);
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
-        Log.i(TAG, "onMessageReceived from: " + from + " data: " + data);
+        logger.info("onMessageReceived from: " + from + " data: " + data);
         Notification notification = new Notification();
         notification.setContent(data.getString(GCM_KEY_CONTENT));
         notification.setDebug(data.getString(GCM_KEY_DEBUG));

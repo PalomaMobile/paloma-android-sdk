@@ -15,8 +15,6 @@ import java.util.Map;
  */
 public class JobGetMessageThreadMembers extends BaseRetryPolicyAwareJob<PaginatedResponse<MessageThreadMember>> {
 
-    public static final String TAG = JobGetMessageThreadMembers.class.getSimpleName();
-
     private long threadId;
 
     /**

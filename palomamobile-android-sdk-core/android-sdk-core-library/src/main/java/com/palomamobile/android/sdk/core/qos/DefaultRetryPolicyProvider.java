@@ -1,7 +1,8 @@
 package com.palomamobile.android.sdk.core.qos;
 
-import android.util.Log;
 import com.path.android.jobqueue.RetryConstraint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit.RetrofitError;
 
 /**
@@ -13,7 +14,7 @@ import retrofit.RetrofitError;
  */
 public class DefaultRetryPolicyProvider implements IRetryPolicyProvider {
 
-    private static final String TAG = DefaultRetryPolicyProvider.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(DefaultRetryPolicyProvider.class);
 
     /**
      * Default implementation returns:
@@ -28,7 +29,7 @@ public class DefaultRetryPolicyProvider implements IRetryPolicyProvider {
      */
     @Override
     public RetryConstraint shouldReRunOnThrowable(BaseRetryPolicyAwareJob job, Throwable throwable, int runCount, int maxRunCount) {
-        Log.d(TAG, "shouldReRunOnThrowable() ");
+        logger.debug("shouldReRunOnThrowable() ");
         RetryConstraint retryConstraint = RetryConstraint.CANCEL;
         if (throwable instanceof RetrofitError) {
             RetrofitError error = (RetrofitError) throwable;
@@ -36,10 +37,10 @@ public class DefaultRetryPolicyProvider implements IRetryPolicyProvider {
                 retryConstraint = RetryConstraint.createExponentialBackoff(runCount, job.getInitialBackOffInMs());
             }
             else {
-                Log.d(TAG, "error not temporary");
+                logger.debug("error not temporary");
             }
         }
-        Log.w(TAG, job + " failed with: " + throwable + " -> " + asString(retryConstraint));
+        logger.warn(job + " failed with: " + throwable + " -> " + asString(retryConstraint));
         return retryConstraint;
     }
 

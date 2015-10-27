@@ -3,7 +3,6 @@ package com.palomamobile.android.sdk.user.sampleApp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,11 +18,13 @@ import com.palomamobile.android.sdk.user.EventLocalUserUpdated;
 import com.palomamobile.android.sdk.user.IUserManager;
 import com.palomamobile.android.sdk.user.JobRegisterUser;
 import com.palomamobile.android.sdk.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class UserRegistrationSampleActivity extends Activity {
 
-    private static final String TAG = UserRegistrationSampleActivity.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(UserRegistrationSampleActivity.class);
 
     private IUserManager userManager;
 
@@ -74,7 +75,7 @@ public class UserRegistrationSampleActivity extends Activity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 AccessToken accessToken = loginResult.getAccessToken();
-                Log.d(TAG, "FB login success, received FB AccessToken: " +
+                logger.debug("FB login success, received FB AccessToken: " +
                         "userId = " + accessToken.getUserId() + ", " +
                         "applicationId = " + accessToken.getApplicationId() + ", " +
                         "token = " + accessToken.getToken());
@@ -85,13 +86,13 @@ public class UserRegistrationSampleActivity extends Activity {
 
             @Override
             public void onCancel() {
-                Log.d(TAG, "FB login cancelled");
+                logger.debug("FB login cancelled");
                 setRegistrationInProgress(false);
             }
 
             @Override
             public void onError(FacebookException exception) {
-                Log.w(TAG, "FB login throwable", exception);
+                logger.warn("FB login throwable", exception);
                 setRegistrationInProgress(false);
             }
         });
@@ -105,7 +106,7 @@ public class UserRegistrationSampleActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        Log.d(TAG, "onDestroy");
+        logger.debug("onDestroy");
         ServiceSupport.Instance.getEventBus().unregister(this);
         super.onDestroy();
     }
@@ -114,7 +115,7 @@ public class UserRegistrationSampleActivity extends Activity {
     public void onEventMainThread(EventLocalUserUpdated event) {
         Throwable throwable = event.getFailure();
         if (throwable == null) {
-            Log.d(TAG, "onEventMainThread(): " + event);
+            logger.debug("onEventMainThread(): " + event);
             setResult(RESULT_OK);
             User user = event.getSuccess();
             Toast.makeText(getApplicationContext(), getString(R.string.login_success_as, user.getUsername(), user.getId()), Toast.LENGTH_LONG).show();

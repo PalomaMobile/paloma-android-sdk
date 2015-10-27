@@ -1,6 +1,7 @@
 package com.palomamobile.android.sdk.core.util;
 
-import android.util.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit.RestAdapter;
 
 /**
@@ -11,10 +12,11 @@ import retrofit.RestAdapter;
 public class TruncatedAndroidLog implements RestAdapter.Log {
 
     public static final int DEFAULT_TRUNCATED_LOG_CHUNK_SIZE = 4000;
-    public static final String DEFAULT_LOG_TAG = "com.palomamobile";
+    public static final String DEFAULT_LOG_TAG = "paloma:retrofit";
 
     private int maxMsgLogLength;
     private String tag;
+    private Logger logger;
 
     /**
      * Same as calling {@link #TruncatedAndroidLog(int, String)} with {@link #DEFAULT_TRUNCATED_LOG_CHUNK_SIZE} and {@link #DEFAULT_LOG_TAG}.
@@ -30,15 +32,15 @@ public class TruncatedAndroidLog implements RestAdapter.Log {
      */
     public TruncatedAndroidLog(int maxMsgLogLength, String tag) {
         this.maxMsgLogLength = maxMsgLogLength;
-        this.tag = tag;
+        setTag(tag);
     }
 
     @Override
     public void log(String message) {
         int end = Math.min(message.length(), getMaxMsgLogLength());
-        Log.i(tag, message.substring(0, end));
+        logger.info(message.substring(0, end));
         if (message.length() > DEFAULT_TRUNCATED_LOG_CHUNK_SIZE) {
-            Log.i(tag, "[... truncated]");
+            logger.info("[... truncated]");
         }
     }
 
@@ -67,6 +69,7 @@ public class TruncatedAndroidLog implements RestAdapter.Log {
      * @param tag log tag
      */
     public void setTag(String tag) {
+        this.logger = LoggerFactory.getLogger(tag);
         this.tag = tag;
     }
 }

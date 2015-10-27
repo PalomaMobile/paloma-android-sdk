@@ -3,7 +3,6 @@ package com.palomamobile.android.sdk.friend.sampleApp;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +16,8 @@ import com.palomamobile.android.sdk.friend.JobGetFriends;
 import com.palomamobile.android.sdk.friend.JobPostRelationship;
 import com.palomamobile.android.sdk.friend.RelationAttributes;
 import com.palomamobile.android.sdk.user.IUserManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ import java.util.List;
  */
 public class FriendSampleActivity extends Activity {
 
-    private static final String TAG = FriendSampleActivity.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(FriendSampleActivity.class);
 
     private TextView textViewUserId;
 
@@ -62,7 +63,7 @@ public class FriendSampleActivity extends Activity {
                     JobPostRelationship jobPostRelationship = friendManager.createJobPutRelationship(reciprocalUserId, new RelationAttributes(RelationAttributes.Type.friend));
                     ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostRelationship);
                 } catch (Throwable throwable) {
-                    Log.w(TAG, throwable);
+                    logger.warn("Friend User ID invalid.", throwable);
                     Toast.makeText(FriendSampleActivity.this, "Friend User ID invalid.", Toast.LENGTH_LONG).show();
                 }
             }
@@ -90,21 +91,21 @@ public class FriendSampleActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        Log.d(TAG, "onDestroy");
+        logger.debug("onDestroy");
         ServiceSupport.Instance.getEventBus().unregister(this);
         super.onDestroy();
     }
 
     @SuppressWarnings("unused")
     public void onEventMainThread(EventFriendsListReceived event) {
-        Log.d(TAG, "onEventMainThread(): " + event);
+        logger.debug("onEventMainThread(): " + event);
         Throwable throwable = event.getFailure();
         if (throwable == null) {
             displayFriends(event.getSuccess().getEmbedded().getItems());
         }
         else {
             Toast.makeText(getApplicationContext(), "Err: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.w(TAG, throwable.getMessage());
+            logger.warn(throwable.getMessage());
         }
     }
 }

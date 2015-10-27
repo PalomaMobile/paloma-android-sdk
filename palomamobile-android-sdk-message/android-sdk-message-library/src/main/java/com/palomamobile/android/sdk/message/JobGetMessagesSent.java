@@ -15,8 +15,6 @@ import java.util.Map;
  */
 public class JobGetMessagesSent extends BaseRetryPolicyAwareJob<PaginatedResponse<MessageSent>> {
 
-    public static final String TAG = JobGetMessagesSent.class.getSimpleName();
-
     private long userId;
 
     /**

@@ -2,7 +2,6 @@ package com.palomamobile.android.sdk.verification.sampleApp;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,10 +14,12 @@ import com.palomamobile.android.sdk.verification.email.IEmailVerificationManager
 import com.palomamobile.android.sdk.verification.email.JobCreateEmailVerification;
 import com.palomamobile.android.sdk.verification.email.JobPostUserVerifiedEmail;
 import com.path.android.jobqueue.JobManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class VerificationSampleActivity extends Activity {
 
-    private static final String TAG = VerificationSampleActivity.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(VerificationSampleActivity.class);
 
     private IEmailVerificationManager emailVerificationManager = ServiceSupport.Instance.getServiceManager(IEmailVerificationManager.class);
     private JobManager jobManager = ServiceSupport.Instance.getJobManager();
@@ -73,7 +74,7 @@ public class VerificationSampleActivity extends Activity {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(EventEmailVerificationCreated event) {
-        Log.d(TAG, "onEventMainThread(): " + event);
+        logger.debug("onEventMainThread(): " + event);
         Throwable throwable = event.getFailure();
         if (throwable == null) {
             textViewStatus.setText("Step 1. of User email verification successful. Check your email for the verification code needed in the next step.");
@@ -85,7 +86,7 @@ public class VerificationSampleActivity extends Activity {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(EventLocalUserUpdated event) {
-        Log.d(TAG, "onEventMainThread(): " + event);
+        logger.debug("onEventMainThread(): " + event);
         Throwable throwable = event.getFailure();
         if (throwable == null) {
             textViewStatus.setText("Step 2. of User email verification successful. Email verification complete.\n" + event.getSuccess().toString());

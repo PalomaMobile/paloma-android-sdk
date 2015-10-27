@@ -1,11 +1,12 @@
 package com.palomamobile.android.sdk.friend;
 
-import android.util.Log;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.palomamobile.android.sdk.user.IUserManager;
 import com.palomamobile.android.sdk.user.User;
 import com.path.android.jobqueue.Params;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -18,7 +19,7 @@ import java.util.Map;
  */
 public class JobPostSocialUserCredential extends BaseRetryPolicyAwareJob<Void> {
 
-    public static final String TAG = JobPostSocialUserCredential.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(JobPostSocialUserCredential.class);
     private SocialUserCredential socialUserCredential;
 
     /**
@@ -43,7 +44,7 @@ public class JobPostSocialUserCredential extends BaseRetryPolicyAwareJob<Void> {
     public Void syncRun(boolean postEvent) throws Throwable {
         User user = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser();
         FriendManager friendManager = (FriendManager) ServiceSupport.Instance.getServiceManager(IFriendManager.class);
-        Log.d(TAG, "Posting: " + socialUserCredential);
+        logger.debug("Posting: " + socialUserCredential);
         friendManager.getService().postSocialUserCredentials(getRetryId(), user.getId(), socialUserCredential, null);
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventSocialUserCredentialsPosted(this));

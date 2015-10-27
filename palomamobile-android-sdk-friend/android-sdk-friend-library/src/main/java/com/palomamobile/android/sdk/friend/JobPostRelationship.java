@@ -1,11 +1,12 @@
 package com.palomamobile.android.sdk.friend;
 
-import android.util.Log;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.palomamobile.android.sdk.user.IUserManager;
 import com.palomamobile.android.sdk.user.User;
 import com.path.android.jobqueue.Params;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Convenience wrapper around {@link IFriendService#addRelationship(String, long, long, RelationAttributes)}
@@ -16,7 +17,7 @@ import com.path.android.jobqueue.Params;
  */
 public class JobPostRelationship extends BaseRetryPolicyAwareJob<Relationship> {
 
-    public static final String TAG = JobPostRelationship.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(JobPostRelationship.class);
     private final Long reciprocalUserId;
     private final String reciprocalUsername;
     private final RelationAttributes relationAttributes;
@@ -78,7 +79,7 @@ public class JobPostRelationship extends BaseRetryPolicyAwareJob<Relationship> {
         }
 
 
-        Log.d(TAG, "Received relationship from server: " + result);
+        logger.debug("Received relationship from server: " + result);
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventRelationshipUpdated(this, result));
         }

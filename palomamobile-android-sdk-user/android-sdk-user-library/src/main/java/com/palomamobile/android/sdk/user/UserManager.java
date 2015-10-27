@@ -2,16 +2,17 @@ package com.palomamobile.android.sdk.user;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import com.palomamobile.android.sdk.auth.IAuthManager;
 import com.palomamobile.android.sdk.auth.IUserCredential;
 import com.palomamobile.android.sdk.core.EventServiceManagerRegistered;
 import com.palomamobile.android.sdk.core.IServiceSupport;
 import com.palomamobile.android.sdk.core.ServiceSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class UserManager implements IUserManager {
 
-    public static final String TAG = UserManager.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(UserManager.class);
 
     static final String CACHE_KEY_LOCAL_USER = "cache_key_local_user";
 
@@ -31,9 +32,9 @@ class UserManager implements IUserManager {
 
     @SuppressWarnings("unused")
     public void onEventBackgroundThread(EventServiceManagerRegistered event) {
-        Log.d(TAG, "onEventBackgroundThread(" + event + ")");
+        logger.debug("onEventBackgroundThread(" + event + ")");
         if (IAuthManager.class == event.getIntrface()) {
-            Log.d(TAG, "IAuthManager instance available -> setUserCredentialsProvider(this)");
+            logger.debug("IAuthManager instance available -> setUserCredentialsProvider(this)");
             ServiceSupport.Instance.getServiceManager(IAuthManager.class).setUserCredentialsProvider(this);
         }
     }

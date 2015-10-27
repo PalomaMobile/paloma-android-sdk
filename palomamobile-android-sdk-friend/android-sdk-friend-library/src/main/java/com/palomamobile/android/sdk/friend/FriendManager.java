@@ -5,8 +5,6 @@ import com.palomamobile.android.sdk.core.IServiceSupport;
 
 class FriendManager implements IFriendManager {
 
-    private static final String TAG = FriendManager.class.getSimpleName();
-
     private IFriendService friendService;
 
     public FriendManager(IServiceSupport serviceSupport) {

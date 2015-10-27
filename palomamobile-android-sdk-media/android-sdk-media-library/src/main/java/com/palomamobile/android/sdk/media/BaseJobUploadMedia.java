@@ -1,10 +1,11 @@
 package com.palomamobile.android.sdk.media;
 
-import android.util.Log;
 import com.google.gson.Gson;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.path.android.jobqueue.Params;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit.client.Header;
 import retrofit.client.Response;
 import retrofit.converter.ConversionException;
@@ -16,7 +17,7 @@ import retrofit.converter.GsonConverter;
  */
 public abstract class BaseJobUploadMedia extends BaseRetryPolicyAwareJob<MediaInfo> {
 
-    private static final String TAG = BaseJobUploadMedia.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(BaseJobUploadMedia.class);
 
     private static final String LOCATION_HEADER_NAME = "Location";
 
@@ -46,7 +47,7 @@ public abstract class BaseJobUploadMedia extends BaseRetryPolicyAwareJob<MediaIn
 
     @Override
     public MediaInfo syncRun(boolean postEvent) throws Throwable {
-        Log.d(TAG, "posting " + file + " '" + mime + "'");
+        logger.debug("posting " + file + " '" + mime + "'");
         MediaInfo result = callService(mime, file);
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventMediaUploaded(this, result));

@@ -3,13 +3,14 @@ package com.palomamobile.android.sdk.media;
 import android.content.Context;
 import android.net.Uri;
 import android.test.InstrumentationTestCase;
-import android.util.Log;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.user.TestUtilities;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,12 +18,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-/**
- *
- */
 public class MediaManagerInstrumentationTest extends InstrumentationTestCase {
 
-    public static final String TAG = MediaManagerInstrumentationTest.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(MediaManagerInstrumentationTest.class);
 
     private IMediaManager mediaManager;
 
@@ -53,8 +51,8 @@ public class MediaManagerInstrumentationTest extends InstrumentationTestCase {
         Uri privateUrl = Uri.parse(privateUrlStr);
         Uri requestedExpiringAuthorizedUrl = mediaManager.requestExpiringPublicUrl(privateUrl);
         assertNotNull(requestedExpiringAuthorizedUrl);
-        Log.d(TAG, "providedExpiring:  " + providedExpiringPublicUrl);
-        Log.d(TAG, "requestedExpiring: " + requestedExpiringAuthorizedUrl);
+        logger.debug("providedExpiring:  " + providedExpiringPublicUrl);
+        logger.debug("requestedExpiring: " + requestedExpiringAuthorizedUrl);
 
         assertEquals(providedExpiringPublicUrl.getHost(), requestedExpiringAuthorizedUrl.getHost());
         assertEquals(providedExpiringPublicUrl.getPath(), requestedExpiringAuthorizedUrl.getPath());
@@ -119,7 +117,7 @@ public class MediaManagerInstrumentationTest extends InstrumentationTestCase {
             inputStream = getInstrumentation().getContext().getAssets().open(assetName);
             copy(inputStream, outputStream);
         } catch (IOException e) {
-            Log.w(TAG, "unable to create cache file." , e);
+            logger.warn("unable to create cache file.", e);
         } finally {
             try {
                 if (inputStream != null) {

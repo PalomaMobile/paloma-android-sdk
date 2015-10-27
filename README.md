@@ -83,6 +83,7 @@ dependencies {
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.birbit:android-priority-jobqueue:1.3.3'
+    compile 'org.slf4j:slf4j-api:1.7.12'
 
     //Paloma Platform SDK modules
     compile 'com.palomamobile.android.sdk:core:2.6@aar'
@@ -138,6 +139,27 @@ public class UserRegistrationActivity extends Activity {
         }
     }
 
+}
+```
+
+## Logs
+
+The SDK doesn't impose a particular logging implementation, instead all logging is done via Simple Logging Facade for Java [(SLF4J)](http://www.slf4j.org/manual.html). This allows the app to specify the preferred 
+logging implementation by including a SLF4J compatible framework such as [logback](https://github.com/tony19/logback-android) or [android-logger](https://github.com/noveogroup/android-logger).
+
+To turn on SDK logging include you favorite logging framework in your project:
+
+
+```groovy
+dependencies {
+
+    ...
+
+    //this can be android-logger or some other implementation you prefer
+    compile 'com.noveogroup.android:android-logger:1.3.5'
+    
+    ...
+    
 }
 ```
 

@@ -1,8 +1,9 @@
 package com.palomamobile.android.sdk.core.qos;
 
 import android.test.InstrumentationTestCase;
-import android.util.Log;
 import com.path.android.jobqueue.Params;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -10,16 +11,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-/**
- * Created by Karel Herink
- */
 public class BaseRetryPolicyAwareJobTest extends InstrumentationTestCase {
 
-    private static final String TAG = BaseRetryPolicyAwareJobTest.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(BaseRetryPolicyAwareJobTest.class);
 
     public void testConcurrentJobCreationIdUniqueness() throws Throwable {
         int count = 100;
-        Log.d(TAG, "testConcurrentJobCreationIdUniqueness()");
+        logger.debug("testConcurrentJobCreationIdUniqueness()");
         ConcreteJobA[] arrA = new ConcreteJobA[count];
         for (int i = 0; i < count; i++) {
             arrA[i] = new ConcreteJobA();
@@ -29,7 +27,7 @@ public class BaseRetryPolicyAwareJobTest extends InstrumentationTestCase {
             for (int j = 0; j < arrA.length; j++) {
                 ConcreteJobA other = arrA[j];
                 if (i != j) {
-                    Log.d(TAG, "Compare " + self.getRetryId() + " to " + other.getRetryId());
+                    logger.debug("Compare " + self.getRetryId() + " to " + other.getRetryId());
                     assertFalse(self.getRetryId().equals(other.getRetryId()));
                 }
             }
@@ -46,7 +44,7 @@ public class BaseRetryPolicyAwareJobTest extends InstrumentationTestCase {
             for (int j = 0; j < arrB.length; j++) {
                 ConcreteJobB other = arrB[j];
                 if (i != j) {
-                    Log.d(TAG, "Compare " + self.getRetryId() + " to " + other.getRetryId());
+                    logger.debug("Compare " + self.getRetryId() + " to " + other.getRetryId());
                     assertFalse(self.getRetryId().equals(other.getRetryId()));
                 }
             }
@@ -54,7 +52,7 @@ public class BaseRetryPolicyAwareJobTest extends InstrumentationTestCase {
 
         for (ConcreteJobB self : arrB) {
             for (ConcreteJobA other : arrA) {
-                Log.d(TAG, "Compare " + self.getRetryId() + " to " + other.getRetryId());
+                logger.debug("Compare " + self.getRetryId() + " to " + other.getRetryId());
                 assertFalse(self.getRetryId().equals(other.getRetryId()));
             }
         }
@@ -68,7 +66,7 @@ public class BaseRetryPolicyAwareJobTest extends InstrumentationTestCase {
         outputStream.flush();
         ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
         ConcreteJobA after = (ConcreteJobA) inputStream.readObject();
-        Log.d(TAG, "before serialization: " + before + " after:" + after);
+        logger.debug("before serialization: " + before + " after:" + after);
         assertTrue(before.getRetryId().equals(after.getRetryId()));
         assertTrue(before.equals(after));
     }

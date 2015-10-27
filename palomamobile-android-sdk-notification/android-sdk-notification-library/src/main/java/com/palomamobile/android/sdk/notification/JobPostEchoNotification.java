@@ -1,10 +1,11 @@
 package com.palomamobile.android.sdk.notification;
 
-import android.util.Log;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.palomamobile.android.sdk.user.IUserManager;
 import com.path.android.jobqueue.Params;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Convenience wrapper around {@link INotificationService#postEchoNotification(String, Long, Notification)}
@@ -16,7 +17,7 @@ import com.path.android.jobqueue.Params;
  */
 public class JobPostEchoNotification extends BaseRetryPolicyAwareJob<Void> {
 
-    private static final String TAG = JobPostEchoNotification.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(JobPostEchoNotification.class);
     private Notification echo;
 
 
@@ -40,7 +41,7 @@ public class JobPostEchoNotification extends BaseRetryPolicyAwareJob<Void> {
 
     @Override
     public Void syncRun(boolean postEvent) throws Throwable {
-        Log.d(TAG, "posting echo notification: " + echo);
+        logger.debug("posting echo notification: " + echo);
         IUserManager userManager = ServiceSupport.Instance.getServiceManager(IUserManager.class);
         NotificationManager notificationManager = (NotificationManager) ServiceSupport.Instance.getServiceManager(INotificationManager.class);
         notificationManager.getService().postEchoNotification(getRetryId(), userManager.getUser().getId(), echo);

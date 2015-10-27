@@ -7,12 +7,13 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import com.palomamobile.android.sdk.core.qos.IRetryPolicyProvider;
 import com.palomamobile.android.sdk.core.util.Utilities;
 import com.path.android.jobqueue.JobManager;
 import com.squareup.okhttp.OkHttpClient;
 import de.greenrobot.event.EventBus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 
@@ -33,7 +34,7 @@ public enum ServiceSupport implements IServiceSupport {
 
     Instance;
 
-    public static final String TAG = ServiceSupport.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(ServiceSupport.class);
     public static final String CONFIG_NAME_ENDPOINT = "com.palomamobile.android.sdk.Endpoint";
 
     private Map<Class<?>, Object> serviceManagerMap;
@@ -93,7 +94,7 @@ public enum ServiceSupport implements IServiceSupport {
     @Override
     public EventBus getInternalEventBus() {
         if (!new Exception().getStackTrace()[0].getClassName().contains("com.palomamobile.android.sdk")) {
-            Log.i(TAG, "IServiceSupport.getInternalEventBus() is only useful if modifying SDK, maybe you want IServiceSupport.getEventBus()?");
+            logger.info("IServiceSupport.getInternalEventBus() is only useful if modifying SDK, maybe you want IServiceSupport.getEventBus()?");
         }
         return internalEventBus;
     }
@@ -179,7 +180,7 @@ public enum ServiceSupport implements IServiceSupport {
         initCheck();
         Object implementation = serviceManagerMap.get(intrface);
         if (implementation == null) {
-            Log.i(TAG, "IServiceManager instance not yet registered for " + intrface);
+            logger.info("IServiceManager instance not yet registered for " + intrface);
             return null;
         }
         T t = intrface.cast(implementation);
@@ -215,11 +216,11 @@ public enum ServiceSupport implements IServiceSupport {
             for (String key : bundle.keySet()) {
                 if (key.startsWith("com.palomamobile.android.sdk.manager-class")) {
                     String className = bundle.getString(key);
-                    Log.i(TAG, "found declared service manager " + key + " : " + className);
+                    logger.info("found declared service manager " + key + " : " + className);
                     try {
                         Class.forName(className).getConstructor(IServiceSupport.class).newInstance(this);
                     } catch (Exception e) {
-                        Log.e(TAG, "unable to instantiate service manager " + ServiceSupportConfiguration.class + " : " + className, e);
+                        logger.error("unable to instantiate service manager " + ServiceSupportConfiguration.class + " : " + className, e);
                     }
                 }
             }

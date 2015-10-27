@@ -4,12 +4,7 @@ import junit.framework.TestCase;
 
 import java.util.Map;
 
-/**
- *
- */
 public class ServiceRequestParamsUnitTest extends TestCase {
-
-    private static final String TAG = ServiceRequestParamsUnitTest.class.getSimpleName();
 
     public void testFilterQuery() {
         ServiceRequestParams params = new ServiceRequestParams();

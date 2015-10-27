@@ -1,10 +1,11 @@
 package com.palomamobile.android.sdk.user;
 
-import android.util.Log;
 import com.palomamobile.android.sdk.auth.IUserCredential;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.path.android.jobqueue.Params;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Convenience wrapper around {@link IUserService#validateCredentials(String, IUserCredential)}
@@ -15,7 +16,7 @@ import com.path.android.jobqueue.Params;
  */
 public class JobLoginUser extends BaseRetryPolicyAwareJob<User> {
 
-    public static final String TAG = JobLoginUser.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(JobLoginUser.class);
 
     private IUserCredential userCredential;
 
@@ -53,7 +54,7 @@ public class JobLoginUser extends BaseRetryPolicyAwareJob<User> {
     public User syncRun(boolean postEvent) throws Throwable {
         ServiceSupport.Instance.getCache().clear();
 
-        Log.d(TAG, "about to login as: " + userCredential);
+        logger.debug("about to login as: " + userCredential);
         final UserManager userManager = (UserManager) ServiceSupport.Instance.getServiceManager(IUserManager.class);
         //IUserService.validateCredentials() will never create a user it will return either 200 (with user in body) if user found or 404 fail
         User result = userManager.getService().validateCredentials(getRetryId(), userCredential);

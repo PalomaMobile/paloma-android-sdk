@@ -1,10 +1,11 @@
 package com.palomamobile.android.sdk.user;
 
-import android.util.Log;
 import com.palomamobile.android.sdk.auth.IUserCredential;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.path.android.jobqueue.Params;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit.RetrofitError;
 
 /**
@@ -17,7 +18,7 @@ import retrofit.RetrofitError;
  */
 public class JobRegisterUser extends BaseRetryPolicyAwareJob<User> {
 
-    public static final String TAG = JobRegisterUser.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(JobRegisterUser.class);
 
     private IUserCredential userCredential;
 
@@ -55,7 +56,7 @@ public class JobRegisterUser extends BaseRetryPolicyAwareJob<User> {
     public User syncRun(boolean postEvent) throws Throwable {
         ServiceSupport.Instance.getCache().clear();
 
-        Log.d(TAG, "about to register as: " + userCredential);
+        logger.debug("about to register as: " + userCredential);
         User result;
         final UserManager userManager = (UserManager) ServiceSupport.Instance.getServiceManager(IUserManager.class);
         try {
@@ -63,14 +64,14 @@ public class JobRegisterUser extends BaseRetryPolicyAwareJob<User> {
         } catch (RetrofitError error) {
             //HTTP STATUS 303: See Other (since HTTP/1.1)
             if (error.getResponse() != null && error.getResponse().getStatus() == 303) {
-                Log.d(TAG, "user exists, but we gave the correct credentials so this is fine and we're basically doing a login");
+                logger.debug("user exists, but we gave the correct credentials so this is fine and we're basically doing a login");
                 result = (User) error.getBodyAs(User.class);
             }
             else {
                 throw error;
             }
         }
-        Log.d(TAG, "Received a registered user from server: " + result);
+        logger.debug("Received a registered user from server: " + result);
         userManager.updateLocalUser(result);
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventLocalUserUpdated(this, result));

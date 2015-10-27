@@ -1,12 +1,13 @@
 package com.palomamobile.android.sdk.friend;
 
-import android.util.Log;
 import com.palomamobile.android.sdk.core.PaginatedResponse;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.palomamobile.android.sdk.user.IUserManager;
 import com.palomamobile.android.sdk.user.User;
 import com.path.android.jobqueue.Params;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -18,7 +19,7 @@ import java.util.Map;
  */
 public class JobGetRelationships extends BaseRetryPolicyAwareJob<PaginatedResponse<Relationship>> {
 
-    public static final String TAG = JobGetRelationships.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(JobGetRelationships.class);
 
     /**
      * Create a new job.
@@ -40,7 +41,7 @@ public class JobGetRelationships extends BaseRetryPolicyAwareJob<PaginatedRespon
         User user = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser();
         FriendManager friendManager = (FriendManager) ServiceSupport.Instance.getServiceManager(IFriendManager.class);
         PaginatedResponse<Relationship> result = friendManager.getService().getRelationships(getRetryId(), user.getId(), null);
-        Log.d(TAG, "Received list of relationship from server: " + result);
+        logger.debug("Received list of relationship from server: " + result);
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventRelationshipsListReceived(this, result));
         }

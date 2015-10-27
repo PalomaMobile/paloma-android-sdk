@@ -19,8 +19,6 @@ import java.io.File;
  */
 public class JobUploadMediaPrivate extends BaseJobUploadMedia {
 
-    private static final String TAG = JobUploadMediaPrivate.class.getSimpleName();
-
     /**
      * Create a new private media upload job.
      * @param params custom job parameters

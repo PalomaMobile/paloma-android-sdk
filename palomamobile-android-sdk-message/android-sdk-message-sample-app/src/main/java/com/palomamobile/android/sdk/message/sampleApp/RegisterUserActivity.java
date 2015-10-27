@@ -3,18 +3,19 @@ package com.palomamobile.android.sdk.message.sampleApp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.user.EventLocalUserUpdated;
 import com.palomamobile.android.sdk.user.IUserManager;
 import com.palomamobile.android.sdk.user.JobRegisterUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class RegisterUserActivity extends Activity {
 
-    private static final String TAG = RegisterUserActivity.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(RegisterUserActivity.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,7 @@ public class RegisterUserActivity extends Activity {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(EventLocalUserUpdated event) {
-        Log.d(TAG, "onEventMainThread(): " + event);
+        logger.debug("onEventMainThread(): " + event);
         Throwable throwable = event.getFailure();
         if (throwable == null) {
             onUserAvailable();

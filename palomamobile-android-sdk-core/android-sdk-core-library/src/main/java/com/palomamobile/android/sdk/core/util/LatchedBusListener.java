@@ -1,6 +1,7 @@
 package com.palomamobile.android.sdk.core.util;
 
-import android.util.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -13,6 +14,8 @@ import java.util.concurrent.TimeUnit;
  *
  */
 public class LatchedBusListener<T> {
+
+    private static final Logger logger = LoggerFactory.getLogger(LatchedBusListener.class);
 
     private CountDownLatch countDownLatch;
     private T event;
@@ -29,9 +32,9 @@ public class LatchedBusListener<T> {
 
     @SuppressWarnings("unused")
     public void onEventBackgroundThread(T t) {
-        Log.d(LatchedBusListener.class.getSimpleName(), "onEventBackgroundThread() : " + t);
+        logger.debug("onEventBackgroundThread() : " + t);
         if (clazz.isAssignableFrom(t.getClass())) {
-            Log.d(LatchedBusListener.class.getSimpleName(), "that works for us : " + t);
+            logger.debug("that works for us : " + t);
             this.event = t;
             this.countDownLatch.countDown();
         }

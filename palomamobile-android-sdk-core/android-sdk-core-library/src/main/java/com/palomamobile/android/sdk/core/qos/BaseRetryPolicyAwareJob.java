@@ -1,11 +1,12 @@
 package com.palomamobile.android.sdk.core.qos;
 
-import android.util.Log;
 import com.palomamobile.android.sdk.core.ServiceRequestParams;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.path.android.jobqueue.Job;
 import com.path.android.jobqueue.Params;
 import com.path.android.jobqueue.RetryConstraint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.UUID;
@@ -23,6 +24,8 @@ public abstract class BaseRetryPolicyAwareJob<Result> extends Job {
 
     private String retryId;
 
+    public static final Logger logger = LoggerFactory.getLogger(BaseRetryPolicyAwareJob.class);
+
     /**
      * Create a new job with the supplied params.
      * @param params
@@ -30,7 +33,7 @@ public abstract class BaseRetryPolicyAwareJob<Result> extends Job {
     public BaseRetryPolicyAwareJob(Params params) {
         super(params);
         retryId = sessionId + ":" + sessionJobCounter.incrementAndGet();
-        Log.i(getClass().getSimpleName(), "Create new job with retryId: " + retryId);
+        logger.trace("Create new job with retryId: " + retryId);
     }
 
     private Result result;
@@ -48,7 +51,7 @@ public abstract class BaseRetryPolicyAwareJob<Result> extends Job {
      */
     @Override
     public void onAdded() {
-        Log.d(getClass().getSimpleName(), "onAdded(" + this + ")");
+        logger.debug("onAdded(" + this + ")");
         if (onJobAddedListener != null) {
             onJobAddedListener.onAdded(this);
         }
@@ -91,7 +94,7 @@ public abstract class BaseRetryPolicyAwareJob<Result> extends Job {
     @Override
     protected RetryConstraint shouldReRunOnThrowable(Throwable throwable, int runCount, int maxRunCount) {
         RetryConstraint retryConstraint = ServiceSupport.Instance.getRetryPolicyProvider().shouldReRunOnThrowable(this, throwable, runCount, maxRunCount);
-        Log.i(getClass().getSimpleName(), "retryConstraint: " + toString(retryConstraint));
+        logger.info("retryConstraint: " + toString(retryConstraint));
         if (!retryConstraint.shouldRetry()) {
             postFailure(throwable);
         }
@@ -115,7 +118,7 @@ public abstract class BaseRetryPolicyAwareJob<Result> extends Job {
             result = syncRun(true);
         } catch (Throwable throwable) {
             if (getCurrentRunCount() >= getMaxAttempts()) {
-                Log.w(getClass().getSimpleName(), "getCurrentRunCount() == getRetryLimit() is true: postFailure");
+                logger.warn("getCurrentRunCount() == getRetryLimit() is true: postFailure");
                 postFailure(throwable);
             }
             throw  throwable;

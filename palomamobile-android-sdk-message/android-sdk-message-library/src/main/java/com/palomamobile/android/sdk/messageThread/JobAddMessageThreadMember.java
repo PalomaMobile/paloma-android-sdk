@@ -12,8 +12,6 @@ import com.path.android.jobqueue.Params;
  */
 public class JobAddMessageThreadMember extends BaseRetryPolicyAwareJob<MessageThreadMember> {
 
-    public static final String TAG = JobAddMessageThreadMember.class.getSimpleName();
-
     private long messageThreadId;
     private long userId;
 

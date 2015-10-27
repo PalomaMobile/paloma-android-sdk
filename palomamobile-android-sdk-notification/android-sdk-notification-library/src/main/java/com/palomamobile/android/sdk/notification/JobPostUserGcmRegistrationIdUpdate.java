@@ -1,7 +1,6 @@
 package com.palomamobile.android.sdk.notification;
 
 import android.content.Context;
-import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.google.gson.JsonObject;
@@ -11,6 +10,8 @@ import com.palomamobile.android.sdk.core.util.Utilities;
 import com.palomamobile.android.sdk.user.IUserManager;
 import com.palomamobile.android.sdk.user.User;
 import com.path.android.jobqueue.Params;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The default provided implementation of the {@link INotificationManager} runs this job
@@ -23,7 +24,7 @@ import com.path.android.jobqueue.Params;
  */
 public class JobPostUserGcmRegistrationIdUpdate extends BaseRetryPolicyAwareJob<GcmRegistrationIdResponse> {
 
-    public static final String TAG = JobPostUserGcmRegistrationIdUpdate.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(JobPostUserGcmRegistrationIdUpdate.class);
 
 
     /**
@@ -42,7 +43,7 @@ public class JobPostUserGcmRegistrationIdUpdate extends BaseRetryPolicyAwareJob<
     }
 
     public GcmRegistrationIdResponse syncRun(boolean postEvent) throws Throwable {
-        Log.i(TAG, "onRun()");
+        logger.info("onRun()");
         Context context = ServiceSupport.Instance.getContext();
 
         NotificationManager notificationManager = (NotificationManager) ServiceSupport.Instance.getServiceManager(INotificationManager.class);
@@ -55,7 +56,7 @@ public class JobPostUserGcmRegistrationIdUpdate extends BaseRetryPolicyAwareJob<
             GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
             if (gcm != null) {
                 if (gcmSenderId != null && gcmSenderId.length() > 0) {
-                    Log.d(TAG, "Asking GoogleCloudMessaging for a new gcmRegistrationId with gcmSenderId: " + gcmSenderId);
+                    logger.debug("Asking GoogleCloudMessaging for a new gcmRegistrationId with gcmSenderId: " + gcmSenderId);
 
                     InstanceID instanceID = InstanceID.getInstance(context);
                     gcmRegistrationId = instanceID.getToken(gcmSenderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
@@ -63,11 +64,11 @@ public class JobPostUserGcmRegistrationIdUpdate extends BaseRetryPolicyAwareJob<
                     GcmUtils.storeRegistrationId(context, gcmRegistrationId);
                 }
                 else {
-                    Log.d(TAG, "NOT asking GoogleCloudMessaging for a new gcmRegistrationId, gcmSenderId is not configured.");
+                    logger.debug("NOT asking GoogleCloudMessaging for a new gcmRegistrationId, gcmSenderId is not configured.");
                 }
             }
             else {
-                Log.i(TAG, "Gcm NOT available");
+                logger.info("Gcm NOT available");
             }
         }
 
@@ -75,9 +76,9 @@ public class JobPostUserGcmRegistrationIdUpdate extends BaseRetryPolicyAwareJob<
 
         //see if we need to update local user with a new gcmRegistrationId
         User localUser = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser();
-        Log.d(TAG, "gcmRegistrationId: " + gcmRegistrationId + ", lastServerGcmRegistrationId: " + lastServerGcmRegistrationId + ", localUser: " + localUser);
+        logger.debug("gcmRegistrationId: " + gcmRegistrationId + ", lastServerGcmRegistrationId: " + lastServerGcmRegistrationId + ", localUser: " + localUser);
         if (gcmRegistrationId != null && localUser != null) {
-            Log.d(TAG, "asking server to update user's gcmRegistrationId");
+            logger.debug("asking server to update user's gcmRegistrationId");
             return postGcmRegistrationIdUpdate(localUser.getId(), gcmRegistrationId, postEvent);
         }
         else {
@@ -88,7 +89,7 @@ public class JobPostUserGcmRegistrationIdUpdate extends BaseRetryPolicyAwareJob<
             if (localUser == null) {
                 reason = "user not yet logged in";
             }
-            Log.i(TAG, "NOT asking server to update user's gcmRegistrationId because: " + reason);
+            logger.info("NOT asking server to update user's gcmRegistrationId because: " + reason);
             throw new IllegalStateException("Unable to update current user's gcm registration id: " + reason);
         }
     }
@@ -100,7 +101,7 @@ public class JobPostUserGcmRegistrationIdUpdate extends BaseRetryPolicyAwareJob<
         String deviceId = Utilities.getDeviceId(getApplicationContext());
 
         GcmRegistrationIdResponse gcmRegistrationIdResponse = notificationManager.getService().addGcmRegistrationId(getRetryId(), userId, deviceId, gcmRegistrationIdJson);
-        Log.d(TAG, "SUCCESS (update cache) addGcmRegistrationId() for userId: " + userId + ", gcmRegistrationId: " + gcmRegistrationId);
+        logger.debug("SUCCESS (update cache) addGcmRegistrationId() for userId: " + userId + ", gcmRegistrationId: " + gcmRegistrationId);
         ServiceSupport.Instance.getCache().put(NotificationManager.CACHE_KEY_GCM_REGISTRATION_ID, gcmRegistrationIdResponse.getGcmRegistrationId());
         if (postEvent) {
             ServiceSupport.Instance.getEventBus().post(new EventGcmRegistrationIdUpdated(this, gcmRegistrationIdResponse));

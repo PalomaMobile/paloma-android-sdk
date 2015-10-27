@@ -13,8 +13,6 @@ import java.util.concurrent.TimeUnit;
 
 public class EmailVerificationManagerInstrumentationTest extends InstrumentationTestCase {
 
-    public static final String TAG = EmailVerificationManagerInstrumentationTest.class.getSimpleName();
-
     private IEmailVerificationTestHelperService verificationTestHelperService;
     private EmailVerificationManager verificationManager;
 

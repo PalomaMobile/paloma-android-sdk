@@ -1,10 +1,11 @@
 package com.palomamobile.android.sdk.core.qos;
 
 import android.test.InstrumentationTestCase;
-import android.util.Log;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.path.android.jobqueue.JobManager;
 import com.path.android.jobqueue.Params;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit.RetrofitError;
 import retrofit.client.Header;
 import retrofit.client.Response;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
  *
  */
 public class DefaultRetryPolicyProviderTest extends InstrumentationTestCase {
-    private static final String TAG = DefaultRetryPolicyProviderTest.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(DefaultRetryPolicyProviderTest.class);
 
     private JobManager jobManager;
 
@@ -52,7 +53,7 @@ public class DefaultRetryPolicyProviderTest extends InstrumentationTestCase {
 
         Thread.sleep(5000);
         long actualJobDuration = job.failTime - job.startTime;
-        Log.d(TAG, "testRetrofitNetworkErrorFailQuick() actualJobDuration: " + actualJobDuration + ", job.workDurationMs: "+job.workDurationMs);
+        logger.debug("testRetrofitNetworkErrorFailQuick() actualJobDuration: " + actualJobDuration + ", job.workDurationMs: "+job.workDurationMs);
         assertEquals(maxAttempts, job.getCurrentRunCount());
         assertTrue(actualJobDuration >= job.workDurationMs);
     }
@@ -81,7 +82,7 @@ public class DefaultRetryPolicyProviderTest extends InstrumentationTestCase {
         jobManager.addJob(job);
         Thread.sleep(2100);
         long actualJobDuration = job.failTime - job.startTime;
-        Log.d(TAG, "testRetrofitConversionErrorFail() actualJobDuration: " + actualJobDuration + " , job.workDurationMs: " + job.workDurationMs);
+        logger.debug("testRetrofitConversionErrorFail() actualJobDuration: " + actualJobDuration + " , job.workDurationMs: " + job.workDurationMs);
         assertEquals(1, job.getCurrentRunCount());
         assertTrue(actualJobDuration >= job.workDurationMs);
     }
@@ -112,7 +113,7 @@ public class DefaultRetryPolicyProviderTest extends InstrumentationTestCase {
         jobManager.addJob(job);
         Thread.sleep(1100);
         long actualJobDuration = job.failTime - job.startTime;
-        Log.d(TAG, "testRetrofitHttpErrorNonRetryableFail() actualJobDuration: " + actualJobDuration + " , job.workDurationMs: " + job.workDurationMs);
+        logger.debug("testRetrofitHttpErrorNonRetryableFail() actualJobDuration: " + actualJobDuration + " , job.workDurationMs: " + job.workDurationMs);
         assertEquals(1, job.getCurrentRunCount());
         assertTrue(actualJobDuration >= job.workDurationMs);
     }
@@ -121,7 +122,7 @@ public class DefaultRetryPolicyProviderTest extends InstrumentationTestCase {
 
         public static long lastRunTime = 0;
 
-        private static final String TAG = TestFailJob.class.getSimpleName();
+        private static final Logger logger = LoggerFactory.getLogger(TestFailJob.class);
 
 
         private final long workDurationMs;
@@ -146,19 +147,19 @@ public class DefaultRetryPolicyProviderTest extends InstrumentationTestCase {
         @Override
         protected void postFailure(Throwable throwable) {
             failTime = System.currentTimeMillis();
-            Log.i(TAG, "postFailure() failTime: " + failTime);
+            logger.info("postFailure() failTime: " + failTime);
         }
 
         @Override
         public void onAdded() {
             super.onAdded();
             startTime = System.currentTimeMillis();
-            Log.i(TAG, "onAdded() startTime: " + startTime);
+            logger.info("onAdded() startTime: " + startTime);
         }
 
         @Override
         public String syncRun(boolean postEvent) throws Throwable {
-            Log.i(TAG, "syncRun() runCount = " + getCurrentRunCount() + ", last executed: " + (lastRunTime == 0 ? 0 : (System.currentTimeMillis() - lastRunTime)) + " ms ago");
+            logger.info("syncRun() runCount = " + getCurrentRunCount() + ", last executed: " + (lastRunTime == 0 ? 0 : (System.currentTimeMillis() - lastRunTime)) + " ms ago");
             lastRunTime = System.currentTimeMillis();
             Thread.sleep(workDurationMs);
             throw upchuck;

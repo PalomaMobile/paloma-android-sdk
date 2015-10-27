@@ -5,9 +5,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.util.Base64;
-import android.util.Log;
 import com.palomamobile.android.sdk.core.IServiceSupport;
 import com.palomamobile.android.sdk.core.util.Utilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -17,7 +18,7 @@ import java.security.NoSuchAlgorithmException;
  */
 class AuthManager implements IAuthManager {
 
-    public static final String TAG = AuthManager.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(AuthManager.class);
 
     public static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
     public static final String GRANT_TYPE_PASSWORD = "password";
@@ -52,7 +53,7 @@ class AuthManager implements IAuthManager {
         clientId = Utilities.getClientIdFromMetadata(context);
         try {
             appSignature = getApplicationSignature(context);
-            Log.v(TAG, "Application signature: " + appSignature);
+            logger.trace("Application signature: " + appSignature);
         } catch (Exception e) {
             throw new RuntimeException("Unable to determine ApplicationSignature.", e);
         }

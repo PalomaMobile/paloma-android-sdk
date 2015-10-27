@@ -1,7 +1,6 @@
 package com.palomamobile.android.sdk.user;
 
 import android.test.InstrumentationTestCase;
-import android.util.Log;
 import com.facebook.AccessToken;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
@@ -11,18 +10,17 @@ import com.facebook.TestUserManager;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.util.LatchedBusListener;
 import com.palomamobile.android.sdk.core.util.Utilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit.RetrofitError;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/**
- *
- */
 public class UserManagerInstrumentationTest extends InstrumentationTestCase {
 
-    public static final String TAG = UserManagerInstrumentationTest.class.getSimpleName();
+    public static final Logger logger = LoggerFactory.getLogger(UserManagerInstrumentationTest.class);
 
     private static String facebookAppId = null;
     private static String facebookAppSecret = null;
@@ -38,7 +36,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
             facebookAppId = Utilities.getValueFromAppMetadata(getInstrumentation().getContext(), "facebook.app.id");
             facebookAppSecret = Utilities.getValueFromAppMetadata(getInstrumentation().getContext(), "facebook.app.secret");
         } catch (Exception e) {
-            Log.w(TAG, "FacebookApp NOT setup, will not be not running instrumentation tests that involve creating FB users, provide your own values for a Facebook test app id and secret.");
+            logger.warn("FacebookApp NOT setup, will not be not running instrumentation tests that involve creating FB users, provide your own values for a Facebook test app id and secret.");
         }
     }
 
@@ -48,7 +46,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
 
     public void testRequestRegisterFacebookUserNoExplicitUserName() throws Throwable {
         if (!isFacebookAppSetup()) {
-            Log.i(TAG, "FacebookApp NOT setup, not running Test: testRequestRegisterFacebookUserNoExplicitUserName()");
+            logger.info("FacebookApp NOT setup, not running Test: testRequestRegisterFacebookUserNoExplicitUserName()");
             return;
         }
 
@@ -76,7 +74,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
 
     public void testRequestRegisterFacebookUserBadCreds() throws Throwable {
         if (!isFacebookAppSetup()) {
-            Log.i(TAG, "FacebookApp NOT setup, not running Test: testRequestRegisterFacebookUserBadCreds()");
+            logger.info("FacebookApp NOT setup, not running Test: testRequestRegisterFacebookUserBadCreds()");
             return;
         }
 
@@ -108,7 +106,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
 
     public void testRequestRegisterFacebookUserWithExplicitUserName() throws Throwable {
         if (!isFacebookAppSetup()) {
-            Log.i(TAG, "FacebookApp NOT setup, not running Test: testRequestRegisterFacebookUserWithExplicitUserName()");
+            logger.info("FacebookApp NOT setup, not running Test: testRequestRegisterFacebookUserWithExplicitUserName()");
             return;
         }
 
@@ -164,7 +162,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
                 new GraphRequest.Callback() {
                     @Override
                     public void onCompleted(GraphResponse graphResponse) {
-                        Log.d(TAG, graphResponse.getRawResponse());
+                        logger.debug(graphResponse.getRawResponse());
                         assertNull(graphResponse.getError());
                     }
                 }
@@ -270,7 +268,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
 
     public void testLoginFbUser() throws Throwable {
         if (!isFacebookAppSetup()) {
-            Log.i(TAG, "FacebookApp NOT setup, not running Test: testLoginFbUser()");
+            logger.info("FacebookApp NOT setup, not running Test: testLoginFbUser()");
             return;
         }
 

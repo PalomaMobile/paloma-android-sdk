@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -16,11 +15,13 @@ import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.media.BaseJobUploadMedia;
 import com.palomamobile.android.sdk.media.EventMediaUploaded;
 import com.palomamobile.android.sdk.media.IMediaManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class MediaSampleActivity extends Activity {
 
-    private static final String TAG = MediaSampleActivity.class.getSimpleName();
+    private static final Logger logger = LoggerFactory.getLogger(MediaSampleActivity.class);
 
     private static int RESULT_LOAD_IMAGE = 1;
     private static final int PICK_FROM_GALLERY = 2;
@@ -94,7 +95,7 @@ public class MediaSampleActivity extends Activity {
 
     @SuppressWarnings("unused")
     public void onEventMainThread(EventMediaUploaded event) {
-        Log.d(TAG, "onEventMainThread(): " + event);
+        logger.debug("onEventMainThread(): " + event);
         Throwable throwable = event.getFailure();
         if (throwable != null) {
             Toast.makeText(this, "Media upload failed", Toast.LENGTH_LONG).show();
