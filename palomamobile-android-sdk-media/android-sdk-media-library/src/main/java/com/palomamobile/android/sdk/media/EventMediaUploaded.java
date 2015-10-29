@@ -8,7 +8,7 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  * once a previously requested media upload has finished.
  * The event contains either {@code mediaInfo} on success or {@code throwable} on
  * failure.
- * To request a media upload use {@link JobUploadMediaPrivate} or {@link JobUploadMediaPublic}
+ * To request a media upload use {@link JobUploadUserMedia} or {@link JobUploadMedia}
  * <br/>
  *
  */

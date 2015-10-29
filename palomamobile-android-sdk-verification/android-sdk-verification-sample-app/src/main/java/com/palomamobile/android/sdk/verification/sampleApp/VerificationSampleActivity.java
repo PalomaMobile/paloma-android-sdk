@@ -44,7 +44,7 @@ public class VerificationSampleActivity extends Activity {
                     Toast.makeText(VerificationSampleActivity.this, "Enter an email address", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    JobCreateEmailVerification jobCreateEmailVerification = emailVerificationManager.createJobCreateEmailVerification(email);
+                    JobCreateEmailVerification jobCreateEmailVerification = new JobCreateEmailVerification(email);
                     jobManager.addJob(jobCreateEmailVerification);
                     textViewStatus.setText("Started step 1. of Email verification");
                 }
@@ -65,7 +65,7 @@ public class VerificationSampleActivity extends Activity {
                     Toast.makeText(VerificationSampleActivity.this, "Enter verification code", Toast.LENGTH_LONG).show();
                     return;
                 }
-                JobPostUserVerifiedEmail jobPostUserVerifiedEmail = emailVerificationManager.createJobPostUserVerifiedEmail(email, code);
+                JobPostUserVerifiedEmail jobPostUserVerifiedEmail = new JobPostUserVerifiedEmail(email, code);
                 jobManager.addJob(jobPostUserVerifiedEmail);
                 textViewStatus.setText("Started step 2. of Email verification");
             }

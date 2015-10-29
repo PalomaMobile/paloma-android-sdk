@@ -10,7 +10,7 @@ import com.palomamobile.android.sdk.message.MessageSent;
  * once the list of messageThread messages is received on the client.
  * {@link #getSuccess()}  will return a {@link PaginatedResponse<MessageSent>>} on success, or {@code null} on failure<br/>
  * {@link #getFailure()} will return a {@code null} on success, on failure a non-null {@code throwable}.<br/>
- * To refresh a list of messageThread messages use {@link IMessageThreadManager#createJobGetMessageThreadMessages(long)}
+ * To refresh a list of messageThread messages use {@link JobGetMessageThreadMessages}
  * <br/>
  *
  */

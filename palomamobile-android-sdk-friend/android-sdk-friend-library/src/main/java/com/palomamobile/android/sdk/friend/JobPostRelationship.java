@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Convenience wrapper around {@link IFriendService#addRelationship(String, long, long, RelationAttributes)}
- * used for friend requests, confirmations, user blocking etc.
+ * used for friend requests, confirmations, user blocking etc. This enables local user to set relationship attributes between
+ * themselves and another user to request or confirm friendship via {@link com.palomamobile.android.sdk.friend.RelationAttributes.Type#friend}
+ * or block another user via  {@link com.palomamobile.android.sdk.friend.RelationAttributes.Type#blocked}<br/>
  * Once this job is completed (with success or failure) it posts {@link EventRelationshipUpdated} on the
  * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>

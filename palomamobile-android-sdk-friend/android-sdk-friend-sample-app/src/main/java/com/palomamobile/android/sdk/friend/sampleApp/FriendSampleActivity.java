@@ -60,7 +60,7 @@ public class FriendSampleActivity extends Activity {
                 long reciprocalUserId;
                 try {
                     reciprocalUserId = Long.parseLong(editTextFriendUserId.getText().toString());
-                    JobPostRelationship jobPostRelationship = friendManager.createJobPutRelationship(reciprocalUserId, new RelationAttributes(RelationAttributes.Type.friend));
+                    JobPostRelationship jobPostRelationship = new JobPostRelationship(reciprocalUserId, new RelationAttributes(RelationAttributes.Type.friend));
                     ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostRelationship);
                 } catch (Throwable throwable) {
                     logger.warn("Friend User ID invalid.", throwable);
@@ -74,7 +74,7 @@ public class FriendSampleActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(FriendSampleActivity.this, R.string.please_wait, Toast.LENGTH_LONG).show();
-                JobGetFriends jobGetFriends = friendManager.createJobGetFriends();
+                JobGetFriends jobGetFriends = new JobGetFriends();
                 ServiceSupport.Instance.getJobManager().addJobInBackground(jobGetFriends);
 
             }

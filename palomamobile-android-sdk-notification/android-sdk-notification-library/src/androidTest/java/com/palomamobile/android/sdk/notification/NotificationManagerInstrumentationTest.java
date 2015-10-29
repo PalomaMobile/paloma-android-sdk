@@ -66,7 +66,7 @@ public class NotificationManagerInstrumentationTest extends InstrumentationTestC
         final LatchedBusListener<EventNotificationReceived> latchedBusListener = new LatchedBusListener<>(EventNotificationReceived.class);
 
         ServiceSupport.Instance.getEventBus().register(latchedBusListener);
-        JobPostEchoNotification jobPostEchoNotification = notificationManager.createJobPostEchoNotification(outNotification);
+        JobPostEchoNotification jobPostEchoNotification = new JobPostEchoNotification(outNotification);
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostEchoNotification);
 
         latchedBusListener.await(30, TimeUnit.SECONDS);

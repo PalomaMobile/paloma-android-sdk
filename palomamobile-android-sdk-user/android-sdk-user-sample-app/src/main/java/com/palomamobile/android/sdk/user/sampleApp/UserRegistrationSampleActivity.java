@@ -15,8 +15,10 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.user.EventLocalUserUpdated;
+import com.palomamobile.android.sdk.user.FbUserCredential;
 import com.palomamobile.android.sdk.user.IUserManager;
 import com.palomamobile.android.sdk.user.JobRegisterUser;
+import com.palomamobile.android.sdk.user.PasswordUserCredential;
 import com.palomamobile.android.sdk.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +59,7 @@ public class UserRegistrationSampleActivity extends Activity {
                     Toast.makeText(UserRegistrationSampleActivity.this, R.string.provide_credentials, Toast.LENGTH_LONG).show();
                 }
                 else {
-                    JobRegisterUser jobRegisterUserViaPassword = userManager.createJobRegisterUserViaPassword(userName, password);
+                    JobRegisterUser jobRegisterUserViaPassword = new JobRegisterUser(new PasswordUserCredential(userName, password));
                     ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaPassword);
                     setRegistrationInProgress(true);
                 }
@@ -79,7 +81,7 @@ public class UserRegistrationSampleActivity extends Activity {
                         "userId = " + accessToken.getUserId() + ", " +
                         "applicationId = " + accessToken.getApplicationId() + ", " +
                         "token = " + accessToken.getToken());
-                JobRegisterUser jobRegisterUserViaFacebook = userManager.createJobRegisterUserViaFacebook(accessToken.getUserId(), accessToken.getToken());
+                JobRegisterUser jobRegisterUserViaFacebook = new JobRegisterUser(new FbUserCredential(accessToken.getUserId(), accessToken.getToken()));
                 ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaFacebook);
                 setRegistrationInProgress(false);
             }

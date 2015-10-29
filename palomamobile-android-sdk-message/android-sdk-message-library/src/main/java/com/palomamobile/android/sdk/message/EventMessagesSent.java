@@ -9,7 +9,7 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  * when the list of messages sent is refreshed.
  * The event contains either a current list of messages sent as returned by {@link #getSuccess()} on success or
  * {@code throwable} on failure.
- * To refresh a list of sent messages use {@link IMessageManager#createJobGetMessagesSent()}
+ * To refresh a list of sent messages use {@link JobGetMessagesSent}
  * <br/>
  */
 public class EventMessagesSent extends BaseJobEvent<JobGetMessagesSent, PaginatedResponse<MessageSent>> {

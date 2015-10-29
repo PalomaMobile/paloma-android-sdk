@@ -78,4 +78,11 @@ public abstract class BaseJobUploadMedia extends BaseRetryPolicyAwareJob<MediaIn
         return null;
     }
 
+    public String getFile() {
+        return file;
+    }
+
+    public String getMime() {
+        return mime;
+    }
 }

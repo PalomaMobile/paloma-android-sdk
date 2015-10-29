@@ -8,7 +8,7 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  * when a messageThread is posted by the client.
  * {@link #getSuccess()}  will return a {@link MessageThread} on success, or {@code null} on failure<br/>
  * {@link #getFailure()} will return a {@code null} on success, on failure a non-null {@code throwable}.<br/>
- * To post a messageThread use {@link IMessageThreadManager#createJobPostMessageThread(NewMessageThread)}
+ * To post a messageThread use {@link JobPostMessageThread}
  * <br/>
  */
 public class EventMessageThreadPosted extends BaseJobEvent<JobPostMessageThread, MessageThread> {

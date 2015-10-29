@@ -1,5 +1,6 @@
 package com.palomamobile.android.sdk.user;
 
+import android.support.annotation.NonNull;
 import com.palomamobile.android.sdk.auth.IUserCredential;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
@@ -19,6 +20,10 @@ public class JobLoginUser extends BaseRetryPolicyAwareJob<User> {
     public static final Logger logger = LoggerFactory.getLogger(JobLoginUser.class);
 
     private IUserCredential userCredential;
+
+    public JobLoginUser(@NonNull String userName, @NonNull String password) {
+        this(new PasswordUserCredential(userName, password));
+    }
 
     /**
      * Create a new job to to login an existing user user. If the credentials do not match an existing user a new user will not be created,
@@ -40,6 +45,7 @@ public class JobLoginUser extends BaseRetryPolicyAwareJob<User> {
         super(params);
         setMaxAttempts(2);
         this.userCredential = userCredential;
+        ((UserManager) ServiceSupport.Instance.getServiceManager(IUserManager.class)).setUserCredential(userCredential);
     }
 
     @Override

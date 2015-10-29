@@ -2,7 +2,6 @@ package com.palomamobile.android.sdk.user;
 
 import android.test.InstrumentationTestCase;
 import com.palomamobile.android.sdk.auth.IUserCredential;
-import com.palomamobile.android.sdk.core.ServiceSupport;
 
 /**
  * User creation utilities designed for use in Instrumentation tests.
@@ -28,10 +27,7 @@ public class TestUtilities {
      * @throws Throwable
      */
     public static User registerUserSynchronous(InstrumentationTestCase instrumentationTestCase, final IUserCredential credential) throws Throwable {
-        final IUserManager userManager = ServiceSupport.Instance.getServiceManager(IUserManager.class);
-
-        JobRegisterUser jobRegisterUser = userManager.createJobRegisterUser(credential);
-        User user = jobRegisterUser.syncRun(true);
+        User user = new JobRegisterUser(credential).syncRun(true);
 
         InstrumentationTestCase.assertNotNull(user);
         return user;

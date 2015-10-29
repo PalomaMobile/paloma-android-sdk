@@ -7,7 +7,7 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  * Event published on the {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()})
  * once a update of a relationships is received. The event contains a {@link Relationship} on success or {@code throwable} on
  * failure.
- * To request a relationship creation or update for the current user use {@link IFriendManager#createJobPutRelationship(long, RelationAttributes)}
+ * To request a relationship creation or update for the current user use {@link JobPostRelationship}
  * <br/>
  *
  */

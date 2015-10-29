@@ -1,10 +1,8 @@
 package com.palomamobile.android.sdk.user;
 
-import com.palomamobile.android.sdk.auth.IUserCredential;
-
 /**
  * Class {@code User} represents the information available about the currently registered local user.<br/>
- * To register a user call {@link IUserManager#createJobRegisterUser(IUserCredential)}
+ * To register a user call {@link JobRegisterUser}
  * <br/>
  *
  */

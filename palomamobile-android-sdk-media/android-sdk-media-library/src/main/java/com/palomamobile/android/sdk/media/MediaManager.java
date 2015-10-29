@@ -32,16 +32,6 @@ class MediaManager implements IMediaManager {
     }
 
     @Override
-    public JobUploadMediaPublic createJobMediaUploadPublic(String mime, String filePath) {
-        return new JobUploadMediaPublic(mime, filePath);
-    }
-
-    @Override
-    public JobUploadMediaPrivate createJobMediaUploadPrivate(String mime, String filePath) {
-        return new JobUploadMediaPrivate(mime, filePath);
-    }
-
-    @Override
     public Uri requestExpiringPublicUrl(Uri mediaUri) throws IOException {
         initNonRedirectingHttpClient();
         Uri resolved = mediaUri;

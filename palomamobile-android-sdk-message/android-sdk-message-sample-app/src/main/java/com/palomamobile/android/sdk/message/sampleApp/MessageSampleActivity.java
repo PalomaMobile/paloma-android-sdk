@@ -83,7 +83,7 @@ public class MessageSampleActivity extends Activity {
                 long reciprocalUserId;
                 try {
                     reciprocalUserId = Long.parseLong(editTextFriendUserId.getText().toString());
-                    JobPostRelationship jobPostRelationship = friendManager.createJobPutRelationship(reciprocalUserId, new RelationAttributes(RelationAttributes.Type.friend));
+                    JobPostRelationship jobPostRelationship = new JobPostRelationship(reciprocalUserId, new RelationAttributes(RelationAttributes.Type.friend));
                     ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostRelationship);
                 } catch (Throwable throwable) {
                     logger.warn("Friend User ID invalid.", throwable);
@@ -96,7 +96,7 @@ public class MessageSampleActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MessageSampleActivity.this, R.string.please_wait, Toast.LENGTH_LONG).show();
-                JobGetFriends jobGetFriends = friendManager.createJobGetFriends();
+                JobGetFriends jobGetFriends = new JobGetFriends();
                 ServiceSupport.Instance.getJobManager().addJobInBackground(jobGetFriends);
 
             }
@@ -120,7 +120,7 @@ public class MessageSampleActivity extends Activity {
                     messageSent.setContentList(contentDetails);
                     messageSent.setRecipients(friendIds);
 
-                    JobPostMessage jobPostMessageToFriends = messageManager.createJobPostMessage(messageSent);
+                    JobPostMessage jobPostMessageToFriends = new JobPostMessage(messageSent);
                     ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostMessageToFriends);
                 }
             }
@@ -130,7 +130,7 @@ public class MessageSampleActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (checkFriends()) {
-                    JobGetMessagesReceived jobGetMessagesReceived = messageManager.createJobGetMessagesReceived();
+                    JobGetMessagesReceived jobGetMessagesReceived =new JobGetMessagesReceived();
                     jobGetMessagesReceived.setServiceRequestParams(new ServiceRequestParams().sort("id", ServiceRequestParams.Sort.Order.Desc));
                     ServiceSupport.Instance.getJobManager().addJobInBackground(jobGetMessagesReceived);
                 }
@@ -209,7 +209,7 @@ public class MessageSampleActivity extends Activity {
     }
 
     private void deleteMessage(MessageReceived messageReceived) {
-        JobDeleteMessageReceived jobDeleteMessageReceived = messageManager.createJobDeleteMessageReceived(messageReceived.getId());
+        JobDeleteMessageReceived jobDeleteMessageReceived = new JobDeleteMessageReceived(messageReceived.getId());
         messagesReceived.remove(messageReceived);
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobDeleteMessageReceived);
     }

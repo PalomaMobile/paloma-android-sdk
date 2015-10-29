@@ -1,7 +1,7 @@
 package com.palomamobile.android.sdk.media;
 
+import android.net.Uri;
 import com.google.gson.annotations.SerializedName;
-import retrofit.mime.TypedInput;
 
 import java.io.Serializable;
 
@@ -62,11 +62,14 @@ public class MediaInfo implements Serializable {
     }
 
     /**
-     * @return {@code true} if media was posted via {@link IMediaService#postMediaPrivate(long, TypedInput)} so that it
-     * is only accessible to the posting user (owner), {@code false}) otherwise
+     * @return {@code true} if media is only accessible to the posting user (owner), {@code false}) otherwise
      */
     public boolean isSecured() {
         return secured;
+    }
+
+    public String getTrailingMediaUri() {
+        return Uri.parse(url).getLastPathSegment();
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.palomamobile.android.sdk.verification.email;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.palomamobile.android.sdk.user.EventLocalUserUpdated;
+import com.palomamobile.android.sdk.user.IUserManager;
 import com.palomamobile.android.sdk.user.User;
 import com.path.android.jobqueue.Params;
 
@@ -18,13 +19,26 @@ public class JobPostUserVerifiedEmail extends BaseRetryPolicyAwareJob<User> {
     private long userId;
     private UserVerifiedEmailUpdate userVerifiedEmailUpdate;
 
-    public JobPostUserVerifiedEmail(long userId, String emailAddress, String code) {
-        this(new Params(0).requireNetwork().persist(), userId, emailAddress, code);
+    /**
+     * Create a new job instance.
+     *
+     * @param emailAddress email address being verified
+     * @param code received via the email address being verified
+     */
+    public JobPostUserVerifiedEmail(String emailAddress, String code) {
+        this(new Params(0).requireNetwork().persist(), emailAddress, code);
     }
 
-    public JobPostUserVerifiedEmail(Params params, long userId, String emailAddress, String code) {
+    /**
+     * Create a new job instance.
+     *
+     * @param params job behaviour attributes
+     * @param emailAddress email address being verified
+     * @param code received via the email address being verified
+     */
+    public JobPostUserVerifiedEmail(Params params, String emailAddress, String code) {
         super(params);
-        this.userId = userId;
+        this.userId = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser().getId();
         this.userVerifiedEmailUpdate = new UserVerifiedEmailUpdate(emailAddress, code);
     }
 

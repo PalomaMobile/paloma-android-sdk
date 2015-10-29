@@ -9,6 +9,7 @@ import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.user.EventLocalUserUpdated;
 import com.palomamobile.android.sdk.user.IUserManager;
 import com.palomamobile.android.sdk.user.JobRegisterUser;
+import com.palomamobile.android.sdk.user.PasswordUserCredential;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,7 @@ public class RegisterUserActivity extends Activity {
             final String userName = "usr_" + curTime;
             final String userPassword = "pwd_" + curTime;
 
-            JobRegisterUser jobRegisterUserViaPassword = userManager.createJobRegisterUserViaPassword(userName, userPassword);
+            JobRegisterUser jobRegisterUserViaPassword = new JobRegisterUser(new PasswordUserCredential(userName, userPassword));
             ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaPassword);
         }
     }

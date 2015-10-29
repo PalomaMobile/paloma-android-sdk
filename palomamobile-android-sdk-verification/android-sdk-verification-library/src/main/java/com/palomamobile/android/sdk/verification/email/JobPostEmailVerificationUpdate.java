@@ -15,10 +15,23 @@ public class JobPostEmailVerificationUpdate extends BaseRetryPolicyAwareJob<Void
     private String emailAddress;
     private String code;
 
+    /**
+     * Create a new job instance.
+     *
+     * @param emailAddress email address being verified
+     * @param code received via the email address being verified
+     */
     public JobPostEmailVerificationUpdate(String emailAddress, String code) {
         this(new Params(0).requireNetwork().persist(), emailAddress, code);
     }
 
+    /**
+     * Create a new job instance.
+     *
+     * @param params job behaviour attributes
+     * @param emailAddress email address being verified
+     * @param code received via the email address being verified
+     */
     public JobPostEmailVerificationUpdate(Params params, String emailAddress, String code) {
         super(params);
         this.emailAddress = emailAddress;

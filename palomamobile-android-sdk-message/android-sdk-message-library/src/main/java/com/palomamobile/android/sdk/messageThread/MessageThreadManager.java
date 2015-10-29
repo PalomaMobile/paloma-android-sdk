@@ -1,9 +1,6 @@
 package com.palomamobile.android.sdk.messageThread;
 
 import com.palomamobile.android.sdk.core.IServiceSupport;
-import com.palomamobile.android.sdk.core.ServiceSupport;
-import com.palomamobile.android.sdk.message.MessageSent;
-import com.palomamobile.android.sdk.user.IUserManager;
 
 class MessageThreadManager implements IMessageThreadManager {
 
@@ -18,63 +15,5 @@ class MessageThreadManager implements IMessageThreadManager {
     public IMessageThreadService getService() {
         return messageThreadService;
     }
-
-    @Override
-    public JobPostMessageThread createJobPostMessageThread(NewMessageThread newMessageThread) {
-        return new JobPostMessageThread(newMessageThread);
-    }
-
-    @Override
-    public JobGetMessageThread createJobGetMessageThread(long messageThreadId) {
-        return new JobGetMessageThread(messageThreadId);
-    }
-
-
-    @Override
-    public JobPostMessageThreadUpdate createJobUpdateMessageThread(long messageThreadId, MessageThreadUpdate update) {
-        return new JobPostMessageThreadUpdate(messageThreadId, update);
-    }
-
-    @Override
-    public JobDeleteMessageThread createJobDeleteMessageThread(long messageThreadId) {
-        return new JobDeleteMessageThread(messageThreadId);
-    }
-
-    @Override
-    public JobGetMessageThreadMembers createJobGetMessageThreadMembers(long messageThreadId) {
-        return new JobGetMessageThreadMembers(messageThreadId);
-    }
-
-    @Override
-    public JobAddMessageThreadMember createJobAddMessageThreadMember(long messageThreadId, long userId) {
-        return new JobAddMessageThreadMember(messageThreadId, userId);
-    }
-
-    public JobDeleteMessageThreadMember createJobDeleteMessageThreadMember(long messageThreadId, long userId) {
-        return new JobDeleteMessageThreadMember(messageThreadId, userId);
-    }
-
-    @Override
-    public JobGetMessageThreadMessages createJobGetMessageThreadMessages(long messageThreadId) {
-        return new JobGetMessageThreadMessages(messageThreadId);
-    }
-
-    @Override
-    public JobPostMessageThreadMessage createJobPostMessageThreadMessage(long messageThreadId, MessageSent newMessage) {
-        return new JobPostMessageThreadMessage(messageThreadId, newMessage);
-    }
-
-    @Override
-    public JobGetMessageThreads createJobGetMessageThreads() {
-        IUserManager userManager = ServiceSupport.Instance.getServiceManager(IUserManager.class);
-        return new JobGetMessageThreads(userManager.getUser().getId());
-    }
-
-    @Override
-    public JobDeleteMessageThreads createJobDeleteMessageThreads() {
-        IUserManager userManager = ServiceSupport.Instance.getServiceManager(IUserManager.class);
-        return new JobDeleteMessageThreads(userManager.getUser().getId());
-    }
-
 
 }

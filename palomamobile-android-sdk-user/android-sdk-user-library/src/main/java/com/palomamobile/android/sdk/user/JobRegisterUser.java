@@ -42,6 +42,7 @@ public class JobRegisterUser extends BaseRetryPolicyAwareJob<User> {
         super(params);
         setMaxAttempts(2);
         this.userCredential = userCredential;
+        ((UserManager) ServiceSupport.Instance.getServiceManager(IUserManager.class)).setUserCredential(userCredential);
     }
 
     @Override

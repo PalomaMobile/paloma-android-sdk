@@ -42,7 +42,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         final LatchedBusListener<EventMessagesReceived> latchedBusListener = new LatchedBusListener<>(EventMessagesReceived.class);
 
         ServiceSupport.Instance.getEventBus().register(latchedBusListener);
-        JobGetMessagesReceived jobRefreshMessagesReceived = messageManager.createJobGetMessagesReceived();
+        JobGetMessagesReceived jobRefreshMessagesReceived = new JobGetMessagesReceived();
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobRefreshMessagesReceived);
         latchedBusListener.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListener);
@@ -91,7 +91,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         //login as self and check messages
         self = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmpSelf, tmpSelf));
 
-        PaginatedResponse<MessageReceived> messageReceivedPaginatedResponse = messageManager.createJobGetMessagesReceived().setServiceRequestParams(
+        PaginatedResponse<MessageReceived> messageReceivedPaginatedResponse = new JobGetMessagesReceived().setServiceRequestParams(
                 new ServiceRequestParams()
                         .setPageIndex(0)
                         .setResultsPerPage(30)
@@ -105,7 +105,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         assertEquals("test1", messageReceivedPaginatedResponse.getEmbedded().getItems().get(1).getContentList().get(0).getPayload());
 
 
-        messageReceivedPaginatedResponse = messageManager.createJobGetMessagesReceived().setServiceRequestParams(
+        messageReceivedPaginatedResponse = new JobGetMessagesReceived().setServiceRequestParams(
                 new ServiceRequestParams()
                         .setPageIndex(0)
                         .setResultsPerPage(30)
@@ -116,7 +116,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         assertEquals("https://other.com/2", messageReceivedPaginatedResponse.getEmbedded().getItems().get(0).getContentList().get(0).getUrl());
         assertEquals("https://other.com/1", messageReceivedPaginatedResponse.getEmbedded().getItems().get(1).getContentList().get(0).getUrl());
 
-        messageReceivedPaginatedResponse = messageManager.createJobGetMessagesReceived().setServiceRequestParams(
+        messageReceivedPaginatedResponse = new JobGetMessagesReceived().setServiceRequestParams(
                 new ServiceRequestParams()
                         .setPageIndex(0)
                         .setResultsPerPage(30)
@@ -165,7 +165,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         MessageSent messageSentB = createJobPostMessageToFriend("bbb b", null, "https://www.google.com/images/srpr/logo11w.png", friendId, "image/png").syncRun();
         MessageSent messageSentC = createJobPostMessageToFriend("ab", null, "http://www.workjoke.com/images/logo.png", friendId, "image/png").syncRun();
 
-        PaginatedResponse<MessageSent> messageSentPaginatedResponse = messageManager.createJobGetMessagesSent().setServiceRequestParams(
+        PaginatedResponse<MessageSent> messageSentPaginatedResponse = new JobGetMessagesSent().setServiceRequestParams(
                 new ServiceRequestParams()
                         .setPageIndex(4).setResultsPerPage(2)
         ).syncRun();
@@ -175,7 +175,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
 
         //test the filtering on messages sent once implemented
         {
-            PaginatedResponse<MessageSent> filteredPaginatedResponse = messageManager.createJobGetMessagesSent().setServiceRequestParams(
+            PaginatedResponse<MessageSent> filteredPaginatedResponse = new JobGetMessagesSent().setServiceRequestParams(
                     new ServiceRequestParams()
                             .setPageIndex(0).setResultsPerPage(3).setFilterQuery("timeSent>='" + messageSentA.getTimeSent() + "'").sort("timeSent", ServiceRequestParams.Sort.Order.Asc)
             ).syncRun();
@@ -190,7 +190,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         //log back in as a friend
         User friendIsBack = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmp, tmp));
 
-        PaginatedResponse<MessageReceived> paginatedResponse = messageManager.createJobGetMessagesReceived().setServiceRequestParams(
+        PaginatedResponse<MessageReceived> paginatedResponse = new JobGetMessagesReceived().setServiceRequestParams(
                 new ServiceRequestParams()
                         .setResultsPerPage(3)
                         .setPageIndex(2)
@@ -214,7 +214,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
 
         //test the filtering on messages received once implemented
         {
-            PaginatedResponse<MessageReceived> filteredPaginatedResponse = messageManager.createJobGetMessagesReceived().setServiceRequestParams(
+            PaginatedResponse<MessageReceived> filteredPaginatedResponse = new JobGetMessagesReceived().setServiceRequestParams(
                     new ServiceRequestParams()
                             .setPageIndex(0).setResultsPerPage(3).setFilterQuery("(type~'%a%'|type~'%b%')").sort("timeSent", ServiceRequestParams.Sort.Order.Asc)
             ).syncRun();
@@ -235,7 +235,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
 
 
 
-        messageManager.createJobDeleteMessageReceived(paginatedResponse.getEmbedded().getItems().get(0).getId()).syncRun();
+        new JobDeleteMessageReceived(paginatedResponse.getEmbedded().getItems().get(0).getId()).syncRun();
 
         createJobPostMessageToFriend(null, null, "https://duckduckgo.com/?q=" + counter++ + "&ia=about", friendId, "text/plain").syncRun();
 
@@ -257,7 +257,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         messageSent.setType(messageType);
         messageSent.setContentList(contentDetails);
         messageSent.setRecipients(friendIds);
-        return messageManager.createJobPostMessage(messageSent);
+        return new JobPostMessage(messageSent);
     }
 
 
@@ -299,7 +299,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         final LatchedBusListener<EventMessagesReceived> latchedEventMessagesReceivedBusListener = new LatchedBusListener<>(EventMessagesReceived.class);
 
         ServiceSupport.Instance.getEventBus().register(latchedEventMessagesReceivedBusListener);
-        JobGetMessagesReceived jobRefreshMessagesReceived = messageManager.createJobGetMessagesReceived();
+        JobGetMessagesReceived jobRefreshMessagesReceived = new JobGetMessagesReceived();
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobRefreshMessagesReceived);
         latchedEventMessagesReceivedBusListener.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedEventMessagesReceivedBusListener);
@@ -313,7 +313,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         final LatchedBusListener<EventMessageReceivedDeleted> latchedEventMessageDeletedBusListener = new LatchedBusListener<>(EventMessageReceivedDeleted.class);
         ServiceSupport.Instance.getEventBus().register(latchedEventMessageDeletedBusListener);
         MessageReceived messageReceived = messagesReceived.get(0);
-        JobDeleteMessageReceived jobDeleteMessageReceived = messageManager.createJobDeleteMessageReceived(messageReceived.getId());
+        JobDeleteMessageReceived jobDeleteMessageReceived = new JobDeleteMessageReceived(messageReceived.getId());
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobDeleteMessageReceived);
 
         //this will show we're ok locally
@@ -325,7 +325,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         //this will verify that the server has also registered the message deletion
         final LatchedBusListener<EventMessagesReceived> latchedEventEmptyMessagesReceivedBusListener = new LatchedBusListener<>(EventMessagesReceived.class);
         ServiceSupport.Instance.getEventBus().register(latchedEventEmptyMessagesReceivedBusListener);
-        jobRefreshMessagesReceived = messageManager.createJobGetMessagesReceived();
+        jobRefreshMessagesReceived = new JobGetMessagesReceived();
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobRefreshMessagesReceived);
         latchedEventEmptyMessagesReceivedBusListener.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedEventEmptyMessagesReceivedBusListener);
@@ -367,7 +367,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         MessageSent sentC1Out = new MessageSent();
         sentC1Out.setRecipients(a.getId(), b.getId(), b.getId());
         sentC1Out.setIncludeRecipients(true);
-        MessageSent sentC1 = messageManager.createJobPostMessage(sentC1Out).syncRun();
+        MessageSent sentC1 = new JobPostMessage(sentC1Out).syncRun();
         assertEquals(sentC1Out.getRecipients(), sentC1.getRecipients());
         assertNotNull(sentC1.getReplyToken());
         assertNotNull(sentC1.getReplyChain());
@@ -375,7 +375,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
 
         //login as B
         TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(userBStr, userBStr));
-        PaginatedResponse<MessageReceived> b1Received = messageManager.createJobGetMessagesReceived().syncRun();
+        PaginatedResponse<MessageReceived> b1Received = new JobGetMessagesReceived().syncRun();
         List<MessageReceived> b1ReceivedItems = b1Received.getEmbedded().getItems();
         assertEquals(2, b1ReceivedItems.size());
         assertEquals(b1ReceivedItems.get(0).getSender(), b1ReceivedItems.get(1).getSender());
@@ -389,7 +389,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         sentB1Out.setRecipients(a.getId(), c.getId());
         sentB1Out.setIncludeRecipients(true);
         sentB1Out.setReplyTo(b1ReceivedItems.get(0).getReplyToken());
-        MessageSent sentB1 = messageManager.createJobPostMessage(sentB1Out).syncRun();
+        MessageSent sentB1 = new JobPostMessage(sentB1Out).syncRun();
         assertEquals(sentB1Out.getRecipients(), sentB1.getRecipients());
         assertNotNull(sentB1.getReplyToken());
         assertEquals(sentC1.getReplyChain(), sentB1.getReplyChain());
@@ -398,7 +398,7 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
 
         //login as A
         TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(userAStr, userAStr));
-        PaginatedResponse<MessageReceived> a1Received = messageManager.createJobGetMessagesReceived().syncRun();
+        PaginatedResponse<MessageReceived> a1Received = new JobGetMessagesReceived().syncRun();
         List<MessageReceived> a1ReceivedItems = a1Received.getEmbedded().getItems();
         assertEquals(2, a1ReceivedItems.size());//initial message from C, reply from B to C & A
         assertEquals(c.getId(), a1ReceivedItems.get(0).getSender().getUserId());

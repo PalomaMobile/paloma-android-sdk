@@ -9,6 +9,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Convenience wrapper around {@link INotificationService#postEchoNotification(String, Long, Notification)}
+ * Normally notifications are only received on the client as a result of some action taking
+ * place on the server (eg. message received, friend found etc.).
+ * This method exists solely to provide the ability to test Notifications on their own without the need for
+ * additional triggers. This asynchronous method will ask the server to return the provided {@code echo} notification via
+ * the configured channel (GCM, SMS, etc.).</br>
  * Once this job is completed (with success or failure) it posts {@link EventEchoNotificationRequested} on the
  * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * When the actual {@link Notification} is delivered (as a result of this request) a {@link EventNotificationReceived}

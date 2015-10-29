@@ -25,7 +25,7 @@ public class JobPostSocialUserCredential extends BaseRetryPolicyAwareJob<Void> {
     /**
      * Create a new job
      * @param params custom job parameters
-     * @param socialUserCredential to be sent to friend service for matching
+     * @param socialUserCredential supported 3rd party credential to be sent to friend service for friend matching etc.
      */
     public JobPostSocialUserCredential(Params params, SocialUserCredential socialUserCredential) {
         super(params);

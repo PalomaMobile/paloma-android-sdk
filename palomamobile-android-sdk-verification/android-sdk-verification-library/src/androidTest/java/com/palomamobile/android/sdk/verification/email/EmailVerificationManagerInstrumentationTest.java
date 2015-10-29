@@ -47,7 +47,7 @@ public class EmailVerificationManagerInstrumentationTest extends Instrumentation
     private void createEmailVerification(String emailAddress) throws Throwable {
         final LatchedBusListener<EventEmailVerificationCreated> busListener = new LatchedBusListener<>(EventEmailVerificationCreated.class);
         ServiceSupport.Instance.getEventBus().register(busListener);
-        ServiceSupport.Instance.getJobManager().addJob(verificationManager.createJobCreateEmailVerification(emailAddress));
+        ServiceSupport.Instance.getJobManager().addJob(new JobCreateEmailVerification(emailAddress));
         busListener.await(30, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(busListener);
         EventEmailVerificationCreated event = busListener.getEvent();
@@ -58,7 +58,7 @@ public class EmailVerificationManagerInstrumentationTest extends Instrumentation
     private void updateEmailVerification(String emailAddress, String code) throws Throwable {
         final LatchedBusListener<EventEmailVerificationUpdated> busListener = new LatchedBusListener<>(EventEmailVerificationUpdated.class);
         ServiceSupport.Instance.getEventBus().register(busListener);
-        ServiceSupport.Instance.getJobManager().addJob(verificationManager.createJobUpdateEmailVerification(emailAddress, code));
+        ServiceSupport.Instance.getJobManager().addJob(new JobPostEmailVerificationUpdate(emailAddress, code));
         busListener.await(30, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(busListener);
         EventEmailVerificationUpdated event = busListener.getEvent();
@@ -74,7 +74,7 @@ public class EmailVerificationManagerInstrumentationTest extends Instrumentation
 
         final LatchedBusListener<EventLocalUserUpdated> busListener = new LatchedBusListener<>(EventLocalUserUpdated.class);
         ServiceSupport.Instance.getEventBus().register(busListener);
-        ServiceSupport.Instance.getJobManager().addJob(verificationManager.createJobPostUserVerifiedEmail(emailAddress, code));
+        ServiceSupport.Instance.getJobManager().addJob(new JobPostUserVerifiedEmail(emailAddress, code));
         busListener.await(30, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(busListener);
         EventLocalUserUpdated event = busListener.getEvent();

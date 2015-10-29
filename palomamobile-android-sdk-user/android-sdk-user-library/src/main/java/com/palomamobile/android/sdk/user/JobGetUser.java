@@ -10,12 +10,12 @@ import com.path.android.jobqueue.Params;
 public class JobGetUser extends BaseRetryPolicyAwareJob<User> {
     private final long userId;
 
-    public JobGetUser(long userId) {
-        this(new Params(0).requireNetwork().setPersistent(true), userId);
+    public JobGetUser() {
+        this(new Params(0).requireNetwork().setPersistent(true));
     }
-    public JobGetUser(Params params, long userId) {
+    public JobGetUser(Params params) {
         super(params);
-        this.userId = userId;
+        this.userId = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser().getId();
     }
 
     @Override

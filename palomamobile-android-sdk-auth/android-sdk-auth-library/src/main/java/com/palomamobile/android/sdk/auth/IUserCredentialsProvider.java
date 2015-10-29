@@ -8,6 +8,9 @@ package com.palomamobile.android.sdk.auth;
  */
 public interface IUserCredentialsProvider {
 
+    /**
+     * @return user credential for authentication purposes.
+     */
     IUserCredential getUserCredential();
 
 }

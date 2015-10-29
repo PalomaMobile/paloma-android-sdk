@@ -45,53 +45,6 @@ class UserManager implements IUserManager {
         return ServiceSupport.Instance.getCache().get(CACHE_KEY_LOCAL_USER, User.class);
     }
 
-    public JobRegisterUser createJobRegisterUserViaFacebook(@NonNull String fbUserId, @NonNull String fbAuthToken) {
-        return createJobRegisterUserViaFacebook(new FbUserCredential(fbUserId, fbAuthToken));
-    }
-
-    public JobRegisterUser createJobRegisterUserViaFacebook(@NonNull FbUserCredential credential) {
-        return createJobRegisterUser(credential);
-    }
-
-    public JobRegisterUser createJobRegisterUserViaPassword(@NonNull String userName, @NonNull String password) {
-        PasswordUserCredential passwordUserCredential = new PasswordUserCredential(userName, password);
-        return createJobRegisterUserViaPassword(passwordUserCredential);
-    }
-
-    public JobRegisterUser createJobRegisterUserViaPassword(PasswordUserCredential passwordUserCredential) {
-        return createJobRegisterUser(passwordUserCredential);
-    }
-
-    public JobRegisterUser createJobRegisterUser(@NonNull IUserCredential userCredential) {
-        this.userCredential = userCredential;
-        return new JobRegisterUser(userCredential);
-    }
-
-    public JobLoginUser createJobLoginUserViaFacebook(@NonNull String fbUserId, @NonNull String fbAuthToken) {
-        FbUserCredential facebookCredential = new FbUserCredential(fbUserId, fbAuthToken);
-        return createJobLoginUser(facebookCredential);
-    }
-
-    public JobLoginUser createJobLoginUserViaPassword(@NonNull String userName, @NonNull String password) {
-        PasswordUserCredential passwordUserCredential = new PasswordUserCredential(userName, password);
-        return createJobLoginUser(passwordUserCredential);
-    }
-
-    public JobLoginUser createJobLoginUser(@NonNull IUserCredential userCredential) {
-        this.userCredential = userCredential;
-        return new JobLoginUser(userCredential);
-    }
-
-    @Override
-    public JobGetUser createJobJobGetUser() {
-        return new JobGetUser(getUser().getId());
-    }
-
-    @Override
-    public JobPostUserUpdate createJobUpdateUser(UserUpdate userUpdate) {
-        return new JobPostUserUpdate(getUser().getId(), userUpdate);
-    }
-
     @Override
     @NonNull
     public IUserService getService() {
@@ -112,4 +65,7 @@ class UserManager implements IUserManager {
         return userCredential;
     }
 
+    void setUserCredential(IUserCredential userCredential) {
+        this.userCredential = userCredential;
+    }
 }

@@ -55,7 +55,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
 
         final LatchedBusListener<EventFriendsListReceived> latchedBusListener = new LatchedBusListener<>(EventFriendsListReceived.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListener);
-        JobGetFriends jobGetFriends = friendManager.createJobGetFriends();
+        JobGetFriends jobGetFriends = new JobGetFriends();
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobGetFriends);
         latchedBusListener.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListener);
@@ -137,7 +137,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
             //Add fb credential to userA
             final LatchedBusListener<EventSocialUserCredentialsPosted> latchedBusListenerFriendsA = new LatchedBusListener<>(EventSocialUserCredentialsPosted.class);
             ServiceSupport.Instance.getEventBus().register(latchedBusListenerFriendsA);
-            JobPostSocialUserCredential jobPostSocialUserCredential = friendManager.createJobPostSocialUserCredential(new SocialUserCredential(fbUserIdA, fbAuthTokenA, FbUserCredential.FB_CREDENTIAL_TYPE));
+            JobPostSocialUserCredential jobPostSocialUserCredential = new JobPostSocialUserCredential(new SocialUserCredential(fbUserIdA, fbAuthTokenA, FbUserCredential.FB_CREDENTIAL_TYPE));
             ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostSocialUserCredential);
             latchedBusListenerFriendsA.await(200, TimeUnit.SECONDS);
             ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerFriendsA);
@@ -145,7 +145,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
             Throwable failure = latchedBusListenerFriendsA.getEvent().getFailure();
             //no errors expected yet
             assertNull(failure);
-            PaginatedResponse<Friend> friendPaginatedResponse = friendManager.createJobGetFriends().syncRun();
+            PaginatedResponse<Friend> friendPaginatedResponse = new JobGetFriends().syncRun();
             assertNull(friendPaginatedResponse.getEmbedded());
 
             //Create paloma user B (login / pwd)
@@ -155,14 +155,14 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
             //If A & B are friends on FB then Paloma will mirror the relationship
             final LatchedBusListener<EventSocialUserCredentialsPosted> latchedBusListenerFriendsB = new LatchedBusListener<>(EventSocialUserCredentialsPosted.class);
             ServiceSupport.Instance.getEventBus().register(latchedBusListenerFriendsB);
-            jobPostSocialUserCredential = friendManager.createJobPostSocialUserCredential(new SocialUserCredential(fbUserIdB, fbAuthTokenB, FbUserCredential.FB_CREDENTIAL_TYPE));
+            jobPostSocialUserCredential = new JobPostSocialUserCredential(new SocialUserCredential(fbUserIdB, fbAuthTokenB, FbUserCredential.FB_CREDENTIAL_TYPE));
             ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostSocialUserCredential);
             latchedBusListenerFriendsB.await(20, TimeUnit.SECONDS);
             ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerFriendsB);
             assertNotNull(latchedBusListenerFriendsB.getEvent());
             assertNull(latchedBusListenerFriendsB.getEvent().getFailure());
 
-            PaginatedResponse<Friend> friendsB = friendManager.createJobGetFriends().syncRun();
+            PaginatedResponse<Friend> friendsB = new JobGetFriends().syncRun();
             assertNotNull(friendsB);
             //expect to find userA as a friend
             assertEquals(1, friendsB.getEmbedded().getItems().size());
@@ -172,7 +172,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
             TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(passwordUserCredentialA.getUsername(), passwordUserCredentialA.getUserPassword()));
             final LatchedBusListener<EventFriendsListReceived> latchedBusListener = new LatchedBusListener<>(EventFriendsListReceived.class);
             ServiceSupport.Instance.getEventBus().register(latchedBusListener);
-            JobGetFriends jobGetFriends = friendManager.createJobGetFriends();
+            JobGetFriends jobGetFriends = new JobGetFriends();
             ServiceSupport.Instance.getJobManager().addJobInBackground(jobGetFriends);
             latchedBusListener.await(10, TimeUnit.SECONDS);
             ServiceSupport.Instance.getEventBus().unregister(latchedBusListener);
@@ -224,7 +224,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         //request a friendship as user B with user A
         final LatchedBusListener<EventRelationshipUpdated> latchedBusListenerRelationshipB = new LatchedBusListener<>(EventRelationshipUpdated.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListenerRelationshipB);
-        JobPostRelationship jobPostRelationship = friendManager.createJobPutRelationship(userA.getId(), new RelationAttributes(RelationAttributes.Type.friend));
+        JobPostRelationship jobPostRelationship = new JobPostRelationship(userA.getId(), new RelationAttributes(RelationAttributes.Type.friend));
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostRelationship);
         latchedBusListenerRelationshipB.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerRelationshipB);
@@ -249,7 +249,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         //request a friendship as user A with user B (reciprocate)
         final LatchedBusListener<EventRelationshipUpdated> latchedBusListenerRelationshipA = new LatchedBusListener<>(EventRelationshipUpdated.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListenerRelationshipA);
-        jobPostRelationship = friendManager.createJobPutRelationship(userB.getId(), new RelationAttributes(RelationAttributes.Type.friend));
+        jobPostRelationship = new JobPostRelationship(userB.getId(), new RelationAttributes(RelationAttributes.Type.friend));
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostRelationship);
         latchedBusListenerRelationshipA.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerRelationshipA);
@@ -272,7 +272,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         //check friends for A
         final LatchedBusListener<EventFriendsListReceived> latchedBusFriendsListenerA = new LatchedBusListener<>(EventFriendsListReceived.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusFriendsListenerA);
-        JobGetFriends jobGetFriends = friendManager.createJobGetFriends();
+        JobGetFriends jobGetFriends = new JobGetFriends();
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobGetFriends);
         latchedBusFriendsListenerA.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusFriendsListenerA);
@@ -289,7 +289,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(passwordUserCredentialB.getUsername(), passwordUserCredentialB.getUserPassword()));
         final LatchedBusListener<EventFriendsListReceived> latchedBusFriendsListenerB = new LatchedBusListener<>(EventFriendsListReceived.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusFriendsListenerB);
-        jobGetFriends = friendManager.createJobGetFriends();
+        jobGetFriends = new JobGetFriends();
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobGetFriends);
         latchedBusFriendsListenerB.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusFriendsListenerB);
@@ -322,7 +322,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         //request a friendship as user B with user A
         final LatchedBusListener<EventRelationshipUpdated> latchedBusListenerRelationshipB = new LatchedBusListener<>(EventRelationshipUpdated.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListenerRelationshipB);
-        JobPostRelationship jobPostRelationship = friendManager.createJobPutRelationship(userA.getUsername(), new RelationAttributes(RelationAttributes.Type.friend));
+        JobPostRelationship jobPostRelationship = new JobPostRelationship(userA.getUsername(), new RelationAttributes(RelationAttributes.Type.friend));
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostRelationship);
         latchedBusListenerRelationshipB.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerRelationshipB);
@@ -347,7 +347,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         //request a friendship as user A with user B (reciprocate)
         final LatchedBusListener<EventRelationshipUpdated> latchedBusListenerRelationshipA = new LatchedBusListener<>(EventRelationshipUpdated.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListenerRelationshipA);
-        jobPostRelationship = friendManager.createJobPutRelationship(userB.getUsername(), new RelationAttributes(RelationAttributes.Type.friend));
+        jobPostRelationship = new JobPostRelationship(userB.getUsername(), new RelationAttributes(RelationAttributes.Type.friend));
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostRelationship);
         latchedBusListenerRelationshipA.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerRelationshipA);
@@ -370,7 +370,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         //check friends for A
         final LatchedBusListener<EventFriendsListReceived> latchedBusFriendsListenerA = new LatchedBusListener<>(EventFriendsListReceived.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusFriendsListenerA);
-        JobGetFriends jobGetFriends = friendManager.createJobGetFriends();
+        JobGetFriends jobGetFriends = new JobGetFriends();
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobGetFriends);
         latchedBusFriendsListenerA.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusFriendsListenerA);
@@ -387,7 +387,7 @@ public class FriendManagerInstrumentationTest extends InstrumentationTestCase {
         TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(passwordUserCredentialB.getUsername(), passwordUserCredentialB.getUserPassword()));
         final LatchedBusListener<EventFriendsListReceived> latchedBusFriendsListenerB = new LatchedBusListener<>(EventFriendsListReceived.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusFriendsListenerB);
-        jobGetFriends = friendManager.createJobGetFriends();
+        jobGetFriends = new JobGetFriends();
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobGetFriends);
         latchedBusFriendsListenerB.await(10, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusFriendsListenerB);

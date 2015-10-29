@@ -6,16 +6,16 @@ import com.path.android.jobqueue.Params;
 
 public class JobPostUserUpdate extends BaseRetryPolicyAwareJob<User> {
 
-    private final long userId;
-    private final UserUpdate userUpdate;
+    private long userId;
+    private UserUpdate userUpdate;
 
-    public JobPostUserUpdate(long userId, UserUpdate userUpdate) {
-        this(new Params(0).requireNetwork().setPersistent(true), userId, userUpdate);
+    public JobPostUserUpdate(UserUpdate userUpdate) {
+        this(new Params(0).requireNetwork().setPersistent(true), userUpdate);
     }
 
-    public JobPostUserUpdate(Params params, long userId, UserUpdate userUpdate) {
+    public JobPostUserUpdate(Params params, UserUpdate userUpdate) {
         super(params);
-        this.userId = userId;
+        this.userId = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser().getId();
         this.userUpdate = userUpdate;
     }
 

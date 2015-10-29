@@ -11,12 +11,21 @@ import com.path.android.jobqueue.Params;
  * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  */
 public class JobCreateEmailVerification extends BaseRetryPolicyAwareJob<Void> {
-    private String emailAddress;
+    private final String emailAddress;
 
+    /**
+     * Create a new job instance.
+     * @param emailAddress email address to be verified
+     */
     public JobCreateEmailVerification(String emailAddress) {
         this(new Params(0).requireNetwork().persist(), emailAddress);
     }
 
+    /**
+     * Create a new job instance.
+     * @param params job behaviour attributes
+     * @param emailAddress email address to be verified
+     */
     public JobCreateEmailVerification(Params params, String emailAddress) {
         super(params);
         this.emailAddress = emailAddress;

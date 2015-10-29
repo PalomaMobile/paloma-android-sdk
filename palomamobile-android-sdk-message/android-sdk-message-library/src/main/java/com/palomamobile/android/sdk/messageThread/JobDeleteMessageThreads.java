@@ -2,6 +2,7 @@ package com.palomamobile.android.sdk.messageThread;
 
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
+import com.palomamobile.android.sdk.user.IUserManager;
 import com.path.android.jobqueue.Params;
 
 /**
@@ -14,13 +15,13 @@ public class JobDeleteMessageThreads extends BaseRetryPolicyAwareJob<Void> {
 
     private long userId;
 
-    public JobDeleteMessageThreads(long userId) {
-        this(new Params(0).requireNetwork().setPersistent(true), userId);
+    public JobDeleteMessageThreads() {
+        this(new Params(0).requireNetwork().setPersistent(true));
     }
 
-    public JobDeleteMessageThreads(Params params, long userId) {
+    public JobDeleteMessageThreads(Params params) {
         super(params);
-        this.userId = userId;
+        this.userId = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser().getId();
     }
 
     @Override

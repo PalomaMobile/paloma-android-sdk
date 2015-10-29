@@ -1,6 +1,5 @@
 package com.palomamobile.android.sdk.user;
 
-import com.palomamobile.android.sdk.auth.IUserCredential;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
@@ -10,7 +9,7 @@ import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
  * whenever the {@code localUser} is created or updated (e.g. during user registration).
  * The event contains either the {@code localUser} on success or {@code throwable} on
  * failure.<br/>
- * To register a local {@code user} call {@link IUserManager#createJobRegisterUser(IUserCredential)} or one of the related convenience methods.
+ * To register a local {@code user} call {@link JobRegisterUser} or one of the related convenience methods.
  * <br/>
  *
  */

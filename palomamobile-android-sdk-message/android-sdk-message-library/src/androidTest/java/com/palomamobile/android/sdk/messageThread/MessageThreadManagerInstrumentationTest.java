@@ -57,7 +57,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         newMessageThread.setType("testType");
         newMessageThread.setCustom(custom);
 
-        JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(newMessageThread);
+        JobPostMessageThread jobPostMessageThread = new JobPostMessageThread(newMessageThread);
 
         final LatchedBusListener<EventMessageThreadPosted> latchedBusListener = new LatchedBusListener<>(EventMessageThreadPosted.class);
         eventBus.register(latchedBusListener);
@@ -94,7 +94,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         newMessageThread.setType("testType");
         newMessageThread.setCustom(custom);
 
-        JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(newMessageThread);
+        JobPostMessageThread jobPostMessageThread = new JobPostMessageThread(newMessageThread);
 
         final LatchedBusListener<EventMessageThreadPosted> latchedBusListener = new LatchedBusListener<>(EventMessageThreadPosted.class);
         eventBus.register(latchedBusListener);
@@ -108,7 +108,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         assertNotNull(event.getSuccess());
         MessageThread created = event.getSuccess();
 
-        JobGetMessageThread jobGetMessageThread = messageThreadManager.createJobGetMessageThread(created.getId());
+        JobGetMessageThread jobGetMessageThread = new JobGetMessageThread(created.getId());
         final LatchedBusListener<EventMessageThreadReceived> latchedBusListenerReceive = new LatchedBusListener<>(EventMessageThreadReceived.class);
         eventBus.register(latchedBusListenerReceive);
         jobManager.addJobInBackground(jobGetMessageThread);
@@ -133,7 +133,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         newMessageThread.setName(name);
         newMessageThread.setType("blah");
 
-        MessageThread messageThreadBlah = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun();
+        MessageThread messageThreadBlah = new JobPostMessageThread(newMessageThread).syncRun();
 
         String tmp = Long.toString(System.currentTimeMillis());
         HashMap<String, String> custom = new HashMap<>();
@@ -146,7 +146,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         customMessageThread.setType("testType");
         customMessageThread.setCustom(custom);
 
-        JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(customMessageThread);
+        JobPostMessageThread jobPostMessageThread = new JobPostMessageThread(customMessageThread);
 
         final LatchedBusListener<EventMessageThreadPosted> latchedBusListenerPost = new LatchedBusListener<>(EventMessageThreadPosted.class);
         eventBus.register(latchedBusListenerPost);
@@ -165,7 +165,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         final MessageThreadUpdate update = new MessageThreadUpdate();
         update.withName(tmpUpdate).removeRelatedTo().withType("charismatic").withCustom("greeting", "yo").removeCustom("mood").withCustom("feeling", "happy");
 
-        JobPostMessageThreadUpdate jobPostMessageThreadUpdate = messageThreadManager.createJobUpdateMessageThread(posted.getId(), update);
+        JobPostMessageThreadUpdate jobPostMessageThreadUpdate = new JobPostMessageThreadUpdate(posted.getId(), update);
         final LatchedBusListener<EventMessageThreadUpdated> latchedBusListenerUpdate = new LatchedBusListener<>(EventMessageThreadUpdated.class);
         eventBus.register(latchedBusListenerUpdate);
         jobManager.addJobInBackground(jobPostMessageThreadUpdate);
@@ -188,9 +188,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         assertNull(updated.getCustom().get("mood"));
         assertEquals("yo", updated.getCustom().get("greeting"));
         assertEquals("happy", updated.getCustom().get("feeling"));
-
-        //XXX put this back once Craig fixes the server
-//        assertEquals(2, updated.getCustom().size());
+        assertEquals(2, updated.getCustom().size());
     }
 
     public void testMessageThreadDelete() throws Throwable {
@@ -201,7 +199,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         newMessageThread.setName(name);
         newMessageThread.setType("blah");
 
-        MessageThread messageThreadBlah = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun();
+        MessageThread messageThreadBlah = new JobPostMessageThread(newMessageThread).syncRun();
 
         String tmp = Long.toString(System.currentTimeMillis());
         HashMap<String, String> custom = new HashMap<>();
@@ -214,10 +212,10 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         customMessageThread.setType("testType");
         customMessageThread.setCustom(custom);
 
-        JobPostMessageThread jobPostMessageThread = messageThreadManager.createJobPostMessageThread(customMessageThread);
+        JobPostMessageThread jobPostMessageThread = new JobPostMessageThread(customMessageThread);
         MessageThread messageThread = jobPostMessageThread.syncRun(false);
 
-        JobDeleteMessageThread jobDeleteMessageThread = messageThreadManager.createJobDeleteMessageThread(messageThread.getId());
+        JobDeleteMessageThread jobDeleteMessageThread =new JobDeleteMessageThread(messageThread.getId());
 
         final LatchedBusListener<EventMessageThreadDeleted> latchedBusListenerDelete = new LatchedBusListener<>(EventMessageThreadDeleted.class);
         eventBus.register(latchedBusListenerDelete);
@@ -230,7 +228,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         assertNull(eventDelete.getFailure());
 
 
-        JobGetMessageThread jobGetMessageThread = messageThreadManager.createJobGetMessageThread(messageThread.getId());
+        JobGetMessageThread jobGetMessageThread = new JobGetMessageThread(messageThread.getId());
 
         final LatchedBusListener<EventMessageThreadReceived> latchedBusListenerReceived = new LatchedBusListener<>(EventMessageThreadReceived.class);
         eventBus.register(latchedBusListenerReceived);
@@ -249,10 +247,10 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         newMessageThread.setName(name);
         newMessageThread.setType("blah");
 
-        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun();
+        MessageThread messageThread = new JobPostMessageThread(newMessageThread).syncRun();
 
 
-        JobGetMessageThreadMembers jobGetMessageThreadMembers = messageThreadManager.createJobGetMessageThreadMembers(messageThread.getId());
+        JobGetMessageThreadMembers jobGetMessageThreadMembers = new JobGetMessageThreadMembers(messageThread.getId());
 
         final LatchedBusListener<EventMessageThreadMembersReceived> latchedBusListenerReceived = new LatchedBusListener<>(EventMessageThreadMembersReceived.class);
         eventBus.register(latchedBusListenerReceived);
@@ -280,10 +278,10 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         NewMessageThread newMessageThread = new NewMessageThread();
         newMessageThread.setName(threadName);
         newMessageThread.setType("blah");
-        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun();
+        MessageThread messageThread = new JobPostMessageThread(newMessageThread).syncRun();
 
 
-        JobAddMessageThreadMember jobAddMessageThreadMember = messageThreadManager.createJobAddMessageThreadMember(messageThread.getId(), other.getId());
+        JobAddMessageThreadMember jobAddMessageThreadMember = new JobAddMessageThreadMember(messageThread.getId(), other.getId());
 
         final LatchedBusListener<EventMessageThreadMemberAdded> latchedBusListenerAdded = new LatchedBusListener<>(EventMessageThreadMemberAdded.class);
         eventBus.register(latchedBusListenerAdded);
@@ -298,7 +296,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         assertEquals(other.getId(), threadMember.getUser().getUserId());
         assertEquals(other.getUsername(), threadMember.getUser().getUsername());
 
-        PaginatedResponse<MessageThreadMember> messageThreadMemberPaginatedResponse = messageThreadManager.createJobGetMessageThreadMembers(messageThread.getId()).syncRun();
+        PaginatedResponse<MessageThreadMember> messageThreadMemberPaginatedResponse = new JobGetMessageThreadMembers(messageThread.getId()).syncRun();
         List<MessageThreadMember> members = messageThreadMemberPaginatedResponse.getEmbedded().getItems();
         assertEquals(2, members.size());
         //do our own sorting until server supports it for messageThreads
@@ -319,7 +317,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         assertEquals(self.getId(), memberSelf.getUser().getUserId());
 
 
-        JobDeleteMessageThreadMember jobDeleteMessageThreadMember = messageThreadManager.createJobDeleteMessageThreadMember(messageThread.getId(), self.getId());
+        JobDeleteMessageThreadMember jobDeleteMessageThreadMember = new JobDeleteMessageThreadMember(messageThread.getId(), self.getId());
 
         final LatchedBusListener<EventMessageThreadMemberDeleted> latchedBusListenerDeleted = new LatchedBusListener<>(EventMessageThreadMemberDeleted.class);
         eventBus.register(latchedBusListenerDeleted);
@@ -330,7 +328,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         assertNull(deleted.getFailure());
 
         try {
-            PaginatedResponse<MessageThreadMember> shouldFail = messageThreadManager.createJobGetMessageThreadMembers(messageThread.getId()).syncRun();
+            PaginatedResponse<MessageThreadMember> shouldFail = new JobGetMessageThreadMembers(messageThread.getId()).syncRun();
             fail("403 Forbidden expected");
         } catch (RetrofitError retrofitError) {
             assertEquals(403, retrofitError.getResponse().getStatus());
@@ -350,14 +348,14 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         newMessageThread.setType("blah");
         newMessageThread.setCustom(custom);
 
-        MessageThread messageThread = messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun();
+        MessageThread messageThread = new JobPostMessageThread(newMessageThread).syncRun();
 
         MessageSent toSend = new MessageSent();
         List<MessageContentDetail> contentDetailList = new ArrayList<>();
         contentDetailList.add(new MessageContentDetail("text/html", "http://www.google.com"));
         toSend.setContentList(contentDetailList);
 
-        JobPostMessageThreadMessage jobPostMessageThreadMessage = messageThreadManager.createJobPostMessageThreadMessage(messageThread.getId(), toSend);
+        JobPostMessageThreadMessage jobPostMessageThreadMessage = new JobPostMessageThreadMessage(messageThread.getId(), toSend);
 
         final LatchedBusListener<EventMessageSentPosted> latchedBusListenerPosted = new LatchedBusListener<>(EventMessageSentPosted.class);
         eventBus.register(latchedBusListenerPosted);
@@ -376,7 +374,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         assertEquals("text/html", messageContentDetail.getContentType());
         assertEquals("http://www.google.com", messageContentDetail.getUrl());
 
-        JobGetMessageThreadMessages jobGetMessageThreadMessages = messageThreadManager.createJobGetMessageThreadMessages(messageThread.getId());
+        JobGetMessageThreadMessages jobGetMessageThreadMessages = new JobGetMessageThreadMessages(messageThread.getId());
         final LatchedBusListener<EventMessageThreadMessagesReceived> latchedBusListenerReceived = new LatchedBusListener<>(EventMessageThreadMessagesReceived.class);
         eventBus.register(latchedBusListenerReceived);
         jobManager.addJobInBackground(jobGetMessageThreadMessages);
@@ -413,13 +411,13 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         newMessageThread.setType("blah");
         newMessageThread.setCustom(custom);
 
-        messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun();
-        messageThreadManager.createJobPostMessageThread(newMessageThread).syncRun();
+        new JobPostMessageThread(newMessageThread).syncRun();
+        new JobPostMessageThread(newMessageThread).syncRun();
 
-        PaginatedResponse<MessageThread> messageThreadPaginatedResponse = messageThreadManager.createJobGetMessageThreads().syncRun();
+        PaginatedResponse<MessageThread> messageThreadPaginatedResponse = new JobGetMessageThreads().syncRun();
         assertEquals(2, messageThreadPaginatedResponse.getEmbedded().getItems().size());
 
-        JobDeleteMessageThreads jobDeleteMessageThreads = messageThreadManager.createJobDeleteMessageThreads();
+        JobDeleteMessageThreads jobDeleteMessageThreads = new JobDeleteMessageThreads();
         final LatchedBusListener<EventMessageThreadsDeleted> latchedBusListenerDeleted = new LatchedBusListener<>(EventMessageThreadsDeleted.class);
         eventBus.register(latchedBusListenerDeleted);
         jobManager.addJobInBackground(jobDeleteMessageThreads);
@@ -429,7 +427,7 @@ public class MessageThreadManagerInstrumentationTest extends InstrumentationTest
         EventMessageThreadsDeleted eventMessagesReceived = latchedBusListenerDeleted.getEvent();
         assertNull(eventMessagesReceived.getFailure());
 
-        PaginatedResponse<MessageThread> afterDelete = messageThreadManager.createJobGetMessageThreads().syncRun();
+        PaginatedResponse<MessageThread> afterDelete = new JobGetMessageThreads().syncRun();
         assertEquals(null, afterDelete.getEmbedded());
     }
 

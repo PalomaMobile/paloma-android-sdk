@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.UUID;
 
 public class MediaManagerInstrumentationTest extends InstrumentationTestCase {
 
@@ -31,14 +32,14 @@ public class MediaManagerInstrumentationTest extends InstrumentationTestCase {
         mediaManager = ServiceSupport.Instance.getServiceManager(IMediaManager.class);
     }
 
-    public void testUploadDownloadMediaPrivate() throws Throwable {
+    public void testUploadDownloadUserMedia() throws Throwable {
         TestUtilities.registerUserSynchronous(this);
         final String mime = "image/jpg";
         File imageFile = fileFromAsset("cat.jpg");
         if (imageFile == null) {
             throw new RuntimeException("Unable to create a file from asset");
         }
-        JobUploadMediaPrivate mediaUploadJob = mediaManager.createJobMediaUploadPrivate(mime, imageFile.getAbsolutePath());
+        JobUploadUserMedia mediaUploadJob = new JobUploadUserMedia(mime, imageFile.getAbsolutePath());
         MediaInfo mediaInfo = mediaUploadJob.syncRun(false);
         assertNotNull(mediaInfo);
         assertEquals(mime, mediaInfo.getContentType());
@@ -77,23 +78,70 @@ public class MediaManagerInstrumentationTest extends InstrumentationTestCase {
         response.body().close();
     }
 
-    public void testUploadDownloadMediaPublic() throws Throwable {
-        TestUtilities.registerUserSynchronous(this);
 
+    public void testUploadDownloadNamedUserMedia() throws Throwable {
+        String trailingMediaUri = "cat_" + UUID.randomUUID().toString();
+        TestUtilities.registerUserSynchronous(this);
         final String mime = "image/jpg";
         File imageFile = fileFromAsset("cat.jpg");
         if (imageFile == null) {
             throw new RuntimeException("Unable to create a file from asset");
         }
-        JobUploadMediaPublic mediaUploadJob = mediaManager.createJobMediaUploadPublic(mime, imageFile.getAbsolutePath());
+        JobUploadUserMedia mediaUploadJob = new JobUploadUserMedia(trailingMediaUri, mime, imageFile.getAbsolutePath());
         MediaInfo mediaInfo = mediaUploadJob.syncRun(false);
-        assertEquals(mime, mediaInfo.getContentType());
+        assertNotNull(mediaInfo);
+        assertEquals(mediaUploadJob.getMime(), mediaInfo.getContentType());
         assertNotNull(mediaInfo.getUrl());
-        Uri uri = Uri.parse(mediaInfo.getUrl());
-        assertFalse(mediaInfo.isSecured());
-        assertNull(mediaInfo.getExpiringPublicUrl());
-        assertEquals(uri, mediaManager.requestExpiringPublicUrl(uri));
+        assertTrue(mediaInfo.isSecured());
+        assertEquals(mediaUploadJob.getTrailingMediaUri(), mediaInfo.getTrailingMediaUri());
+        assertNotNull(mediaInfo.getExpiringPublicUrl());
+        Uri providedExpiringPublicUrl = Uri.parse(mediaInfo.getExpiringPublicUrl());
 
+        String privateUrlStr = mediaInfo.getUrl();
+        Uri privateUrl = Uri.parse(privateUrlStr);
+        Uri requestedExpiringAuthorizedUrl = mediaManager.requestExpiringPublicUrl(privateUrl);
+        assertNotNull(requestedExpiringAuthorizedUrl);
+        logger.debug("providedExpiring:  " + providedExpiringPublicUrl);
+        logger.debug("requestedExpiring: " + requestedExpiringAuthorizedUrl);
+
+        assertEquals(providedExpiringPublicUrl.getHost(), requestedExpiringAuthorizedUrl.getHost());
+        assertEquals(providedExpiringPublicUrl.getPath(), requestedExpiringAuthorizedUrl.getPath());
+
+        //retrieving the providedExpiringPublicUrl via a plain http client should work just fine
+        OkHttpClient httpClient = new OkHttpClient();
+        Call call = httpClient.newCall(new Request.Builder().get().url(requestedExpiringAuthorizedUrl.toString()).build());
+        Response response = call.execute();
+        assertNotNull(response);
+        assertTrue(response.code() >= 200 && response.code() < 300);
+        assertNotNull(response.body());
+        assertTrue(response.body().contentType().toString().startsWith(mediaUploadJob.getMime()));
+        assertEquals(response.body().contentLength(), new File(mediaUploadJob.getFile()).length());
+        response.body().close();
+
+        //retrieving the privateUrl via a plain http client should fail due to lack of auth
+        call = httpClient.newCall(new Request.Builder().get().url(privateUrl.toString()).build());
+        response = call.execute();
+        assertNotNull(response);
+        assertTrue(response.code() == 401);
+        assertNotNull(response.body());
+        response.body().close();
+    }
+
+    public void testUploadDownloadNamedApplicationMedia() throws Throwable {
+        String trailingMediaUri = "cat_" + UUID.randomUUID().toString();
+        TestUtilities.registerUserSynchronous(this);
+        final String mime = "image/jpg";
+        File imageFile = fileFromAsset("cat.jpg");
+        if (imageFile == null) {
+            throw new RuntimeException("Unable to create a file from asset");
+        }
+        JobUploadApplicationMedia mediaUploadJob = new JobUploadApplicationMedia(trailingMediaUri, mime, imageFile.getAbsolutePath());
+        MediaInfo mediaInfo = mediaUploadJob.syncRun(false);
+        assertNotNull(mediaInfo);
+        assertEquals(mediaUploadJob.getMime(), mediaInfo.getContentType());
+        assertNotNull(mediaInfo.getUrl());
+        assertFalse(mediaInfo.isSecured());
+        assertEquals(mediaUploadJob.getTrailingMediaUri(), mediaInfo.getTrailingMediaUri());
 
         //retrieving the providedExpiringPublicUrl via a plain http client should work just fine
         OkHttpClient httpClient = new OkHttpClient();
@@ -102,9 +150,75 @@ public class MediaManagerInstrumentationTest extends InstrumentationTestCase {
         assertNotNull(response);
         assertTrue(response.code() >= 200 && response.code() < 300);
         assertNotNull(response.body());
-        assertTrue(response.body().contentType().toString().startsWith(mime));
-        assertEquals(response.body().contentLength(), imageFile.length());
+        assertTrue(response.body().contentType().toString().startsWith(mediaUploadJob.getMime()));
+        assertEquals(response.body().contentLength(), new File(mediaUploadJob.getFile()).length());
         response.body().close();
+    }
+
+
+
+    public void testUploadDownloadMedia() throws Throwable {
+        TestUtilities.registerUserSynchronous(this);
+
+        final String mime = "image/jpg";
+        File catImageFile = fileFromAsset("cat.jpg");
+        if (catImageFile == null) {
+            throw new RuntimeException("Unable to create a file from asset");
+        }
+        JobUploadMedia catMediaUploadJob = new JobUploadMedia(mime, catImageFile.getAbsolutePath());
+        MediaInfo catMediaInfo = catMediaUploadJob.syncRun(false);
+        assertEquals(mime, catMediaInfo.getContentType());
+        assertNotNull(catMediaInfo.getUrl());
+        Uri uri = Uri.parse(catMediaInfo.getUrl());
+        assertFalse(catMediaInfo.isSecured());
+        assertNull(catMediaInfo.getExpiringPublicUrl());
+        assertEquals(uri, mediaManager.requestExpiringPublicUrl(uri));
+
+
+        //retrieving the providedExpiringPublicUrl via a plain http client should work just fine
+        OkHttpClient httpClient = new OkHttpClient();
+        Call catCall = httpClient.newCall(new Request.Builder().get().url(catMediaInfo.getUrl()).build());
+        Response catResponse = catCall.execute();
+        assertNotNull(catResponse);
+        assertTrue(catResponse.code() >= 200 && catResponse.code() < 300);
+        assertNotNull(catResponse.body());
+        assertTrue(catResponse.body().contentType().toString().startsWith(mime));
+        assertEquals(catResponse.body().contentLength(), catImageFile.length());
+        catResponse.body().close();
+
+
+        //we should be able to do a PUT to update the media (to DOG) by it's trailing uri
+        File dogImageFile = fileFromAsset("dog.jpg");
+        if (dogImageFile == null) {
+            throw new RuntimeException("Unable to create a file from asset");
+        }
+        String trailingUri = catMediaInfo.getTrailingMediaUri();
+        assertNotNull(trailingUri);
+
+        JobUploadMedia mediaUpdateJob = new JobUploadMedia(trailingUri, "image/jpg", dogImageFile.getAbsolutePath());
+        MediaInfo dogMediaInfo = mediaUpdateJob.syncRun(false);
+        assertEquals(mime, dogMediaInfo.getContentType());
+        assertNotNull(dogMediaInfo.getUrl());
+        Uri updateUri = Uri.parse(dogMediaInfo.getUrl());
+        assertFalse(dogMediaInfo.isSecured());
+        assertNull(dogMediaInfo.getExpiringPublicUrl());
+        assertEquals(uri, mediaManager.requestExpiringPublicUrl(updateUri));
+        assertEquals(uri, updateUri);
+        assertEquals(trailingUri, dogMediaInfo.getTrailingMediaUri());
+
+        //currently server returns a cached version of CAT
+        //XXX enable the below test and set the correct (immediate) cache expiry to make the test pass, after MED-29 is fixed
+        boolean MED_29_FIXED = false;
+        if (MED_29_FIXED) {
+            Call dogCall = httpClient.newCall(new Request.Builder().get().url(dogMediaInfo.getUrl()).build());
+            Response dogResponse = dogCall.execute();
+            assertNotNull(dogResponse);
+            assertTrue(dogResponse.code() >= 200 && dogResponse.code() < 300);
+            assertNotNull(dogResponse.body());
+            assertTrue(dogResponse.body().contentType().toString().startsWith(mime));
+            assertEquals(dogResponse.body().contentLength(), dogImageFile.length());
+            dogResponse.body().close();
+        }
     }
 
     private File fileFromAsset(String assetName) {

@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * Class {@code MessageReceived} represents the information available about a message received from another {@link UserDetails} in the context of the Message SDK.
- * To retrieve the local user's list of received messages call {@link IMessageManager#createJobGetMessagesReceived()}
+ * To retrieve the local user's list of received messages call {@link  JobGetMessagesReceived}
  * <br/>
  *
  */

@@ -12,31 +12,6 @@ class FriendManager implements IFriendManager {
         serviceSupport.registerServiceManager(IFriendManager.class, this);
     }
 
-    @Override
-    public JobPostSocialUserCredential createJobPostSocialUserCredential(SocialUserCredential credential) {
-        return new JobPostSocialUserCredential(credential);
-    }
-
-    @Override
-    public JobGetFriends createJobGetFriends() {
-        return new JobGetFriends();
-    }
-
-    @Override
-    public JobPostRelationship createJobPutRelationship(long reciprocalUserId, RelationAttributes relationAttributes) {
-        return new JobPostRelationship(reciprocalUserId, relationAttributes);
-    }
-
-    @Override
-    public JobPostRelationship createJobPutRelationship(String reciprocalUsername, RelationAttributes relationAttributes) {
-        return new JobPostRelationship(reciprocalUsername, relationAttributes);
-    }
-
-    @Override
-    public JobGetRelationships createJobGetRelationships() {
-        return new JobGetRelationships();
-    }
-
     @NonNull
     @Override
     public IFriendService getService() {

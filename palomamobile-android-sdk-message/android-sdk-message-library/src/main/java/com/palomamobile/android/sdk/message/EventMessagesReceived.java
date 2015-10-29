@@ -9,7 +9,7 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  * once the list of messages received on the client is refreshed.
  * The event contains either a current list of messages received as returned by {@link #getSuccess()}  on success or {@code throwable} on
  * failure.
- * To refresh a list of received messages use {@link IMessageManager#createJobGetMessagesReceived()}
+ * To refresh a list of received messages use {@link JobGetMessagesReceived}
  * <br/>
  *
  */

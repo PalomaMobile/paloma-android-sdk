@@ -61,7 +61,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
 
         final LatchedBusListener<EventLocalUserUpdated> latchedBusListener = new LatchedBusListener<>(EventLocalUserUpdated.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListener);
-        JobRegisterUser jobRegisterUserViaFacebook = userManager.createJobRegisterUserViaFacebook(fbUserId, fbAuthToken);
+        JobRegisterUser jobRegisterUserViaFacebook = new JobRegisterUser(new FbUserCredential(fbUserId, fbAuthToken));
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaFacebook);
         latchedBusListener.await(30, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListener);
@@ -89,7 +89,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
 
         final LatchedBusListener<EventLocalUserUpdated> latchedBusListener = new LatchedBusListener<>(EventLocalUserUpdated.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListener);
-        JobRegisterUser jobRegisterUserViaFacebook = userManager.createJobRegisterUserViaFacebook(fbUserId + "0", fbAuthToken);
+        JobRegisterUser jobRegisterUserViaFacebook = new JobRegisterUser(new FbUserCredential(fbUserId + "0", fbAuthToken));
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaFacebook);
         latchedBusListener.await(30, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListener);
@@ -123,7 +123,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
 
         final LatchedBusListener<EventLocalUserUpdated> latchedBusListener = new LatchedBusListener<>(EventLocalUserUpdated.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListener);
-        JobRegisterUser jobRegisterUserViaFacebook = userManager.createJobRegisterUserViaFacebook(credential);
+        JobRegisterUser jobRegisterUserViaFacebook = new JobRegisterUser(credential);
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaFacebook);
         latchedBusListener.await(30, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListener);
@@ -138,7 +138,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
 
         final LatchedBusListener<EventLocalUserUpdated> latchedBusListener2 = new LatchedBusListener<>(EventLocalUserUpdated.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListener2);
-        jobRegisterUserViaFacebook = userManager.createJobRegisterUserViaFacebook(wrongCredential);
+        jobRegisterUserViaFacebook = new JobRegisterUser(wrongCredential);
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaFacebook);
         latchedBusListener2.await(30, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListener2);
@@ -186,7 +186,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
         custom.put("eyes", "green");
         credential.setCustom(custom);
 
-        JobRegisterUser jobRegisterUserViaPassword = userManager.createJobRegisterUserViaPassword(credential);
+        JobRegisterUser jobRegisterUserViaPassword = new JobRegisterUser(credential);
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobRegisterUserViaPassword);
         latchedBusListener.await(30, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListener);
@@ -206,7 +206,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
 
         //try and register the same username again with different password
         try {
-            JobRegisterUser jobRegisterUserViaPassword2 = userManager.createJobRegisterUserViaPassword(userName, "other_password");
+            JobRegisterUser jobRegisterUserViaPassword2 = new JobRegisterUser(new PasswordUserCredential(userName, "other_password"));
             jobRegisterUserViaPassword2.syncRun(false);
             fail("RetrofitError expected");
         } catch (RetrofitError retrofitError) {
@@ -214,7 +214,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
         }
 
         //try and register the same username again with the same password
-        JobRegisterUser jobRegisterUserViaPassword2 = userManager.createJobRegisterUserViaPassword(userName, userPassword);
+        JobRegisterUser jobRegisterUserViaPassword2 = new JobRegisterUser(new PasswordUserCredential(userName, userPassword));
         User localUser2 = jobRegisterUserViaPassword2.syncRun(false);
         assertEquals(localUser2, newUser);
     }
@@ -223,7 +223,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
         long curTime = System.nanoTime();
         final String username = "usr_" + curTime;
         final String userPassword = "pwd_" + curTime;
-        User user = userManager.createJobRegisterUserViaPassword(username, userPassword).syncRun();
+        User user = new JobRegisterUser(new PasswordUserCredential(username, userPassword)).syncRun();
 
         UserUpdate update = new UserUpdate();
         update.setDisplayName("toodles");
@@ -235,7 +235,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
 
         final LatchedBusListener<EventLocalUserUpdated> latchedBusListenerUpdate = new LatchedBusListener<>(EventLocalUserUpdated.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListenerUpdate);
-        JobPostUserUpdate jobPostUserUpdate = userManager.createJobUpdateUser(update);
+        JobPostUserUpdate jobPostUserUpdate = new JobPostUserUpdate(update);
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostUserUpdate);
         latchedBusListenerUpdate.await(20, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerUpdate);
@@ -254,7 +254,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
 
         final LatchedBusListener<EventLocalUserUpdated> latchedBusListenerGet = new LatchedBusListener<>(EventLocalUserUpdated.class);
         ServiceSupport.Instance.getEventBus().register(latchedBusListenerGet);
-        JobGetUser jobGetUser = userManager.createJobJobGetUser();
+        JobGetUser jobGetUser = new JobGetUser();
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobGetUser);
         latchedBusListenerGet.await(20, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(latchedBusListenerGet);
@@ -279,7 +279,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
         final String fbAuthToken = accessTokenForTestUser.getToken();
 
         try {
-            JobLoginUser jobLoginUserViaFacebook = userManager.createJobLoginUserViaFacebook(fbUserId, fbAuthToken);
+            JobLoginUser jobLoginUserViaFacebook = new JobLoginUser(new FbUserCredential(fbUserId, fbAuthToken));
             jobLoginUserViaFacebook.syncRun(false);
             fail("RetrofitError expected - even if FB creds valid no paloma user exists yet");
         } catch (RetrofitError retrofitError) {
@@ -289,11 +289,11 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
         final String userName = "tmp_" + System.currentTimeMillis();
         FbUserCredential credential = new FbUserCredential(fbUserId, fbAuthToken);
         credential.setUsername(userName);
-        JobRegisterUser jobRegisterUserViaFacebook = userManager.createJobRegisterUserViaFacebook(credential);
+        JobRegisterUser jobRegisterUserViaFacebook = new JobRegisterUser(credential);
         User userRegistered = jobRegisterUserViaFacebook.syncRun(false);
         assertEquals(userName, userRegistered.getUsername());
 
-        JobLoginUser jobLoginUserViaFacebook = userManager.createJobLoginUserViaFacebook(fbUserId, fbAuthToken);
+        JobLoginUser jobLoginUserViaFacebook = new JobLoginUser(new FbUserCredential(fbUserId, fbAuthToken));
         User userLogedin = jobLoginUserViaFacebook.syncRun(false);
         assertEquals(userRegistered, userLogedin);
 
@@ -303,7 +303,7 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
 
     public void testLoginPwdUser() throws Throwable {
         final String tmp = "tmp_" + System.currentTimeMillis();
-        JobLoginUser jobLoginUserViaPassword = userManager.createJobLoginUserViaPassword(tmp, tmp);
+        JobLoginUser jobLoginUserViaPassword = new JobLoginUser(new PasswordUserCredential(tmp, tmp));
         try {
             jobLoginUserViaPassword.syncRun(false);
             fail("RetrofitError expected - can't verify creds as no paloma user exists yet");
@@ -312,11 +312,11 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
             assertEquals(404, retrofitError.getResponse().getStatus());
         }
 
-        JobRegisterUser jobRegisterUserViaFacebook = userManager.createJobRegisterUserViaPassword(tmp, tmp);
+        JobRegisterUser jobRegisterUserViaFacebook = new JobRegisterUser(new PasswordUserCredential(tmp, tmp));
         User userRegistered = jobRegisterUserViaFacebook.syncRun(false);
         assertEquals(tmp, userRegistered.getUsername());
 
-        jobLoginUserViaPassword = userManager.createJobLoginUserViaPassword(tmp, tmp);
+        jobLoginUserViaPassword = new JobLoginUser(new PasswordUserCredential(tmp, tmp));
         User userLogedin = jobLoginUserViaPassword.syncRun(false);
         assertEquals(userRegistered, userLogedin);
     }

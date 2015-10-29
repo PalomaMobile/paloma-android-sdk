@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.notification.EventEchoNotificationRequested;
 import com.palomamobile.android.sdk.notification.EventNotificationReceived;
-import com.palomamobile.android.sdk.notification.INotificationManager;
 import com.palomamobile.android.sdk.notification.JobPostEchoNotification;
 import com.palomamobile.android.sdk.notification.Notification;
 import com.palomamobile.android.sdk.user.IUserManager;
@@ -68,7 +67,7 @@ public class NotificationSampleActivity extends Activity {
         echo.setSenderId(user.getId());
         echo.setTimestamp(System.currentTimeMillis());
 
-        JobPostEchoNotification jobPostEchoNotification = ServiceSupport.Instance.getServiceManager(INotificationManager.class).createJobPostEchoNotification(echo);
+        JobPostEchoNotification jobPostEchoNotification = new JobPostEchoNotification(echo);
         ServiceSupport.Instance.getJobManager().addJobInBackground(jobPostEchoNotification);
     }
 

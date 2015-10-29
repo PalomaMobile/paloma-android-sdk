@@ -15,6 +15,8 @@ import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.media.BaseJobUploadMedia;
 import com.palomamobile.android.sdk.media.EventMediaUploaded;
 import com.palomamobile.android.sdk.media.IMediaManager;
+import com.palomamobile.android.sdk.media.JobUploadMedia;
+import com.palomamobile.android.sdk.media.JobUploadUserMedia;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,8 +88,8 @@ public class MediaSampleActivity extends Activity {
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             BaseJobUploadMedia jobUploadMedia = checkBoxPrivate.isChecked()
-                    ? mediaManager.createJobMediaUploadPrivate("image/jpg", picturePath)
-                    : mediaManager.createJobMediaUploadPublic("image/jpg", picturePath);
+                    ? new JobUploadUserMedia("image/jpg", picturePath)
+                    : new JobUploadMedia("image/jpg", picturePath);
             ServiceSupport.Instance.getJobManager().addJobInBackground(jobUploadMedia);
             setUiBusy(true);
         }

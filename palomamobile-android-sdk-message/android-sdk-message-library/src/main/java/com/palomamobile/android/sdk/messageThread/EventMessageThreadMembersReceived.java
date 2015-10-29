@@ -9,7 +9,7 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  * once the list of messageThread members is received.
  * {@link #getSuccess()}  will return a {@link PaginatedResponse<MessageThreadMember>>} on success, or {@code null} on failure<br/>
  * {@link #getFailure()} will return a {@code null} on success, on failure a non-null {@code throwable}.<br/>
- * To request refresh of messageThread members use {@link IMessageThreadManager#createJobGetMessageThreadMembers(long)}
+ * To request refresh of messageThread members use {@link JobGetMessageThreadMembers}
  * <br/>
  */
 public class EventMessageThreadMembersReceived extends BaseJobEvent<JobGetMessageThreadMembers, PaginatedResponse<MessageThreadMember>> {

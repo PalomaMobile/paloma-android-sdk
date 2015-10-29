@@ -3,6 +3,7 @@ package com.palomamobile.android.sdk.messageThread;
 import com.palomamobile.android.sdk.core.PaginatedResponse;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
+import com.palomamobile.android.sdk.user.IUserManager;
 import com.path.android.jobqueue.Params;
 
 import java.util.Map;
@@ -18,21 +19,19 @@ public class JobGetMessageThreads extends BaseRetryPolicyAwareJob<PaginatedRespo
     private long userId;
 
     /**
-     * Create a new job to get list of users messageThreads.
-     * @param userId local user id
+     * Create a new job to get list of current users messageThreads.
      */
-    public JobGetMessageThreads(long userId) {
-        this(new Params(0).requireNetwork(), userId);
+    public JobGetMessageThreads() {
+        this(new Params(0).requireNetwork());
     }
 
     /**
      * Create a new job to get list of users messageThreads.
      * @param params custom job params
-     * @param userId local user id
      */
-    public JobGetMessageThreads(Params params, long userId) {
+    public JobGetMessageThreads(Params params) {
         super(params);
-        this.userId = userId;
+        this.userId = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser().getId();
     }
 
     @Override

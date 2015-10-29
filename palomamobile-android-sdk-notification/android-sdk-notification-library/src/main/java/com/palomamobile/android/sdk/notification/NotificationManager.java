@@ -66,11 +66,6 @@ class NotificationManager implements INotificationManager {
     }
 
     @Override
-    public JobPostEchoNotification createJobPostEchoNotification(Notification echo) {
-        return new JobPostEchoNotification(echo);
-    }
-
-    @Override
     @NonNull
     public INotificationService getService() {
         return notificationService;

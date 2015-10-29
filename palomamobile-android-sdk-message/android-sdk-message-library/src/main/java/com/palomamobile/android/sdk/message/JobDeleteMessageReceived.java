@@ -2,10 +2,12 @@ package com.palomamobile.android.sdk.message;
 
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
+import com.palomamobile.android.sdk.user.IUserManager;
 import com.path.android.jobqueue.Params;
 
 /**
  * Convenience wrapper around {@link IMessageService#deleteMessageReceived(String, long, long)}
+ * Delete a received message identified by {@code messageId}.
  * Once this job is completed (with success or failure) it posts {@link EventMessageReceivedDeleted} on the
  * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
@@ -17,22 +19,20 @@ public class JobDeleteMessageReceived extends BaseRetryPolicyAwareJob<Void> {
 
     /**
      * Create a new job to delete a received message.
-     * @param userId local user id
      * @param messageId of the message to be deleted
      */
-    public JobDeleteMessageReceived(Long userId, Long messageId) {
-        this(new Params(0).requireNetwork(), userId, messageId);
+    public JobDeleteMessageReceived(Long messageId) {
+        this(new Params(0).requireNetwork(), messageId);
     }
 
     /**
      * Create a new job to delete a received message.
      * @param params custom job parameters
-     * @param userId local user id
      * @param messageId of the message to be deleted
      */
-    public JobDeleteMessageReceived(Params params, Long userId, Long messageId) {
+    public JobDeleteMessageReceived(Params params, Long messageId) {
         super(params);
-        this.userId = userId;
+        this.userId = ServiceSupport.Instance.getServiceManager(IUserManager.class).getUser().getId();
         this.messageId = messageId;
     }
 

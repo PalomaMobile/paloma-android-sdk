@@ -8,7 +8,7 @@ import com.palomamobile.android.sdk.core.qos.BaseJobEvent;
  * once the list of messageThread members changes as a result of messageThread member deletion.
  * {@link #getSuccess()}  will return always return {@code null}<br/>
  * {@link #getFailure()} will return a {@code null} on success, on failure a non-null {@code throwable}.<br/>
- * To delete a messageThread member use {@link IMessageThreadManager#createJobDeleteMessageThreadMember(long, long)}
+ * To delete a messageThread member use {@link JobDeleteMessageThreadMember}
  * <br/>
  */
 public class EventMessageThreadMemberDeleted extends BaseJobEvent<JobDeleteMessageThreadMember, Void> {
