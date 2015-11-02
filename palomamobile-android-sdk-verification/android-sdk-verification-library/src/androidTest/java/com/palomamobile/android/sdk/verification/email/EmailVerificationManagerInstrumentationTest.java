@@ -4,9 +4,14 @@ import android.test.InstrumentationTestCase;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.util.LatchedBusListener;
 import com.palomamobile.android.sdk.user.EventLocalUserUpdated;
+import com.palomamobile.android.sdk.user.EventPasswordResetCompleted;
+import com.palomamobile.android.sdk.user.JobGetUser;
+import com.palomamobile.android.sdk.user.JobRegisterUser;
+import com.palomamobile.android.sdk.user.JobResetPassword;
 import com.palomamobile.android.sdk.user.PasswordUserCredential;
 import com.palomamobile.android.sdk.user.TestUtilities;
 import com.palomamobile.android.sdk.user.User;
+import com.palomamobile.android.sdk.user.VerificationMethod;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -82,6 +87,53 @@ public class EmailVerificationManagerInstrumentationTest extends Instrumentation
         assertNull(event.getFailure());
         assertEquals(emailAddress, event.getSuccess().getEmailAddress());
 
+    }
+
+    public void testPasswordReset() throws Throwable {
+        final String tmpSelf = String.valueOf(System.currentTimeMillis());
+        new JobRegisterUser(new PasswordUserCredential(tmpSelf, tmpSelf)).syncRun(false);
+        String emailAddress = tmpSelf + "@example.com";
+
+        createEmailVerification(emailAddress);
+        VerificationEmailUpdate verificationEmailUpdate = verificationTestHelperService.getEmailVerification(UUID.randomUUID().toString(), emailAddress);
+        String code = verificationEmailUpdate.getCode();
+        updateEmailVerification(emailAddress, code);
+
+        User registeredUser = new JobGetUser().syncRun(false);
+
+        //LOGOUT
+        ServiceSupport.Instance.getCache().clear();
+
+
+        //oh no - user forgot their password :)
+
+        createEmailVerification(emailAddress);
+        VerificationEmailUpdate verificationEmailUpdateForReset = verificationTestHelperService.getEmailVerification(UUID.randomUUID().toString(), emailAddress);
+
+        String codeForReset = verificationEmailUpdateForReset.getCode();
+        String newPassword = "new_password_987";
+        LatchedBusListener<EventPasswordResetCompleted> resetCompletedLatchedBusListener = new LatchedBusListener<>(EventPasswordResetCompleted.class);
+        ServiceSupport.Instance.getEventBus().register(resetCompletedLatchedBusListener);
+        //job reset password will first fire an EventPasswordResetCompleted and then EventLocalUserUpdated since we passed TRUE to constructor
+        ServiceSupport.Instance.getJobManager().addJob(new JobResetPassword(newPassword, codeForReset, VerificationMethod.Email, emailAddress, true));
+        resetCompletedLatchedBusListener.await(30, TimeUnit.SECONDS);
+        ServiceSupport.Instance.getEventBus().unregister(resetCompletedLatchedBusListener);
+
+        //make sure EventPasswordResetCompleted gets here
+        assertNotNull(resetCompletedLatchedBusListener.getEvent());
+        assertNull(resetCompletedLatchedBusListener.getEvent().getFailure());
+        assertEquals(registeredUser, resetCompletedLatchedBusListener.getEvent().getSuccess());
+
+        //next we should get EventLocalUserUpdated, these 2 lines could be moved up a bit but keeping them here for readability
+        final LatchedBusListener<EventLocalUserUpdated> userLoginBusListener = new LatchedBusListener<>(EventLocalUserUpdated.class);
+        ServiceSupport.Instance.getEventBus().register(userLoginBusListener);
+
+        userLoginBusListener.await(30, TimeUnit.SECONDS);
+        ServiceSupport.Instance.getEventBus().unregister(userLoginBusListener);
+        EventLocalUserUpdated event = userLoginBusListener.getEvent();
+        assertNotNull(event);
+        assertNull(event.getFailure());
+        assertEquals(registeredUser, event.getSuccess());
     }
 
 }

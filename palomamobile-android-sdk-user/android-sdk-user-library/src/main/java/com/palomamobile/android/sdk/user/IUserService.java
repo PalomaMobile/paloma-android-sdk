@@ -82,4 +82,25 @@ public interface IUserService {
     @PUT("/users/{userId}")
     User updateUser(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @Body UserUpdate userUpdate);
 
+
+    /**
+     * Reset password for a user identified by a code sent to user's previously confirmed verification address.
+     * Return an existing {@link User} that found for the verification address if the code is valid. Throws {@link retrofit.RetrofitError} on failure.
+     * <br/>{@link JobResetPassword} provides a convenient wrapper, consider using it instead.
+     *
+     * @param requestId for the purposes of identifying retries
+     * @param verificationChannel channel that can be used to verify user (eg: email)
+     * @param verificationAddress address that belongs to the {@code verificationChannel} and identifies a unique user (eg: user@example.com)
+     * @param passwordUpdate contains verification code received on the {@code verificationAddress} and the new value for the users password
+     * @return existing user
+     */
+    @Headers({
+            IAuthManager.INTERNAL_AUTH_REQUIREMENT_HEADER_NAME + ": " + "Client",
+            CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION,
+            CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
+    @PUT("/users/{verificationChannel}/{verificationAddress}/password")
+    User resetPassword(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId,
+                       @Path("verificationChannel") String verificationChannel,
+                       @Path("verificationAddress") String verificationAddress,
+                       @Body PasswordUpdate passwordUpdate);
 }

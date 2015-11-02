@@ -265,6 +265,29 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
         assertEquals(updatedUser, gottenUser);
     }
 
+    public void testPasswordReset() throws Throwable {
+        //test implemented in Verification module as verification is required
+    }
+
+    public void testPasswordUpdate() throws Throwable {
+        final String tmp = "tmp_" + System.currentTimeMillis();
+        User registered = new JobRegisterUser(new PasswordUserCredential(tmp, tmp)).syncRun(false);
+
+        UserUpdate userUpdate = new UserUpdate();
+        String newPassword = "newPassword123";
+        userUpdate.setPassword(newPassword);
+        new JobPostUserUpdate(userUpdate).syncRun(false);
+
+        try {
+            new JobLoginUser(new PasswordUserCredential(tmp, tmp)).syncRun(false);
+            fail("Shouldn't be able to login with old user credentials");
+        } catch (Exception e) {
+            //expected
+        }
+
+        User logedin = new JobLoginUser(new PasswordUserCredential(tmp, newPassword)).syncRun(false);
+        assertEquals(registered, logedin);
+    }
 
     public void testLoginFbUser() throws Throwable {
         if (!isFacebookAppSetup()) {

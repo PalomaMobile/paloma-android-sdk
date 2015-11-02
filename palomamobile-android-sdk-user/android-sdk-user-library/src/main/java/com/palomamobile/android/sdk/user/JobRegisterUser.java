@@ -28,7 +28,7 @@ public class JobRegisterUser extends BaseRetryPolicyAwareJob<User> {
      * @param userCredential register with these credentials
      */
     public JobRegisterUser(IUserCredential userCredential) {
-        //do NOT set .requireNetwork() - this will make the job fail quickly rather than wait if network not available
+        //do NOT set .requireNetwork() - this will make the job fail quickly rather than wait for network to become available
         this(new Params(0), userCredential);
     }
 
