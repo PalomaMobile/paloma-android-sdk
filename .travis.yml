@@ -1,6 +1,6 @@
 language: android
 #override TEST_ENDPOINT to point to Staging once it is available
-script: "./gradlew clean androidJavadocs androidJavadocsJar assembleDebug testDebug connectedAndroidTest build --debug -PTEST_ENDPOINT=http://ec2-46-137-242-200.ap-southeast-1.compute.amazonaws.com"
+script: "./gradlew clean androidJavadocs androidJavadocsJar assembleDebug testDebug connectedAndroidTest build -PTEST_ENDPOINT=http://ec2-46-137-242-200.ap-southeast-1.compute.amazonaws.com"
 android:
   components:
   - build-tools-22.0.1
