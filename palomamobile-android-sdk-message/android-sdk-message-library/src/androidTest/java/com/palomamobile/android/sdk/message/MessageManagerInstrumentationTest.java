@@ -6,6 +6,7 @@ import android.test.InstrumentationTestCase;
 import com.palomamobile.android.sdk.core.PaginatedResponse;
 import com.palomamobile.android.sdk.core.ServiceRequestParams;
 import com.palomamobile.android.sdk.core.ServiceSupport;
+import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
 import com.palomamobile.android.sdk.core.util.LatchedBusListener;
 import com.palomamobile.android.sdk.user.PasswordUserCredential;
 import com.palomamobile.android.sdk.user.TestUtilities;
@@ -50,6 +51,68 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         assertNotNull(latchedBusListener.getEvent());
         assertNull(latchedBusListener.getEvent().getFailure());
         assertNull(latchedBusListener.getEvent().getSuccess().getEmbedded());
+    }
+
+    public void testDeleteMessagesReceivedByFilter() throws Throwable {
+        //create a "friend 1"
+        final String tmp1 = String.valueOf(System.currentTimeMillis());
+        User friend1 = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmp1, tmp1));
+        assertNotNull(friend1);
+        logger.info("friend1 created!!");
+        final long friendId1 = friend1.getId();
+
+        //create a local user
+        final String tmpSelf = String.valueOf(System.currentTimeMillis());
+        User self = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmpSelf, tmpSelf));
+        logger.info("self created!!");
+        final long selfId = self.getId();
+        assertNotNull(self);
+        assertFalse(friendId1 == selfId);
+
+        //login as friend1 and send some messages to self
+        TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmp1, tmp1));
+        createJobPostMessageToFriend("atest1", "content atest1", "https://bit.ly/1", selfId, "text/plain").syncRun();
+        createJobPostMessageToFriend("atest2", "content atest2", "https://bit.ly/2", selfId, "text/plain").syncRun();
+        createJobPostMessageToFriend("atest3", "content atest3", "https://bit.ly/3", selfId, "text/plain").syncRun();
+        createJobPostMessageToFriend("test4a", "content test4a", "https://bit.ly/4", selfId, "text/plain").syncRun();
+        createJobPostMessageToFriend("test5a", "content test5a", "https://bit.ly/5", selfId, "text/plain").syncRun();
+        createJobPostMessageToFriend("test6a", "content test6a", "https://bit.ly/6", selfId, "text/plain").syncRun();
+
+        self = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmpSelf, tmpSelf));
+
+        PaginatedResponse<MessageReceived> messageReceivedPaginatedResponse = new JobGetMessagesReceived().setServiceRequestParams(
+                new ServiceRequestParams()
+                        .setPageIndex(0)
+                        .setResultsPerPage(30)
+                        .setFilterQuery("sender.userId='"+friendId1+"'")
+                        .sort("id", ServiceRequestParams.Sort.Order.Desc)
+        ).syncRun();
+        assertEquals(6, messageReceivedPaginatedResponse.getEmbedded().getItems().size());
+
+
+        final LatchedBusListener<EventMessagesReceivedDeleted> latchedBusListener = new LatchedBusListener<>(EventMessagesReceivedDeleted.class);
+        ServiceSupport.Instance.getEventBus().register(latchedBusListener);
+        BaseRetryPolicyAwareJob<Void> deleteMessagesJob = new JobDeleteMessagesReceived().setServiceRequestParams(
+                new ServiceRequestParams().setFilterQuery("(type~'a%')")
+        );
+        ServiceSupport.Instance.getJobManager().addJobInBackground(deleteMessagesJob);
+        latchedBusListener.await(10, TimeUnit.SECONDS);
+        ServiceSupport.Instance.getEventBus().unregister(latchedBusListener);
+
+        assertNotNull(latchedBusListener.getEvent());
+        assertNull(latchedBusListener.getEvent().getFailure());
+
+        PaginatedResponse<MessageReceived> messageReceivedPaginatedResponseAfterDelete = new JobGetMessagesReceived().setServiceRequestParams(
+                new ServiceRequestParams()
+                        .setPageIndex(0)
+                        .setResultsPerPage(30)
+                        .setFilterQuery("sender.userId='"+friendId1+"'")
+                        .sort("id", ServiceRequestParams.Sort.Order.Asc)
+        ).syncRun();
+        assertEquals(3, messageReceivedPaginatedResponseAfterDelete.getEmbedded().getItems().size());
+        assertEquals("test4a", messageReceivedPaginatedResponseAfterDelete.getEmbedded().getItems().get(0).getType());
+        assertEquals("test5a", messageReceivedPaginatedResponseAfterDelete.getEmbedded().getItems().get(1).getType());
+        assertEquals("test6a", messageReceivedPaginatedResponseAfterDelete.getEmbedded().getItems().get(2).getType());
     }
 
 
@@ -259,7 +322,6 @@ public class MessageManagerInstrumentationTest extends InstrumentationTestCase {
         messageSent.setRecipients(friendIds);
         return new JobPostMessage(messageSent);
     }
-
 
     public void testRequestShareWithFriend() throws Throwable {
         //create a "friend"
