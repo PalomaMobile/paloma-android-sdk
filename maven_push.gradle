@@ -94,7 +94,7 @@ afterEvaluate { project ->
 
     artifacts {
         //XXX uncomment the line below to publish sources
-        //archives androidSourcesJar
+        archives androidSourcesJar
         archives androidJavadocsJar
     }
 }
