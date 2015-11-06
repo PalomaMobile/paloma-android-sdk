@@ -8,3 +8,4 @@ com.palomamobile.android.sdk.message
 com.palomamobile.android.sdk.messageThread
 com.palomamobile.android.sdk.notification
 com.palomamobile.android.sdk.user
+com.palomamobile.android.sdk.verification.email
