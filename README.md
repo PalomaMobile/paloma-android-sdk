@@ -86,9 +86,9 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.12'
 
     //Paloma Platform SDK modules
-    compile 'com.palomamobile.android.sdk:core:2.6@aar'
-    compile 'com.palomamobile.android.sdk:auth:2.6@aar'
-    compile 'com.palomamobile.android.sdk:user:2.6@aar'
+    compile 'com.palomamobile.android.sdk:core:2.7.0@aar'
+    compile 'com.palomamobile.android.sdk:auth:2.7.0@aar'
+    compile 'com.palomamobile.android.sdk:user:2.7.0@aar'
     
     ...
     

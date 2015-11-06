@@ -58,13 +58,13 @@ dependencies {
     compile 'com.birbit:android-priority-jobqueue:1.3.3'
 
     //Paloma Platform SDK modules
-    compile 'com.palomamobile.android.sdk:core:2.6@aar'
-    compile 'com.palomamobile.android.sdk:auth:2.6@aar'
-    compile 'com.palomamobile.android.sdk:user:2.6@aar'
-    compile 'com.palomamobile.android.sdk:message:2.6@aar'
+    compile 'com.palomamobile.android.sdk:core:2.7.0@aar'
+    compile 'com.palomamobile.android.sdk:auth:2.7.0@aar'
+    compile 'com.palomamobile.android.sdk:user:2.7.0@aar'
+    compile 'com.palomamobile.android.sdk:message:2.7.0@aar'
 
     //Enable optional notifications of messages received
-    compile 'com.palomamobile.android.sdk:notification:2.6@aar'
+    compile 'com.palomamobile.android.sdk:notification:2.7.0@aar'
     ...
     
 }
