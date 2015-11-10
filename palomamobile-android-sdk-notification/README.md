@@ -41,20 +41,21 @@ dependencies {
 
     //you may already use some of these and that is OK
     compile 'de.greenrobot:eventbus:2.4.0'
-    compile 'com.google.code.gson:gson:2.3.1'
+    compile 'com.google.code.gson:gson:2.4'
     compile 'com.android.support:support-annotations:22.2.0'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.5.0'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.birbit:android-priority-jobqueue:1.3.3'
+    compile 'com.birbit:android-priority-jobqueue:1.3.5'
 
     //Paloma Platform SDK modules
-    compile 'com.palomamobile.android.sdk:core:2.7.0@aar'
-    compile 'com.palomamobile.android.sdk:auth:2.7.0@aar'
-    compile 'com.palomamobile.android.sdk:user:2.7.0@aar'
-    compile 'com.palomamobile.android.sdk:notification:2.7.0@aar'
+    compile 'com.palomamobile.android.sdk:core:2.7.1@aar'
+    compile 'com.palomamobile.android.sdk:auth:2.7.1@aar'
+    compile 'com.palomamobile.android.sdk:user:2.7.1@aar'
+    compile 'com.palomamobile.android.sdk:notification:2.7.1@aar'
     
     //enable notifications via GCM
+    compile "com.google.android.gms:play-services-gcm:7.5.0"
     compile "com.google.android.gms:play-services:7.5.0"
     ...
     
@@ -95,7 +96,7 @@ dependencies {
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <category android:name="com.foo" />
+                <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
 
@@ -104,7 +105,7 @@ dependencies {
 </manifest>
 ```
 
-Replace `com.foo` everywhere with the actual package name of your application.
+In not using gradle, replace `${applicationId}` everywhere with the actual package name of your application.
 
 Values for `palomamobile_client_id`, `palomamobile_endpoint`, and `palomamobile_gcm_sender_id` are provided at the time
 you register your application with the Paloma Mobile platform.

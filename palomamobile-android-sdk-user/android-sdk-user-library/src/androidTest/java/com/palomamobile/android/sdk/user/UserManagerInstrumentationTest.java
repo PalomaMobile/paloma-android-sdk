@@ -25,12 +25,10 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
     private static String facebookAppId = null;
     private static String facebookAppSecret = null;
 
-    private IUserManager userManager;
 
     public void setUp() throws Exception {
         super.setUp();
         ServiceSupport.Instance.init(getInstrumentation().getContext());
-        userManager = ServiceSupport.Instance.getServiceManager(IUserManager.class);
 
         try {
             facebookAppId = Utilities.getValueFromAppMetadata(getInstrumentation().getContext(), "facebook.app.id");

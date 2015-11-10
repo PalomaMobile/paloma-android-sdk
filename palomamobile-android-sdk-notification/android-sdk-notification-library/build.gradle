@@ -11,5 +11,9 @@ dependencies {
   compile project(':palomamobile-android-sdk-core:android-sdk-core-library')
   compile project(':palomamobile-android-sdk-auth:android-sdk-auth-library')
   compile project(':palomamobile-android-sdk-user:android-sdk-user-library')
-  compile "com.google.android.gms:play-services:7.5.0"
+
+  //paloma platform dependencies - notifications, use 7.5.0 to remain compatible with older devices
+  //when using 8.3.0. we get "W/GooglePlayServicesUtil﹕ Google Play services out of date.  Requires 8298000 but found 7899036"
+  //on HTC device running android 4.2.2
+  compile "com.google.android.gms:play-services-gcm:7.5.0"
 }

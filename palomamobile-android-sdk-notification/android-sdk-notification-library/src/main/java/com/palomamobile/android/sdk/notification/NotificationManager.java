@@ -13,9 +13,6 @@ import com.palomamobile.android.sdk.user.IUserManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- */
 class NotificationManager implements INotificationManager {
     private static final String CONFIG_NAME_GCM_SENDER_ID = "com.palomamobile.android.sdk.GcmSenderId";
 
@@ -26,12 +23,13 @@ class NotificationManager implements INotificationManager {
 
     public NotificationManager(IServiceSupport serviceSupport) {
         this.notificationService = serviceSupport.getRestAdapter().create(INotificationService.class);
-        serviceSupport.getInternalEventBus().register(this);
+        serviceSupport.getInternalEventBus().register(this);//for EventServiceManagerRegistered
         serviceSupport.registerServiceManager(INotificationManager.class, this);
 
+        serviceSupport.getEventBus().register(this);//for EventLocalUserUpdated
         IUserManager userManager = serviceSupport.getServiceManager(IUserManager.class);
         if (userManager != null) {
-            serviceSupport.getJobManager().addJobInBackground(new JobPostUserGcmRegistrationIdUpdate());
+            attemptGcmRegistrationIdUpdate();
         }
     }
 
@@ -39,7 +37,14 @@ class NotificationManager implements INotificationManager {
     public void onEventBackgroundThread(EventServiceManagerRegistered event) {
         logger.debug("onEventBackgroundThread(" + event + ")");
         if (IUserManager.class == event.getIntrface()) {
-            logger.debug("IUserManager instance available -> addJobInBackground(new JobUpdateGcmRegistrationId())");
+            attemptGcmRegistrationIdUpdate();
+        }
+    }
+
+    protected void attemptGcmRegistrationIdUpdate() {
+        IUserManager userManager = ServiceSupport.Instance.getServiceManager(IUserManager.class);
+        if (userManager != null && userManager.getUser() != null) {
+            logger.debug("IUserManager instance available && user logged in -> addJobInBackground(new JobUpdateGcmRegistrationId())");
             ServiceSupport.Instance.getJobManager().addJobInBackground(new JobPostUserGcmRegistrationIdUpdate());
         }
     }
