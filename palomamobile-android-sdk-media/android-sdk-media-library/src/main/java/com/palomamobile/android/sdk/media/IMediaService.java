@@ -33,7 +33,7 @@ public interface IMediaService {
     Response postMedia(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Body TypedInput file);
 
     /**
-     * Upload file content, update existing media.
+     * Upload file content, update existing media only (create not supported in the media name space).
      * @param requestId for the purposes of identifying retries
      * @param trailingMediaUri media identifier previously received as a service response to a
      * @param file file to upload
