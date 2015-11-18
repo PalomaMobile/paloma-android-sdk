@@ -19,14 +19,12 @@ import java.util.concurrent.TimeUnit;
 public class EmailVerificationManagerInstrumentationTest extends InstrumentationTestCase {
 
     private IEmailVerificationTestHelperService verificationTestHelperService;
-    private EmailVerificationManager verificationManager;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
         ServiceSupport.Instance.init(getInstrumentation().getContext());
         verificationTestHelperService = ServiceSupport.Instance.getRestAdapter().create(IEmailVerificationTestHelperService.class);
-        verificationManager = (EmailVerificationManager) ServiceSupport.Instance.getServiceManager(IEmailVerificationManager.class);
     }
 
     public void testCreateEmailVerification() throws Throwable {
@@ -97,9 +95,10 @@ public class EmailVerificationManagerInstrumentationTest extends Instrumentation
         createEmailVerification(emailAddress);
         VerificationEmailUpdate verificationEmailUpdate = verificationTestHelperService.getEmailVerification(UUID.randomUUID().toString(), emailAddress);
         String code = verificationEmailUpdate.getCode();
-        updateEmailVerification(emailAddress, code);
+        updateUserEmailAddress(emailAddress, code);
 
         User registeredUser = new JobGetUser().syncRun(false);
+        assertEquals(emailAddress, registeredUser.getEmailAddress());
 
         //LOGOUT
         ServiceSupport.Instance.getCache().clear();
@@ -115,7 +114,7 @@ public class EmailVerificationManagerInstrumentationTest extends Instrumentation
         LatchedBusListener<EventPasswordResetCompleted> resetCompletedLatchedBusListener = new LatchedBusListener<>(EventPasswordResetCompleted.class);
         ServiceSupport.Instance.getEventBus().register(resetCompletedLatchedBusListener);
         //job reset password will first fire an EventPasswordResetCompleted and then EventLocalUserUpdated since we passed TRUE to constructor
-        ServiceSupport.Instance.getJobManager().addJob(new JobResetPassword(newPassword, codeForReset, VerificationMethod.Email, emailAddress, true));
+        ServiceSupport.Instance.getJobManager().addJob(new JobResetPassword(codeForReset, newPassword, VerificationMethod.Email, emailAddress, true));
         resetCompletedLatchedBusListener.await(30, TimeUnit.SECONDS);
         ServiceSupport.Instance.getEventBus().unregister(resetCompletedLatchedBusListener);
 
