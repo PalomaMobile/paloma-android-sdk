@@ -1,6 +1,5 @@
 package com.palomamobile.android.sdk.user;
 
-import android.support.annotation.NonNull;
 import com.palomamobile.android.sdk.auth.IUserCredential;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
@@ -21,17 +20,13 @@ public class JobLoginUser extends BaseRetryPolicyAwareJob<User> {
 
     private IUserCredential userCredential;
 
-    public JobLoginUser(@NonNull String userName, @NonNull String password) {
-        this(new PasswordUserCredential(userName, password));
-    }
-
     /**
      * Create a new job to to login an existing user user. If the credentials do not match an existing user a new user will not be created,
      * instead the job will fail.
      * @param userCredential login with these credentials
      */
     public JobLoginUser(IUserCredential userCredential) {
-        //do NOT set .requireNetwork() - this will make the job fail quickly rather than wait if network not available
+        //do NOT set .requireNetwork() - this will make the job fail quickly rather than wait for network to become available
         this(new Params(0), userCredential);
     }
 

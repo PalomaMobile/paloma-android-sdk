@@ -7,6 +7,8 @@ public class UserUpdate implements Serializable {
 
     protected String dateOfBirth;
     protected String displayName;
+    protected String password;
+
     protected Map<String, String> custom;
 
     public Map<String, String> getCustom() {
@@ -31,5 +33,13 @@ public class UserUpdate implements Serializable {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
