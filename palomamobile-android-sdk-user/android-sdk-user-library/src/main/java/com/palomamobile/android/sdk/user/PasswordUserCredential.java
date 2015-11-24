@@ -18,13 +18,18 @@ public class PasswordUserCredential extends BaseUserCredential {
     private String emailAddress;
     private String verificationCode;
 
+    /**
+     * * Construct a user credential for registration via a username and password.
+     * @param username
+     * @param password
+     */
     public PasswordUserCredential(@NonNull String username, @NonNull String password) {
         setUserPassword(password);
         this.username = username;
     }
 
     /**
-     *
+     * Construct a user credential for registration via a verified email address and password.
      * @param verifiedEmail
      * @param password
      */
@@ -34,7 +39,7 @@ public class PasswordUserCredential extends BaseUserCredential {
     }
 
     /**
-     * At least one of {@code username} or {@code verifiedEmail} must contain a valid value.
+     * Construct a user credential for registration. At least one of {@code username} or {@code verifiedEmail} must contain a valid value.
      * @param username user name
      * @param verifiedEmail email address verified by the email verification service
      * @param password

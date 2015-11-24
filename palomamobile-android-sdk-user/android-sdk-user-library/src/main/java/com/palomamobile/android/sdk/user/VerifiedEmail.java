@@ -3,6 +3,7 @@ package com.palomamobile.android.sdk.user;
 import android.support.annotation.NonNull;
 
 /**
+ * Represents an email address with it's one-shot verification code as provided by the verification service.
  * Created by Karel Herink
  */
 public class VerifiedEmail {
