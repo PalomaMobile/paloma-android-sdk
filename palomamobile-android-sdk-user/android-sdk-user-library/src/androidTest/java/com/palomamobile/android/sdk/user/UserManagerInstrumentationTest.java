@@ -342,5 +342,13 @@ public class UserManagerInstrumentationTest extends InstrumentationTestCase {
         assertEquals(userRegistered, userLogedin);
     }
 
+    public void testEmailRegistrationNoUsername() {
+        //test implemented in Verification module as email verification is required
+    }
+
+    public void testEmailRegistrationWithUsername() {
+        //test implemented in Verification module as email verification is required
+    }
+
 
 }

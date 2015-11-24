@@ -1,12 +1,13 @@
 package com.palomamobile.android.sdk.user;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import com.palomamobile.android.sdk.auth.AuthType;
 
 import java.util.HashMap;
 
 /**
- * Username & password user credentials required to retrieve an access token for a given user, this token must be present in API calls
+ * Username/Email & Password user credentials required to retrieve an access token for a given user, this token must be present in API calls
  * that require {@link AuthType#User}.
  * <br/>
  *
@@ -14,8 +15,39 @@ import java.util.HashMap;
 public class PasswordUserCredential extends BaseUserCredential {
     public static final String PWD_CREDENTIAL_TYPE = "password";
 
+    private String emailAddress;
+    private String verificationCode;
+
     public PasswordUserCredential(@NonNull String username, @NonNull String password) {
+        setUserPassword(password);
         this.username = username;
+    }
+
+    /**
+     *
+     * @param verifiedEmail
+     * @param password
+     */
+    public PasswordUserCredential(@NonNull VerifiedEmail verifiedEmail, @NonNull String password) {
+        setUserPassword(password);
+        setVerifiedEmail(verifiedEmail);
+    }
+
+    /**
+     * At least one of {@code username} or {@code verifiedEmail} must contain a valid value.
+     * @param username user name
+     * @param verifiedEmail email address verified by the email verification service
+     * @param password
+     */
+    public PasswordUserCredential(@Nullable String username, @Nullable VerifiedEmail verifiedEmail, @NonNull String password) {
+        setUserPassword(password);
+        this.username = username;
+        if (verifiedEmail != null) {
+            setVerifiedEmail(verifiedEmail);
+        }
+    }
+
+    private void setUserPassword(@NonNull String password) {
         credential = new HashMap<>();
         credential.put(PROP_CREDENTIAL_TYPE, PWD_CREDENTIAL_TYPE);
         credential.put("password", password);
@@ -26,6 +58,11 @@ public class PasswordUserCredential extends BaseUserCredential {
         return credential.get("password");
     }
 
+    public void setVerifiedEmail(@NonNull VerifiedEmail verifiedEmail) {
+        emailAddress = verifiedEmail.getVerifiedEmailAddress();
+        verificationCode = verifiedEmail.getVerificationCode();
+    }
+
     @Override
     public String getCredentialType() {
         return PWD_CREDENTIAL_TYPE;
@@ -34,5 +71,13 @@ public class PasswordUserCredential extends BaseUserCredential {
     @Override
     public String toString() {
         return "PasswordUserCredential{} " + super.toString();
+    }
+
+    public String getVerifiedEmailAddress() {
+        return emailAddress;
+    }
+
+    public String getEmailVerificationCode() {
+        return verificationCode;
     }
 }

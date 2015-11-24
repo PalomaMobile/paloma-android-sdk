@@ -12,6 +12,8 @@ import com.palomamobile.android.sdk.user.PasswordUserCredential;
 import com.palomamobile.android.sdk.user.TestUtilities;
 import com.palomamobile.android.sdk.user.User;
 import com.palomamobile.android.sdk.user.VerificationMethod;
+import com.palomamobile.android.sdk.user.VerifiedEmail;
+import retrofit.RetrofitError;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -44,7 +46,18 @@ public class EmailVerificationManagerInstrumentationTest extends Instrumentation
         createEmailVerification(emailAddress);
         VerificationEmailUpdate verificationEmailUpdate = verificationTestHelperService.getEmailVerification(UUID.randomUUID().toString(), emailAddress);
         String code = verificationEmailUpdate.getCode();
-        updateUserEmailAddress(emailAddress, code);
+
+        final String username = String.valueOf(System.currentTimeMillis());
+        createUserWithEmailAddress(username, emailAddress, code);
+
+        //ensure that the verified email address cannot be used 2nd time
+        try {
+            new JobPostEmailVerificationUpdate(emailAddress, code).syncRun(false);
+            fail();
+        } catch (RetrofitError e) {
+            //this is expected
+        }
+
     }
 
     private void createEmailVerification(String emailAddress) throws Throwable {
@@ -69,10 +82,8 @@ public class EmailVerificationManagerInstrumentationTest extends Instrumentation
         assertNull(event.getFailure());
     }
 
-    private void updateUserEmailAddress(String emailAddress, String code) throws Throwable {
-
-        final String tmpSelf = String.valueOf(System.currentTimeMillis());
-        User self = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(tmpSelf, tmpSelf));
+    private void createUserWithEmailAddress(String username, String emailAddress, String code) throws Throwable {
+        User self = TestUtilities.registerUserSynchronous(this, new PasswordUserCredential(username, username));
         assertNotNull(self);
 
         final LatchedBusListener<EventLocalUserUpdated> busListener = new LatchedBusListener<>(EventLocalUserUpdated.class);
@@ -88,14 +99,12 @@ public class EmailVerificationManagerInstrumentationTest extends Instrumentation
     }
 
     public void testPasswordReset() throws Throwable {
-        final String tmpSelf = String.valueOf(System.currentTimeMillis());
-        new JobRegisterUser(new PasswordUserCredential(tmpSelf, tmpSelf)).syncRun(false);
-        String emailAddress = tmpSelf + "@example.com";
-
+        String emailAddress = String.valueOf(System.currentTimeMillis()) + "@example.com";
         createEmailVerification(emailAddress);
         VerificationEmailUpdate verificationEmailUpdate = verificationTestHelperService.getEmailVerification(UUID.randomUUID().toString(), emailAddress);
         String code = verificationEmailUpdate.getCode();
-        updateUserEmailAddress(emailAddress, code);
+        final String username = String.valueOf(System.currentTimeMillis());
+        createUserWithEmailAddress(username, emailAddress, code);
 
         User registeredUser = new JobGetUser().syncRun(false);
         assertEquals(emailAddress, registeredUser.getEmailAddress());
@@ -133,6 +142,40 @@ public class EmailVerificationManagerInstrumentationTest extends Instrumentation
         assertNotNull(event);
         assertNull(event.getFailure());
         assertEquals(registeredUser, event.getSuccess());
+    }
+
+    public void testEmailRegistrationNoExplicitUsername() throws Throwable {
+        doEmailRegistration(false);
+    }
+
+    public void testEmailRegistrationWithExplicitUsername() throws Throwable {
+        doEmailRegistration(true);
+    }
+
+    public void doEmailRegistration(boolean withExplicitUserName) throws Throwable {
+        final String tmpSelf = String.valueOf(System.currentTimeMillis());
+        String emailAddress = tmpSelf + "@example.com";
+        createEmailVerification(emailAddress);
+        VerificationEmailUpdate verificationEmailUpdate = verificationTestHelperService.getEmailVerification(UUID.randomUUID().toString(), emailAddress);
+        String code = verificationEmailUpdate.getCode();
+
+
+        //ensure the verified email & username is set correctly
+        if (withExplicitUserName) {
+            PasswordUserCredential passwordUserCredential = new PasswordUserCredential(tmpSelf, new VerifiedEmail(emailAddress, code), tmpSelf);
+            User user = new JobRegisterUser(passwordUserCredential).syncRun(false);
+            assertEquals(emailAddress, user.getEmailAddress());
+            assertEquals(tmpSelf, user.getUsername());
+        }
+        else {
+            PasswordUserCredential passwordUserCredential = new PasswordUserCredential(new VerifiedEmail(emailAddress, code), tmpSelf);
+            User user = new JobRegisterUser(passwordUserCredential).syncRun(false);
+            assertEquals(emailAddress, user.getEmailAddress());
+            assertEquals(emailAddress, user.getUsername());
+        }
+
+        //LOGOUT
+        ServiceSupport.Instance.getCache().clear();
     }
 
 }
