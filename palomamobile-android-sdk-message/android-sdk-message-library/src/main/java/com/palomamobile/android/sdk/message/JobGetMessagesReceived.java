@@ -38,10 +38,9 @@ public class JobGetMessagesReceived extends BaseRetryPolicyAwareJob<PaginatedRes
     @Override
     public PaginatedResponse<MessageReceived> syncRun(boolean postEvent) throws Throwable {
         MessageManager messageManager = (MessageManager) ServiceSupport.Instance.getServiceManager(IMessageManager.class);
-        PaginatedResponse<MessageReceived> messagesReceivedResponse = messageManager.getService().getMessagesReceived(getRetryId(), userId, getOptions(), getFilterQuery(), getSortParams());
-        PaginatedResponse<MessageReceived> result = messagesReceivedResponse;
+        PaginatedResponse<MessageReceived> result = messageManager.getService().getMessagesReceived(getRetryId(), userId, getOptions(), getFilterQuery(), getSortParams());
         if (postEvent) {
-            ServiceSupport.Instance.getEventBus().post(new EventMessagesReceived(this, result) );
+            ServiceSupport.Instance.getEventBus().post(new EventMessagesReceived(this, result));
         }
         return result;
     }

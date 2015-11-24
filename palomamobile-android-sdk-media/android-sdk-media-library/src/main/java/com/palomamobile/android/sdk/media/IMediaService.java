@@ -1,14 +1,20 @@
 package com.palomamobile.android.sdk.media;
 
 import com.palomamobile.android.sdk.core.CustomHeader;
+import com.palomamobile.android.sdk.core.PaginatedResponse;
 import retrofit.client.Response;
 import retrofit.http.Body;
+import retrofit.http.GET;
 import retrofit.http.Header;
 import retrofit.http.Headers;
 import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
+import retrofit.http.Query;
+import retrofit.http.QueryMap;
 import retrofit.mime.TypedInput;
+
+import java.util.Map;
 
 /**
  * This interface is consumed by the Retrofit library to provide access to the Paloma Mobile Platform Media Service RESTful API.
@@ -100,4 +106,9 @@ public interface IMediaService {
     @PUT("/applications/{applicationName}/media/{trailingMediaUri}")
     Response updateNamedApplicationMedia(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("applicationName") String applicationName, @Path("trailingMediaUri") String trailingMediaUri, @Body TypedInput file);
 
+
+
+    @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
+    @GET("/users/{userId}/media")
+    PaginatedResponse<MediaInfo> listUserMedia(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @QueryMap Map<String, String> options, @Query("where") String filterQuery, @Query("sort") String... sortOrder);
 }

@@ -3,7 +3,10 @@ package com.palomamobile.android.sdk.media;
 import android.content.Context;
 import android.net.Uri;
 import android.test.InstrumentationTestCase;
+import com.palomamobile.android.sdk.core.PaginatedResponse;
+import com.palomamobile.android.sdk.core.ServiceRequestParams;
 import com.palomamobile.android.sdk.core.ServiceSupport;
+import com.palomamobile.android.sdk.core.util.LatchedBusListener;
 import com.palomamobile.android.sdk.user.TestUtilities;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.OkHttpClient;
@@ -17,7 +20,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class MediaManagerInstrumentationTest extends InstrumentationTestCase {
 
@@ -155,6 +160,49 @@ public class MediaManagerInstrumentationTest extends InstrumentationTestCase {
         response.body().close();
     }
 
+
+    public void testListUserMedia() throws Throwable {
+        TestUtilities.registerUserSynchronous(this);
+        final String mime = "image/jpg";
+
+        //upload 2 cats
+        File catImageFile = fileFromAsset("cat.jpg");
+        if (catImageFile == null) {
+            throw new RuntimeException("Unable to create a file from asset");
+        }
+        JobUploadUserMedia catMediaUploadJob = new JobUploadUserMedia(mime, catImageFile.getAbsolutePath());
+        MediaInfo catMediaInfo1 = catMediaUploadJob.syncRun(false);
+        MediaInfo catMediaInfo2 = catMediaUploadJob.syncRun(false);
+
+        //upload 2 dogs
+        File dogImageFile = fileFromAsset("dog.jpg");
+        if (dogImageFile == null) {
+            throw new RuntimeException("Unable to create a file from asset");
+        }
+        JobUploadUserMedia dogMediaUploadJob = new JobUploadUserMedia(mime, dogImageFile.getAbsolutePath());
+        MediaInfo dogMediaInfo1 = dogMediaUploadJob.syncRun(false);
+        MediaInfo dogMediaInfo2 = dogMediaUploadJob.syncRun(false);
+
+
+        JobListUserMedia jobListUserMedia = new JobListUserMedia();
+        jobListUserMedia.setServiceRequestParams(new ServiceRequestParams().sort("id", ServiceRequestParams.Sort.Order.Desc));
+
+        final LatchedBusListener<EventUserMediaListReceived> latchedBusListener = new LatchedBusListener<>(EventUserMediaListReceived.class);
+        ServiceSupport.Instance.getEventBus().register(latchedBusListener);
+        ServiceSupport.Instance.getJobManager().addJob(jobListUserMedia);
+        latchedBusListener.await(10, TimeUnit.SECONDS);
+        ServiceSupport.Instance.getEventBus().unregister(latchedBusListener);
+        assertNotNull(latchedBusListener.getEvent());
+        assertNull(latchedBusListener.getEvent().getFailure());
+        PaginatedResponse<MediaInfo> success = latchedBusListener.getEvent().getSuccess();
+        assertEquals(4, success.getPage().getTotalElements());
+        List<MediaInfo> items = success.getEmbedded().getItems();
+        assertEquals(4, items.size());
+        assertEquals(dogMediaInfo2.getId(), items.get(0).getId());
+        assertEquals(dogMediaInfo1.getId(), items.get(1).getId());
+        assertEquals(catMediaInfo2.getId(), items.get(2).getId());
+        assertEquals(catMediaInfo1.getId(), items.get(3).getId());
+    }
 
 
     public void testUploadDownloadMedia() throws Throwable {
