@@ -1,15 +1,12 @@
 package com.palomamobile.android.sdk.media;
 
-import com.google.gson.Gson;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.qos.BaseRetryPolicyAwareJob;
+import com.palomamobile.android.sdk.core.util.Utilities;
 import com.path.android.jobqueue.Params;
+import com.path.android.jobqueue.RetryConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import retrofit.client.Header;
-import retrofit.client.Response;
-import retrofit.converter.ConversionException;
-import retrofit.converter.GsonConverter;
 
 /**
  * Abstract class provides base functionality required to upload media content.
@@ -19,10 +16,10 @@ public abstract class BaseJobUploadMedia extends BaseRetryPolicyAwareJob<MediaIn
 
     private static final Logger logger = LoggerFactory.getLogger(BaseJobUploadMedia.class);
 
-    private static final String LOCATION_HEADER_NAME = "Location";
-
     private String mime;
     private String file;
+
+    private IChunkingStrategy chunkingStrategy = new IChunkingStrategy.SimpleChunkingStrategy();
 
     /**
      * Create a new job
@@ -56,27 +53,20 @@ public abstract class BaseJobUploadMedia extends BaseRetryPolicyAwareJob<MediaIn
     }
 
     @Override
+    protected RetryConstraint shouldReRunOnThrowable(Throwable throwable, int runCount, int maxRunCount) {
+        RetryConstraint retryConstraint = super.shouldReRunOnThrowable(throwable, runCount, maxRunCount);
+        if (retryConstraint.shouldRetry()) {
+            getChunkingStrategy().adjustStrategyAfterFailure(throwable);
+        }
+        return retryConstraint;
+    }
+
+    @Override
     protected void postFailure(Throwable throwable) {
         ServiceSupport.Instance.getEventBus().post(new EventMediaUploaded(this, throwable));
     }
 
     protected abstract MediaInfo callService(String mime, String file) throws Exception;
-
-    protected MediaInfo getMediaInfo(Response response) throws ConversionException {
-        GsonConverter converter = new GsonConverter(new Gson());
-        MediaInfo mediaInfo = (MediaInfo) converter.fromBody(response.getBody(), MediaInfo.class);
-        mediaInfo.setUrl(getLocationFromHeaders(response));
-        return mediaInfo;
-    }
-
-    private String getLocationFromHeaders(Response response) {
-        for (Header header : response.getHeaders()) {
-            if (LOCATION_HEADER_NAME.toLowerCase().equals(header.getName().toLowerCase())) {
-                return header.getValue();
-            }
-        }
-        return null;
-    }
 
     public String getFile() {
         return file;
@@ -84,5 +74,23 @@ public abstract class BaseJobUploadMedia extends BaseRetryPolicyAwareJob<MediaIn
 
     public String getMime() {
         return mime;
+    }
+
+    protected IChunkingStrategy getChunkingStrategy() {
+        return chunkingStrategy;
+    }
+
+    public void setChunkingStrategy(IChunkingStrategy chunkingStrategy) {
+        this.chunkingStrategy = chunkingStrategy;
+    }
+
+    public String getTransferId() {
+        String fileName = getFile();
+        try {
+            return Utilities.md5ToString(Utilities.getMD5(fileName));
+        } catch (Exception e) {
+            logger.warn("Unable to generate TransferId using MD5, will use the file name (less than ideal).", e);
+            return fileName;
+        }
     }
 }

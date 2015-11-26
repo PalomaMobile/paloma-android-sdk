@@ -3,7 +3,6 @@ package com.palomamobile.android.sdk.media;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.user.IUserManager;
 import com.path.android.jobqueue.Params;
-import retrofit.client.Response;
 import retrofit.converter.ConversionException;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedInput;
@@ -68,14 +67,14 @@ public class JobUploadUserMedia extends BaseJobUploadNamedMedia {
         IMediaManager mediaManager = ServiceSupport.Instance.getServiceManager(IMediaManager.class);
         long userId = userManager.getUser().getId();
         TypedFile typedFile = new TypedFile(mime, new File(file));
-        Response response;
+        MediaInfo response;
         if (trailingMediaUri == null) {
             response = mediaManager.getService().postUserMedia(getRetryId(), userId, typedFile);
         }
         else {
             response = mediaManager.getService().updateNamedUserMedia(getRetryId(), userId, trailingMediaUri, typedFile);
         }
-        return getMediaInfo(response);
+        return response;
     }
 
 }
