@@ -15,6 +15,8 @@ import retrofit.http.POST;
  */
 public interface IAuthService {
 
+    String HEADER_NAME_AUTHORIZATION = "Authorization";
+
     /**
      * Retrieve Client access token.<br/>
      *
@@ -29,7 +31,7 @@ public interface IAuthService {
             , CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/oauth/token")
     @FormUrlEncoded
-    AccessToken getClientAccessToken(@Header("Authorization") String authorizationValue,
+    AccessToken getClientAccessToken(@Header(HEADER_NAME_AUTHORIZATION) String authorizationValue,
                                      @Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId,
                                      @Field("grant_type") String grantType
     );
@@ -51,7 +53,7 @@ public interface IAuthService {
             CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/oauth/token")
     @FormUrlEncoded
-    AccessToken getUserAccessToken(@Header("Authorization") String authorizationValue,
+    AccessToken getUserAccessToken(@Header(HEADER_NAME_AUTHORIZATION) String authorizationValue,
                                    @Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId,
                                    @Field("username") String userName,
                                    @Field("password") String passsword,
@@ -76,7 +78,7 @@ public interface IAuthService {
             CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/oauth/token")
     @FormUrlEncoded
-    AccessToken refreshUserAccessToken(@Header("Authorization") String authorizationValue,
+    AccessToken refreshUserAccessToken(@Header(HEADER_NAME_AUTHORIZATION) String authorizationValue,
                                        @Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId,
                                        @Field("grant_type") String grantType,
                                        @Field("refresh_token") String refreshToken
