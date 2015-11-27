@@ -17,7 +17,7 @@ import retrofit.http.Path;
  * This class provides somewhat low level access to the Server API it may be more convenient to use methods
  * in {@link IEmailVerificationManager}.
  * <br/>
- * @see <a href="http://54.251.112.144/docs/verification-service/index.html">Paloma Mobile Platform Verification Service RESTful API</a>
+ * @see <a href="http://46.137.242.200/docs/verification-service/index.html">Paloma Mobile Platform Verification Service RESTful API</a>
  */
 public interface IEmailVerificationService {
 

@@ -3,7 +3,7 @@
 # Paloma verification SDK for Android
 
 ## Overview
-verification SDK module supports the [verification Service provided by the Paloma Mobile platform cloud](http://54.251.112.144/docs/verification-service/index.html#_service_description).
+verification SDK module supports the [verification Service provided by the Paloma Mobile platform cloud](http://46.137.242.200/docs/verification-service/index.html#_service_description).
 At a high level the verification SDK supports the following functionality:
 
 * Receiving push verifications via GCM (in future to be expanded to SMS, and custom socket channel)
@@ -116,8 +116,8 @@ Initiate the Paloma Mobile platform SDK, and register to receive verifications. 
 received by any given client app depends on the Paloma Mobile platform services the client app uses. Each service lists
 the verifications it triggers. For example:
 
-* [Friend SDK verifications](http://54.251.112.144/docs/friend-service/index.html#_verifications)
-* [Message SDK verifications](http://54.251.112.144/docs/message-service/index.html#_verifications)
+* [Friend SDK verifications](http://46.137.242.200/docs/friend-service/index.html#_verifications)
+* [Message SDK verifications](http://46.137.242.200/docs/message-service/index.html#_verifications)
 
 
 ```java

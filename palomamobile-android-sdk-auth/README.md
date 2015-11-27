@@ -6,7 +6,7 @@ The Auth SDK module is not normally called directly from client apps. It is requ
 their server API calls.
 
 Auth SDK module supports the auth features of the 
-[User Service provided by the Paloma Mobile platform cloud](http://54.251.112.144/docs/user-service/index.html#_service_description). Note that User management functionality is implemented in the [User SDK](../palomamobile-android-sdk-user)
+[User Service provided by the Paloma Mobile platform cloud](http://46.137.242.200/docs/user-service/index.html#_service_description). Note that User management functionality is implemented in the [User SDK](../palomamobile-android-sdk-user)
 not in the Auth SDK.
 
 At a high level the Auth SDK supports the following functionality:

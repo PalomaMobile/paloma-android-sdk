@@ -3,7 +3,7 @@
 # Paloma Message SDK for Android
 
 ## Overview
-Message SDK module supports the [Message Service provided by the Paloma Mobile platform cloud](http://54.251.112.144/docs/message-service/index.html#_service_description).
+Message SDK module supports the [Message Service provided by the Paloma Mobile platform cloud](http://46.137.242.200/docs/message-service/index.html#_service_description).
 
 At a high level the Message SDK supports the following functionality:
 
@@ -31,7 +31,7 @@ The Message SDK depends on:
 * [User SDK](../palomamobile-android-sdk-user)
 
 Optional but recommended dependency on the [Notification SDK](../palomamobile-android-sdk-notification)
-will enable server push notifications for [events of interest](http://54.251.112.144/docs/message-service/index.html#_notifications).
+will enable server push notifications for [events of interest](http://46.137.242.200/docs/message-service/index.html#_notifications).
 
 
 ## Quick start

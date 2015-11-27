@@ -17,7 +17,7 @@ import retrofit.http.Path;
  * All calls are synchronous. To get a concrete implementation of this interface call {@link IUserManager#getService()}
  * This class provides somewhat low level access to the Server API it may be more convenient to use methods in {@link IUserManager}.
  * <br/>
- * @see <a href="http://54.251.112.144/docs/user-service/index.html">Paloma Mobile Platform User Service RESTful API</a>
+ * @see <a href="http://46.137.242.200/docs/user-service/index.html">Paloma Mobile Platform User Service RESTful API</a>
  */
 public interface IUserService {
 

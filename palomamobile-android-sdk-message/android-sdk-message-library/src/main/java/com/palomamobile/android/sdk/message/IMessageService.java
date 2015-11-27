@@ -20,7 +20,7 @@ import java.util.Map;
  * All calls are synchronous. To get a concrete implementation of this interface call {@link IMessageManager#getService()}
  * This class provides somewhat low level access to the Server API it may be more convenient to use methods in {@link IMessageManager}.
  * <br/>
- * @see <a href="http://54.251.112.144/docs/message-service/index.html">Paloma Mobile Platform Sharing and Messaging Service RESTful API</a>
+ * @see <a href="http://46.137.242.200/docs/message-service/index.html">Paloma Mobile Platform Sharing and Messaging Service RESTful API</a>
  */
 public interface IMessageService {
 
