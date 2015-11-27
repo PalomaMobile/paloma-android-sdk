@@ -7,7 +7,7 @@
 ## Feature overview
 
 The Paloma SDK for Android provides a library, and documentation for developers to build connected mobile applications using the Paloma Mobile Platform Services.
-For in-depth information check out the detailed description of the [Paloma Mobile Platform Services](http://54.251.112.144/index.html#_platform_description).
+For in-depth information check out the detailed description of the [Paloma Mobile Platform Services](http://46.137.242.200/index.html#_platform_description).
 At a high level the SDK enables the following key features provided by the platform:
 
 * Authentication and User management
@@ -52,7 +52,7 @@ Each application facing module provides a <b>Sample app</b> project that demonst
 
 ## Internal dependencies
 
-To get started you will need to set-up a [platform application](http://54.251.112.144/index.html#_authenticating_client_applications).
+To get started you will need to set-up a [platform application](http://46.137.242.200/index.html#_authenticating_client_applications).
 
 ## External dependencies
 
