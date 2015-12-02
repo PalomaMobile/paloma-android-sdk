@@ -1,4 +1,4 @@
-[![Build Status](https://magnum.travis-ci.com/PalomaMobile/paloma-android-sdk.svg?token=MqkF7WcptxY6tzunqsBa)](https://magnum.travis-ci.com/PalomaMobile/paloma-android-sdk)
+[![Build Status](https://travis-ci.org/PalomaMobile/paloma-android-sdk.svg)](https://travis-ci.org/PalomaMobile/paloma-android-sdk.svg)
 [![Coverage Status](https://coveralls.io/repos/PalomaMobile/paloma-android-sdk/badge.svg)](https://coveralls.io/r/PalomaMobile/paloma-android-sdk)
 
 
