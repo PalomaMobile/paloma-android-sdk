@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/PalomaMobile/paloma-android-sdk.svg)](https://travis-ci.org/PalomaMobile/paloma-android-sdk.svg)
-[![Coverage Status](https://coveralls.io/repos/PalomaMobile/paloma-android-sdk/badge.svg)](https://coveralls.io/r/PalomaMobile/paloma-android-sdk)
 
 
 # Paloma SDK for Android

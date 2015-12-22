@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Created by Karel Herink
  */
-public abstract class BaseUserCredential extends UserUpdate implements IUserCredential{
+public abstract class BaseUserCredential extends UserUpdate implements IUserCredential {
 
     protected Map<String, String> credential;
     @Nullable protected String username;

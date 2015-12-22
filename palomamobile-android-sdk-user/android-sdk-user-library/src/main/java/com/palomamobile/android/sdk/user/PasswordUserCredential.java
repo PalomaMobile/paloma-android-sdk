@@ -15,8 +15,8 @@ import java.util.HashMap;
 public class PasswordUserCredential extends BaseUserCredential {
     public static final String PWD_CREDENTIAL_TYPE = "password";
 
-    private String emailAddress;
-    private String verificationCode;
+    @Nullable private String emailAddress;
+    @Nullable private String verificationCode;
 
     /**
      * * Construct a user credential for registration via a username and password.
