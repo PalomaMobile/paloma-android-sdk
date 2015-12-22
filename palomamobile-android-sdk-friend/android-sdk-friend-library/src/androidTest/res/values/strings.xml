@@ -1,8 +1,8 @@
 <resources>
 
     <!-- To run instrumentation tests that involve creating FB users provide your own values below -->
-    <string name="facebook_app_id">510756569089287</string>
-    <string name="facebook_app_secret">ad61ae4a607787d5c010d00d9ede13c6</string>
+    <string name="facebook_app_id"></string>
+    <string name="facebook_app_secret"></string>
 
 
     <string name="palomamobile_client_id">testapp-client</string>
