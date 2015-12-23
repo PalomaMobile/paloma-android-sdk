@@ -1,12 +1,12 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/verification/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.palomamobile.android.sdk/verification)
 
-# Paloma verification SDK for Android
+# Paloma Verification SDK for Android
 
 ## Overview
-verification SDK module supports the [verification Service provided by the Paloma Mobile platform cloud](http://46.137.242.200/docs/verification-service/index.html#_service_description).
-At a high level the verification SDK supports the following functionality:
+Verification SDK module supports the [Verification Service provided by the Paloma Mobile platform cloud](http://46.137.242.200/docs/verification-service/index.html#_service_description).
+At a high level the Verification SDK supports the following functionality:
 
-* Receiving push verifications via GCM (in future to be expanded to SMS, and custom socket channel)
+* Verification of email address
 
 The [javadoc is available here](http://palomamobile.github.io/paloma-android-sdk/docs/index.html) under package _com.palomamobile.android.sdk.verification_
 
@@ -29,8 +29,13 @@ The verification SDK depends on:
 
 For a complete working project see the [android-sdk-verification-sample-app](../palomamobile-android-sdk-verification/android-sdk-verification-sample-app)
 
-Before much else can be done the application needs to register a user. If you're not sure how to do this have a look 
-at the [User SDK](../palomamobile-android-sdk-user).
+The verification of an email address is a process that follows these steps:
+
+* Client application requests email address verification (requires Client authentication only)
+* Paloma Verification Service sends and email with one time verification code
+* User retrieves the one time verification code from the email (thus proving the email address is under their control)
+* User requests an update to their user account with the email address and one time verification code (requires User authentication)
+* Paloma User Service assigns the verified email address to the user account
 
 ### Declare dependencies in your `build.gradle`
 
@@ -54,71 +59,12 @@ dependencies {
     compile 'com.palomamobile.android.sdk:user:2.7.1@aar'
     compile 'com.palomamobile.android.sdk:verification:2.7.1@aar'
     
-    //enable verifications via GCM
-    compile "com.google.android.gms:play-services:7.5.0"
-    ...
-    
 }
 ```
 
-### Configure your `AndroidManifest.xml` with Paloma Mobile GCM integration settings
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.foo"
-    android:versionCode="1"
-    android:versionName="1.0">
-
-    ...
-
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-
-    <permission android:name="${applicationId}.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-    <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE" />
-    
-
-    <application android:label="@string/app_name"
-        android:icon="@drawable/ic_launcher"
-        android:theme="@style/AppTheme"
-        android:name=".App">
-
-        <meta-data android:name="com.palomamobile.android.sdk.ClientId" android:value="@string/palomamobile_client_id"/>
-        <meta-data android:name="com.palomamobile.android.sdk.Endpoint" android:value="@string/palomamobile_endpoint"/>
-        <meta-data android:name="com.palomamobile.android.sdk.GcmSenderId" android:value="@string/palomamobile_gcm_sender_id"/>
-
-        <receiver
-            android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-
-                <category android:name="com.foo" />
-            </intent-filter>
-        </receiver>
-
-    </application>
-
-</manifest>
-```
-
-Replace `com.foo` everywhere with the actual package name of your application.
-
-Values for `palomamobile_client_id`, `palomamobile_endpoint`, and `palomamobile_gcm_sender_id` are provided at the time
-you register your application with the Paloma Mobile platform.
-
-
 ### In your code
 
-Initiate the Paloma Mobile platform SDK, and register to receive verifications. The type of verifications that will be
-received by any given client app depends on the Paloma Mobile platform services the client app uses. Each service lists
-the verifications it triggers. For example:
-
-* [Friend SDK verifications](http://46.137.242.200/docs/friend-service/index.html#_verifications)
-* [Message SDK verifications](http://46.137.242.200/docs/message-service/index.html#_verifications)
-
+Initiate the Paloma Mobile platform SDK.
 
 ```java
 public class App extends Application {
@@ -127,22 +73,74 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         ServiceSupport.Instance.init(this.getApplicationContext());
-        ServiceSupport.Instance.getEventBus().register(this);
         ...
+    }
+}
+```
+
+In your Activity class request email verification and once the one time verification code from the email is available update the user:
+
+```java
+public class VerificationSampleActivity extends Activity {
+
+    private IEmailVerificationManager emailVerificationManager = ServiceSupport.Instance.getServiceManager(IEmailVerificationManager.class);
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ServiceSupport.Instance.getEventBus().register(this);
+
+        final EditText etEmail = (EditText) findViewById(R.id.editTextEmail) ;
+        Button btnEmail = (Button) findViewById(R.id.btnEmail);
+        btnEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = etEmail.getText().toString();
+                JobCreateEmailVerification jobCreateEmailVerification = new JobCreateEmailVerification(email);
+                jobManager.addJob(jobCreateEmailVerification);
+                textViewStatus.setText("Started step 1. of Email verification");
+            }
+        });
+
+        final EditText etCode = (EditText) findViewById(R.id.editTextCode);
+        Button btnVerify = (Button) findViewById(R.id.btnVerify);
+        btnVerify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = etEmail.getText().toString();
+                JobPostUserVerifiedEmail jobPostUserVerifiedEmail = new JobPostUserVerifiedEmail(email, code);
+                jobManager.addJob(jobPostUserVerifiedEmail);
+                textViewStatus.setText("Started step 2. of Email verification");
+            }
+        });
     }
 
     @SuppressWarnings("unused")
-    public void onEventMainThread(EventverificationReceived event) {
-        verification verification = event.getverification();
-        Log.d(TAG, "onEventMainThread(): " + event);
-        String type = verification.getType().toLowerCase();
-        switch (type) {
-            //if this app integrates with the Message SDK it makes sense to listen for new received messages
-            case "messageservice.receivedmessage":
-                handleMessageverification(verification);
-                break;
-            ...
+    public void onEventMainThread(EventEmailVerificationCreated event) {
+        Throwable throwable = event.getFailure();
+        if (throwable == null) {
+            textViewStatus.setText("Step 1. of User email verification successful. Check your email for the verification code needed in the next step.");
+        }
+        else {
+            textViewStatus.setText("Step 1. of User email verification failed: " + event.getFailure());
         }
     }
-}
+
+    @SuppressWarnings("unused")
+    public void onEventMainThread(EventLocalUserUpdated event) {
+        Throwable throwable = event.getFailure();
+        if (throwable == null) {
+            textViewStatus.setText("Step 2. of User email verification successful. Email verification complete.\n" + event.getSuccess().toString());
+        }
+        else {
+            textViewStatus.setText("Step 2. of User email verification failed: " + event.getFailure());
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        ServiceSupport.Instance.getEventBus().unregister(this);
+        super.onDestroy();
+    }
+
 ```
