@@ -8,6 +8,10 @@ include 'palomamobile-android-sdk-user'
 include 'palomamobile-android-sdk-user:android-sdk-user-library'
 include 'palomamobile-android-sdk-user:android-sdk-user-sample-app'
 
+include 'palomamobile-android-sdk-datatracking'
+include 'palomamobile-android-sdk-datatracking:android-sdk-datatracking-library'
+include 'palomamobile-android-sdk-datatracking:android-sdk-datatracking-sample-app'
+
 include 'palomamobile-android-sdk-media'
 include 'palomamobile-android-sdk-media:android-sdk-media-library'
 include 'palomamobile-android-sdk-media:android-sdk-media-sample-app'
@@ -27,3 +31,4 @@ include 'palomamobile-android-sdk-notification:android-sdk-notification-sample-a
 include 'palomamobile-android-sdk-verification'
 include 'palomamobile-android-sdk-verification:android-sdk-verification-library'
 include 'palomamobile-android-sdk-verification:android-sdk-verification-sample-app'
+

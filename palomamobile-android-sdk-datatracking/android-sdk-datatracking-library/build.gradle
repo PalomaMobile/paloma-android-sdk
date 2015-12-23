@@ -1,0 +1,17 @@
+apply from: '../../base_sdk_library.gradle'
+apply from: '../../maven_push.gradle'
+
+android {
+  defaultConfig {
+    buildConfigField "String", "TARGET_SERVICE_VERSION", "\"datatracking-1.0.0\""
+  }
+}
+
+dependencies {
+  compile project(':palomamobile-android-sdk-core:android-sdk-core-library')
+  compile project(':palomamobile-android-sdk-auth:android-sdk-auth-library')
+  compile project(':palomamobile-android-sdk-user:android-sdk-user-library')
+
+  androidTestCompile ('com.android.support:appcompat-v7:22.1.1')
+
+}

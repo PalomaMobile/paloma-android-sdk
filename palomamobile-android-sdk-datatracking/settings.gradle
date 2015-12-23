@@ -1,0 +1,2 @@
+include 'android-sdk-datatracking-library'
+include 'android-sdk-datatracking-sample-app'
