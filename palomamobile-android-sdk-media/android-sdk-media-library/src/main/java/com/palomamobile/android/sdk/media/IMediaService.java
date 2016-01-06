@@ -155,21 +155,21 @@ public interface IMediaService {
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/applications/{applicationName}/media")
     MediaInfo postApplicationMediaChunk(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId,
-                                 @Header(HEADER_NAME_PALOMA_TRANSFER_ID) String transferId,
-                                 @Header("Content-Range") String contentRangeHeaderValue,
-                                 @Path("applicationName") String applicationName,
-                                 @Body TypedInput chunk,
+                                        @Header(HEADER_NAME_PALOMA_TRANSFER_ID) String transferId,
+                                        @Header("Content-Range") String contentRangeHeaderValue,
+                                        @Path("applicationName") String applicationName,
+                                        @Body TypedInput chunk,
                                         @Header(HEADER_NAME_CONTENT_MD5) String contentMd5);
 
     //Upload a chunk of data, content is publicly available.
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @PUT("/applications/{applicationName}/media/{trailingMediaUri}")
     MediaInfo putApplicationMediaChunk(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId,
-                                @Header(HEADER_NAME_PALOMA_TRANSFER_ID) String transferId,
-                                @Header("Content-Range") String contentRangeHeaderValue,
-                                @Path("applicationName") String applicationName,
-                                @Path("trailingMediaUri") String trailingMediaUri,
-                                @Body TypedInput chunk,
+                                       @Header(HEADER_NAME_PALOMA_TRANSFER_ID) String transferId,
+                                       @Header("Content-Range") String contentRangeHeaderValue,
+                                       @Path("applicationName") String applicationName,
+                                       @Path("trailingMediaUri") String trailingMediaUri,
+                                       @Body TypedInput chunk,
                                        @Header(HEADER_NAME_CONTENT_MD5) String contentMd5);
 
 

@@ -1,19 +1,13 @@
 package com.palomamobile.android.sdk.media;
 
-import android.util.Base64;
 import com.palomamobile.android.sdk.core.ServiceSupport;
-import com.palomamobile.android.sdk.core.util.Utilities;
 import com.path.android.jobqueue.Params;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import retrofit.mime.TypedByteArray;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedInput;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Convenience wrapper around {@link IMediaService#postMedia(String, TypedInput)}
@@ -69,75 +63,29 @@ public class JobUploadMedia extends BaseJobUploadMedia {
         this.trailingMediaUri = trailingMediaUri;
     }
 
-    @Override
-    protected MediaInfo callService(String mime, String file) throws Exception {
-        IChunkingStrategy chunkingStrategy = getChunkingStrategy();
-        logger.debug(chunkingStrategy.toString());
 
+    protected MediaInfo uploadSingleFile(TypedFile typedFile) throws IOException {
         IMediaService mediaService = ServiceSupport.Instance.getServiceManager(IMediaManager.class).getService();
-        MediaInfo response;
-        if (chunkingStrategy.isApplyChunking()) {
-            logger.debug("uploading in chunks");
-            response = uploadInChunks(mime, file);
+        if (trailingMediaUri == null) {
+            return mediaService.postMedia(getRetryId(), typedFile);
         }
         else {
-            logger.debug("uploading simply");
-            if (trailingMediaUri == null) {
-                TypedFile typedFile = new TypedFile(mime, new File(file));
-                response = mediaService.postMedia(getRetryId(), typedFile);
-            }
-            else {
-                TypedFile typedFile = new TypedFile(mime, new File(file));
-                response = mediaService.postMedia(getRetryId(), trailingMediaUri, typedFile);
-            }
+            return mediaService.postMedia(getRetryId(), trailingMediaUri, typedFile);
         }
-        return response;
     }
 
-    private MediaInfo uploadInChunks(String mime, String file) throws IOException {
-        RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");
-        int offset = 0;
-        int bufferSize = getChunkingStrategy().getChunkSize();
-        byte[] bytes = new byte[bufferSize];
-        String transferId = String.valueOf(getTransferId());
+
+    @Override
+    protected MediaInfo uploadFileChunk(String transferId, String contentRangeHeaderValue, TypedInput chunk, String contentMd5) throws IOException {
         IMediaService mediaService = ServiceSupport.Instance.getServiceManager(IMediaManager.class).getService();
-
         MediaInfo mediaInfo;
-        do {
-            int readCount = randomAccessFile.read(bytes);
-            byte[] chunkBytes;
-            if (readCount == bufferSize) {
-                chunkBytes = bytes;
-            }
-            else {
-                chunkBytes = new byte[readCount];
-                System.arraycopy(bytes, 0, chunkBytes, 0, readCount);
-            }
-
-            String contentMd5 = null;
-            TypedByteArray chunk = new TypedByteArray(mime, chunkBytes);
-            try {
-                byte[] contentMd5Bytes = Utilities.getMD5(chunkBytes);
-                contentMd5 = Base64.encodeToString(contentMd5Bytes, Base64.NO_WRAP);
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
-
-            if (trailingMediaUri == null) {
-                mediaInfo = mediaService.postMediaChunk(getRetryId(), transferId, buildContentRangeHeaderValue(offset, readCount, randomAccessFile.length()), chunk, contentMd5);
-                trailingMediaUri = mediaInfo.getTrailingMediaUri();
-            }
-            else {
-                mediaInfo = mediaService.putMediaChunk(getRetryId(), transferId, buildContentRangeHeaderValue(offset, readCount, randomAccessFile.length()), trailingMediaUri, chunk, contentMd5);
-            }
-            offset += readCount;
-        } while (offset < randomAccessFile.length());
+        if (trailingMediaUri == null) {
+            mediaInfo = mediaService.postMediaChunk(getRetryId(), transferId, contentRangeHeaderValue, chunk, contentMd5);
+            trailingMediaUri = mediaInfo.getTrailingMediaUri();
+        }
+        else {
+            mediaInfo = mediaService.putMediaChunk(getRetryId(), transferId, contentRangeHeaderValue, trailingMediaUri, chunk, contentMd5);
+        }
         return mediaInfo;
     }
-
-    private static String buildContentRangeHeaderValue(long offset, int byteCount, long totalContentLength) {
-        return "bytes " + offset + "-" + (offset + byteCount -1) +
-                (totalContentLength == -1 ? "/*" : "/" + totalContentLength);
-    }
-
 }

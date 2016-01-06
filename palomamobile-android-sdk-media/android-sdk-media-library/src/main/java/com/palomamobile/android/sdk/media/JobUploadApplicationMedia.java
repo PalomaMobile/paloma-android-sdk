@@ -3,20 +3,19 @@ package com.palomamobile.android.sdk.media;
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.palomamobile.android.sdk.core.util.Utilities;
 import com.path.android.jobqueue.Params;
-import retrofit.converter.ConversionException;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedInput;
 
-import java.io.File;
+import java.io.IOException;
 
 /**
- * Convenience wrapper around {@link IMediaService#postApplicationMedia(String, String, TypedInput)} and  {@link IMediaService#updateNamedApplicationMedia(String, String, String, TypedInput)}
- * used to post media that becomes available only to the posting user.
+ * Convenience wrapper around {@link IMediaService#postApplicationMedia(String, String, TypedInput)} and {@link IMediaService#updateNamedApplicationMedia(String, String, String, TypedInput)}
+ * used to post media that becomes publicly available.
  * Once this job is completed (with success or failure) it posts {@link EventMediaUploaded} on the
  * {@link com.palomamobile.android.sdk.core.IEventBus} (as returned by {@link ServiceSupport#getEventBus()}).
  * </br>
  */
-public class JobUploadApplicationMedia extends BaseJobUploadNamedMedia {
+public class JobUploadApplicationMedia extends BaseJobUploadMedia {
 
     /**
      * Create a new application media upload job.
@@ -65,9 +64,8 @@ public class JobUploadApplicationMedia extends BaseJobUploadNamedMedia {
     }
 
     @Override
-    protected MediaInfo callService(String mime, String file) throws ConversionException {
+    protected MediaInfo uploadSingleFile(TypedFile typedFile) throws IOException {
         IMediaManager mediaManager = ServiceSupport.Instance.getServiceManager(IMediaManager.class);
-        TypedFile typedFile = new TypedFile(mime, new File(file));
         String applicationName = Utilities.getAppNameFromMetadata(ServiceSupport.Instance.getContext());
         MediaInfo response;
         IMediaService mediaService = mediaManager.getService();
@@ -78,6 +76,21 @@ public class JobUploadApplicationMedia extends BaseJobUploadNamedMedia {
             response = mediaService.updateNamedApplicationMedia(getRetryId(), applicationName, trailingMediaUri, typedFile);
         }
         return response;
+    }
+
+    @Override
+    protected MediaInfo uploadFileChunk(String transferId, String contentRangeHeaderValue, TypedInput chunk, String contentMd5) throws IOException {
+        String applicationName = Utilities.getAppNameFromMetadata(ServiceSupport.Instance.getContext());
+        IMediaService mediaService = ServiceSupport.Instance.getServiceManager(IMediaManager.class).getService();
+        MediaInfo mediaInfo;
+        if (trailingMediaUri == null) {
+            mediaInfo = mediaService.postApplicationMediaChunk(getRetryId(), transferId, contentRangeHeaderValue, applicationName, chunk, contentMd5);
+            trailingMediaUri = mediaInfo.getTrailingMediaUri();
+        }
+        else {
+            mediaInfo = mediaService.putApplicationMediaChunk(getRetryId(), transferId, contentRangeHeaderValue, applicationName, trailingMediaUri, chunk, contentMd5);
+        }
+        return mediaInfo;
     }
 
 }
