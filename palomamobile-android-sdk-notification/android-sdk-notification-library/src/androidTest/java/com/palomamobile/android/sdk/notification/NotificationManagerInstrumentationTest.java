@@ -37,7 +37,7 @@ public class NotificationManagerInstrumentationTest extends InstrumentationTestC
         outNotification.setRecipientId(user.getId());
         outNotification.setContent("just some content");
         outNotification.setDebug("just some debug info");
-        outNotification.setSenderClient("user");
+        outNotification.setSenderClient("testapp-client");
         outNotification.setUrl("http://www.google.com");
         outNotification.setSenderId(user.getId());
         outNotification.setTimestamp(System.currentTimeMillis());
