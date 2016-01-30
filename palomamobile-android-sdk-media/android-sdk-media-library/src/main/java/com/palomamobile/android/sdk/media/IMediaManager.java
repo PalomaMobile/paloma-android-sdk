@@ -34,4 +34,19 @@ public interface IMediaManager extends IServiceManager<IMediaService> {
      */
     Uri requestExpiringPublicUrl(Uri mediaUrl) throws IOException;
 
+    /**
+     * Returns the chunking strategy that is applied by default to all jobs that extend {@link BaseJobUploadMedia} as well as
+     * {@link JobReliableDownload}.
+     * By default returns the same instance of {@link com.palomamobile.android.sdk.media.IChunkingStrategy.SimpleChunkingStrategy}.
+     * Custom strategy can be set via {@link #setChunkingStrategy(IChunkingStrategy)}.
+     * @return current chunking strategy
+     */
+    IChunkingStrategy getChunkingStrategy();
+
+    /**
+     * Set custom chunking strategy.
+     * @see #getChunkingStrategy()
+     * @param chunkingStrategy new strategy
+     */
+    void setChunkingStrategy(IChunkingStrategy chunkingStrategy);
 }

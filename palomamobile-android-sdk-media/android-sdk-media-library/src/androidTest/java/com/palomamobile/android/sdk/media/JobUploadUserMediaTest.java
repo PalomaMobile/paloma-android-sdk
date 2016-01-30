@@ -48,7 +48,7 @@ public class JobUploadUserMediaTest extends InstrumentationTestCase {
             throw new RuntimeException("Unable to create a file from asset");
         }
         JobUploadUserMedia mediaUploadJob = new JobUploadUserMedia(mime, imageFile.getAbsolutePath());
-        mediaUploadJob.setChunkingStrategy(strategy);
+        mediaUploadJob.setForcedChunkingStrategy(strategy);
         MediaInfo mediaInfo = mediaUploadJob.syncRun(false);
         assertNotNull(mediaInfo);
         assertEquals(mime, mediaInfo.getContentType());
@@ -107,7 +107,7 @@ public class JobUploadUserMediaTest extends InstrumentationTestCase {
             throw new RuntimeException("Unable to create a file from asset");
         }
         JobUploadUserMedia mediaUploadJob = new JobUploadUserMedia(trailingMediaUri, mime, imageFile.getAbsolutePath());
-        mediaUploadJob.setChunkingStrategy(strategy);
+        mediaUploadJob.setForcedChunkingStrategy(strategy);
         MediaInfo mediaInfo = mediaUploadJob.syncRun(false);
         assertNotNull(mediaInfo);
         assertEquals(mediaUploadJob.getMime(), mediaInfo.getContentType());

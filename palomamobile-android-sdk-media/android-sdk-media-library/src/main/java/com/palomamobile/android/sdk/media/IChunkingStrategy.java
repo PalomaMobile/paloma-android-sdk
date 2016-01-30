@@ -2,10 +2,12 @@ package com.palomamobile.android.sdk.media;
 
 import retrofit.RetrofitError;
 
+import java.io.Serializable;
+
 /**
  * Created by Karel Herink
  */
-public interface IChunkingStrategy {
+public interface IChunkingStrategy extends Serializable, Cloneable {
     boolean isApplyChunking();
 
     int getChunkSize();
@@ -20,9 +22,11 @@ public interface IChunkingStrategy {
         private final static int INITIAL_CHUNK_SIZE = MAXIMUM_CHUNK_SIZE;
         private final static int MINIMUM_CHUNK_SIZE = 512;
 
-        private int chunkSize = -1;
+        private int chunkSize;
 
-        public SimpleChunkingStrategy() {}
+        public SimpleChunkingStrategy() {
+            this.chunkSize = -1;
+        }
 
         public SimpleChunkingStrategy(int chunkSize) {
             this.chunkSize = chunkSize;

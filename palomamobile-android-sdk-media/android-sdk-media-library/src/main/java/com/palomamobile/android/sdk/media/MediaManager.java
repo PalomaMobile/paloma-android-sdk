@@ -17,8 +17,10 @@ class MediaManager implements IMediaManager {
 
     private IMediaService mediaService;
     private OkHttpClient nonRedirectingHttpClient;
+    private IChunkingStrategy chunkingStrategy;
 
     public MediaManager(IServiceSupport serviceSupport) {
+        this.chunkingStrategy = new IChunkingStrategy.SimpleChunkingStrategy();
         this.mediaService = serviceSupport.getRestAdapter().create(IMediaService.class);
         serviceSupport.registerServiceManager(IMediaManager.class, this);
     }
@@ -51,6 +53,16 @@ class MediaManager implements IMediaManager {
             }
         }
         return resolved;
+    }
+
+    @Override
+    public IChunkingStrategy getChunkingStrategy() {
+        return chunkingStrategy;
+    }
+
+    @Override
+    public void setChunkingStrategy(IChunkingStrategy chunkingStrategy) {
+        this.chunkingStrategy = chunkingStrategy;
     }
 
     @NonNull

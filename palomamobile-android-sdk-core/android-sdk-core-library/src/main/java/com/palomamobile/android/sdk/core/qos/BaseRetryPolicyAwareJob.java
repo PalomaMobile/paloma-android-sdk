@@ -7,6 +7,7 @@ import com.path.android.jobqueue.Params;
 import com.path.android.jobqueue.RetryConstraint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import retrofit.RetrofitError;
 
 import java.util.Map;
 import java.util.UUID;
@@ -121,7 +122,7 @@ public abstract class BaseRetryPolicyAwareJob<Result> extends Job {
                 logger.warn("getCurrentRunCount() == getRetryLimit() is true: postFailure");
                 postFailure(throwable);
             }
-            throw  throwable;
+            throw throwable;
         }
     }
 
@@ -267,4 +268,30 @@ public abstract class BaseRetryPolicyAwareJob<Result> extends Job {
                 ", retryId=" + retryId +
                 "} " + super.toString();
     }
+
+    public static boolean isResponseCodeSuccess(int code) {
+        return code >= 200 && code < 300;
+    }
+
+    /**
+     * This implementation only deals with @link retrofit.RetrofitError
+     *
+     * @param throwable
+     * @return
+     */
+    public boolean isExceptionTemporary(Throwable throwable) {
+        if (throwable instanceof RetrofitError) {
+            RetrofitError error = (RetrofitError) throwable;
+            if (error.getKind() == RetrofitError.Kind.NETWORK || error.getKind() == RetrofitError.Kind.HTTP) {
+                if (error.getResponse() == null) {
+                    return true;
+                }
+                int status = error.getResponse().getStatus();
+                if (status >= 500) //server errors should be temporary :)
+                    return true;
+            }
+        }
+        return false; //amongst others also all 4xx errors
+    }
+
 }

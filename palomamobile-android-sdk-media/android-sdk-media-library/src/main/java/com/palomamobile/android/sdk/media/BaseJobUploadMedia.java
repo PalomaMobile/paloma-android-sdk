@@ -28,7 +28,7 @@ public abstract class BaseJobUploadMedia extends BaseRetryPolicyAwareJob<MediaIn
     private String mime;
     private String file;
 
-    private IChunkingStrategy chunkingStrategy = new IChunkingStrategy.SimpleChunkingStrategy();
+    private IChunkingStrategy forcedChunkingStrategy;
     protected String trailingMediaUri;
 
     /**
@@ -84,16 +84,23 @@ public abstract class BaseJobUploadMedia extends BaseRetryPolicyAwareJob<MediaIn
         return mime;
     }
 
+    /**
+     * @return the current applicable chunking strategy for this job.
+     */
     protected IChunkingStrategy getChunkingStrategy() {
-        return chunkingStrategy;
+        return forcedChunkingStrategy != null ? forcedChunkingStrategy : ServiceSupport.Instance.getServiceManager(IMediaManager.class).getChunkingStrategy();
+    }
+
+    /**
+     * Set persistent custom chunking strategy for this job to override the default value as returned by {@link IMediaManager#getChunkingStrategy()}.
+     * @param forcedChunkingStrategy
+     */
+    public void setForcedChunkingStrategy(IChunkingStrategy forcedChunkingStrategy) {
+        this.forcedChunkingStrategy = forcedChunkingStrategy;
     }
 
     public String getTrailingMediaUri() {
         return trailingMediaUri;
-    }
-
-    public void setChunkingStrategy(IChunkingStrategy chunkingStrategy) {
-        this.chunkingStrategy = chunkingStrategy;
     }
 
     public String getTransferId() {

@@ -31,14 +31,11 @@ public class DefaultRetryPolicyProvider implements IRetryPolicyProvider {
     public RetryConstraint shouldReRunOnThrowable(BaseRetryPolicyAwareJob job, Throwable throwable, int runCount, int maxRunCount) {
         logger.debug("shouldReRunOnThrowable() ");
         RetryConstraint retryConstraint = RetryConstraint.CANCEL;
-        if (throwable instanceof RetrofitError) {
-            RetrofitError error = (RetrofitError) throwable;
-            if (isTemporary(error)) {
-                retryConstraint = RetryConstraint.createExponentialBackoff(runCount, job.getInitialBackOffInMs());
-            }
-            else {
-                logger.debug("error not temporary");
-            }
+        if (job.isExceptionTemporary(throwable)) {
+            retryConstraint = RetryConstraint.createExponentialBackoff(runCount, job.getInitialBackOffInMs());
+        }
+        else {
+            logger.debug("error not temporary");
         }
         logger.warn(job + " failed with: " + throwable + " -> " + asString(retryConstraint));
         return retryConstraint;
