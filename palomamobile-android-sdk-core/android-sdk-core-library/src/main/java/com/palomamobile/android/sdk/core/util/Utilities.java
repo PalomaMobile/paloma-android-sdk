@@ -12,6 +12,14 @@ import com.palomamobile.android.sdk.core.R;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 /**
  * Assorted utilities.
  * <br/>
@@ -98,6 +106,42 @@ public class Utilities {
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException("Failed to load meta-data, NameNotFound", e);
         }
+    }
+
+    public static byte[] getMD5(byte[] bytes) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.update(bytes);
+        return md.digest();
+    }
+
+    public static byte[] getMD5(String fileName) throws NoSuchAlgorithmException, IOException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        InputStream is = new FileInputStream(fileName);
+        try {
+            is = new DigestInputStream(is, md);
+
+            byte[] buffer = new byte[8192];
+            while (is.read(buffer) > 0) {
+                //read to updated the digest
+            }
+            byte[] digest = md.digest();
+            return digest;
+        }
+        finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                //ignore
+            }
+        }
+    }
+
+    public static String md5ToString(byte[] digest) {
+        BigInteger bigInt = new BigInteger(1, digest);
+        String output = bigInt.toString(16);
+        //Fill to 32 chars
+        output = String.format("%32s", output).replace(' ', '0');
+        return output;
     }
 
 }

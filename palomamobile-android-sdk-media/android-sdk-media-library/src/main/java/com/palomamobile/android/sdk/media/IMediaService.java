@@ -2,7 +2,6 @@ package com.palomamobile.android.sdk.media;
 
 import com.palomamobile.android.sdk.core.CustomHeader;
 import com.palomamobile.android.sdk.core.PaginatedResponse;
-import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.Header;
@@ -25,31 +24,56 @@ import java.util.Map;
  */
 public interface IMediaService {
 
+    /**
+     * Header with this name identifies each individual chunk as part of a single transfer.
+     */
+    String HEADER_NAME_PALOMA_TRANSFER_ID = "X-Paloma-Transfer";
+    String HEADER_NAME_CONTENT_MD5 = "Content-MD5";
+
     //---- media namespace
 
     /**
      * Upload file content, the posted content is accessible to anyone who can access the media url.
      * @param requestId for the purposes of identifying retries
      * @param file file to upload
-     * @return raw {@link Response} rather than {@link MediaInfo} because the media url is returned in a header.
+     * @return description of media
      * {@link JobUploadMedia} provides a convenient wrapper, consider using it instead.
      */
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/media")
-    Response postMedia(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Body TypedInput file);
+    MediaInfo postMedia(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Body TypedInput file);
 
     /**
      * Upload file content, update existing media only (create not supported in the media name space).
      * @param requestId for the purposes of identifying retries
      * @param trailingMediaUri media identifier previously received as a service response to a
      * @param file file to upload
-     * @return raw {@link Response} rather than {@link MediaInfo} because the media url is returned in a header.
+     * @return description of media
      * {@link JobUploadMedia} provides a convenient wrapper, consider using it instead.
      */
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @PUT("/media/{trailingMediaUri}")
-    Response postMedia(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("trailingMediaUri") String trailingMediaUri, @Body TypedInput file);
+    MediaInfo postMedia(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("trailingMediaUri") String trailingMediaUri, @Body TypedInput file);
 
+
+    //Upload a chunk of data, the posted content is accessible to anyone who can access the media url.
+    @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
+    @POST("/media")
+    MediaInfo postMediaChunk(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId,
+                             @Header(HEADER_NAME_PALOMA_TRANSFER_ID) String transferId,
+                             @Header("Content-Range") String contentRangeHeaderValue,
+                             @Body TypedInput chunk,
+                             @Header(HEADER_NAME_CONTENT_MD5) String contentMd5);
+
+    //Upload a chunk of data, the posted content is accessible to anyone who can access the media url.
+    @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
+    @PUT("/media/{trailingMediaUri}")
+    MediaInfo putMediaChunk(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId,
+                            @Header(HEADER_NAME_PALOMA_TRANSFER_ID) String transferId,
+                            @Header("Content-Range") String contentRangeHeaderValue,
+                            @Path("trailingMediaUri") String trailingMediaUri,
+                            @Body TypedInput chunk,
+                            @Header(HEADER_NAME_CONTENT_MD5) String contentMd5);
 
     //---- user namespace
 
@@ -58,12 +82,12 @@ public interface IMediaService {
      * @param requestId for the purposes of identifying retries
      * @param userId local user id
      * @param file file to upload
-     * @return raw {@link Response} rather than {@link MediaInfo} because the media url is returned in a header.
+     * @return description of media
      * {@link JobUploadUserMedia} provides a convenient wrapper, consider using it instead.
      */
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/users/{userId}/media")
-    Response postUserMedia(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @Body TypedInput file);
+    MediaInfo postUserMedia(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @Body TypedInput file);
 
     /**
      * Upload file content, the posted content is accessible only to the authenticated user that originally posted the content.
@@ -71,13 +95,34 @@ public interface IMediaService {
      * @param userId local user id
      * @param trailingMediaUri media identifier such as file name
      * @param file file to upload
-     * @return raw {@link Response} rather than {@link MediaInfo} because the media url is returned in a header.
+     * @return description of media
      * {@link JobUploadUserMedia} provides a convenient wrapper, consider using it instead.
      */
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @PUT("/users/{userId}/media/{trailingMediaUri}")
-    Response updateNamedUserMedia(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @Path("trailingMediaUri") String trailingMediaUri, @Body TypedInput file);
+    MediaInfo updateNamedUserMedia(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("userId") long userId, @Path("trailingMediaUri") String trailingMediaUri, @Body TypedInput file);
 
+
+    //Upload a chunk of data, the posted content is accessible only to the authenticated user that originally posted the content.
+    @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
+    @POST("/users/{userId}/media")
+    MediaInfo postUserMediaChunk(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId,
+                                 @Header(HEADER_NAME_PALOMA_TRANSFER_ID) String transferId,
+                                 @Header("Content-Range") String contentRangeHeaderValue,
+                                 @Path("userId") long userId,
+                                 @Body TypedInput chunk,
+                                 @Header(HEADER_NAME_CONTENT_MD5) String contentMd5);
+
+    //Upload a chunk of data, the posted content is accessible only to the authenticated user that originally posted the content.
+    @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
+    @PUT("/users/{userId}/media/{trailingMediaUri}")
+    MediaInfo putUserMediaChunk(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId,
+                                @Header(HEADER_NAME_PALOMA_TRANSFER_ID) String transferId,
+                                @Header("Content-Range") String contentRangeHeaderValue,
+                                @Path("userId") long userId,
+                                @Path("trailingMediaUri") String trailingMediaUri,
+                                @Body TypedInput chunk,
+                                @Header(HEADER_NAME_CONTENT_MD5) String contentMd5);
 
     //---- application namespace
 
@@ -86,12 +131,12 @@ public interface IMediaService {
      * @param requestId for the purposes of identifying retries
      * @param applicationName application name
      * @param file file to upload
-     * @return raw {@link Response} rather than {@link MediaInfo} because the media url is returned in a header.
+     * @return description of media
      * {@link JobUploadUserMedia} provides a convenient wrapper, consider using it instead.
      */
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @POST("/applications/{applicationName}/media")
-    Response postApplicationMedia(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("applicationName") String applicationName, @Body TypedInput file);
+    MediaInfo postApplicationMedia(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("applicationName") String applicationName, @Body TypedInput file);
 
     /**
      * Upload file content, content is publicly available.
@@ -99,14 +144,36 @@ public interface IMediaService {
      * @param applicationName application name
      * @param trailingMediaUri media identifier such as file name
      * @param file file to upload
-     * @return raw {@link Response} rather than {@link MediaInfo} because the media url is returned in a header.
+     * @return description of media
      * {@link JobUploadUserMedia} provides a convenient wrapper, consider using it instead.
      */
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @PUT("/applications/{applicationName}/media/{trailingMediaUri}")
-    Response updateNamedApplicationMedia(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("applicationName") String applicationName, @Path("trailingMediaUri") String trailingMediaUri, @Body TypedInput file);
+    MediaInfo updateNamedApplicationMedia(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId, @Path("applicationName") String applicationName, @Path("trailingMediaUri") String trailingMediaUri, @Body TypedInput file);
+
+    //Upload a chunk of data, content is publicly available.
+    @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
+    @POST("/applications/{applicationName}/media")
+    MediaInfo postApplicationMediaChunk(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId,
+                                        @Header(HEADER_NAME_PALOMA_TRANSFER_ID) String transferId,
+                                        @Header("Content-Range") String contentRangeHeaderValue,
+                                        @Path("applicationName") String applicationName,
+                                        @Body TypedInput chunk,
+                                        @Header(HEADER_NAME_CONTENT_MD5) String contentMd5);
+
+    //Upload a chunk of data, content is publicly available.
+    @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
+    @PUT("/applications/{applicationName}/media/{trailingMediaUri}")
+    MediaInfo putApplicationMediaChunk(@Header(CustomHeader.HEADER_NAME_PALOMA_REQUEST) String requestId,
+                                       @Header(HEADER_NAME_PALOMA_TRANSFER_ID) String transferId,
+                                       @Header("Content-Range") String contentRangeHeaderValue,
+                                       @Path("applicationName") String applicationName,
+                                       @Path("trailingMediaUri") String trailingMediaUri,
+                                       @Body TypedInput chunk,
+                                       @Header(HEADER_NAME_CONTENT_MD5) String contentMd5);
 
 
+    //--------------------------------
 
     @Headers({CustomHeader.HEADER_PALOMA_TARGET_SERVICE_VERSION + ": " + BuildConfig.TARGET_SERVICE_VERSION, CustomHeader.HEADER_PALOMA_SDK_MODULE_VERSION + ": " + BuildConfig.VERSION_NAME})
     @GET("/users/{userId}/media")

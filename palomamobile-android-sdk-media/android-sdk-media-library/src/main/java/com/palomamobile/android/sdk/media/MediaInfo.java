@@ -4,6 +4,7 @@ import android.net.Uri;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Class {@code MediaInfo} represents information available about uploaded media in the context of the Media SDK.<br/>
@@ -11,14 +12,53 @@ import java.io.Serializable;
  *
  */
 public class MediaInfo implements Serializable {
-    protected long id;
-    protected long ownerId;
-    protected long contentLength;
-    protected String contentType;
-    protected String url;
-    protected boolean secured;
+    private long id;
+    private long ownerId;
+    private long contentLength;
+    private String contentType;
+    private String url;
+    private boolean secured;
     @SerializedName("expiringAuthorizedUrl")
-    protected String expiringPublicUrl;
+    private String expiringPublicUrl;
+    private String editUrl;
+    private boolean complete;
+    private String cachingControl;
+    private String transferId;
+    private String etag;
+    private ChunkingInfo chunking;
+
+    public static class ChunkingInfo implements Serializable {
+        private List<ContentRange> contentRanges;
+        private String transferId;
+        private String contentType;
+        private long contentLength;
+
+        public long getContentLength() {
+            return contentLength;
+        }
+
+        public List<ContentRange> getContentRanges() {
+            return contentRanges;
+        }
+
+        public String getContentType() {
+            return contentType;
+        }
+
+        public String getTransferId() {
+            return transferId;
+        }
+
+        @Override
+        public String toString() {
+            return "ChunkingInfo{" +
+                    "transferId='" + transferId + '\'' +
+                    ", contentType='" + contentType + '\'' +
+                    ", contentLength=" + contentLength +
+                    ", contentRanges=" + contentRanges +
+                    '}';
+        }
+    }
 
     public MediaInfo() {
     }
@@ -72,17 +112,24 @@ public class MediaInfo implements Serializable {
         return Uri.parse(url).getLastPathSegment();
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("MediaInfo{");
-        sb.append("id=").append(id);
-        sb.append(", ownerId=").append(ownerId);
-        sb.append(", url=").append(url);
-        sb.append(", secured=").append(secured);
-        sb.append(", expiringPublicUrl=").append(expiringPublicUrl);
-        sb.append(", contentLength=").append(contentLength);
-        sb.append(", contentType='").append(contentType).append('\'');
-        sb.append('}');
-        return sb.toString();
+    public String getCachingControl() {
+        return cachingControl;
     }
+
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public String getEditUrl() {
+        return editUrl;
+    }
+
+    public String getEtag() {
+        return etag;
+    }
+
+    public String getTransferId() {
+        return transferId;
+    }
+
 }

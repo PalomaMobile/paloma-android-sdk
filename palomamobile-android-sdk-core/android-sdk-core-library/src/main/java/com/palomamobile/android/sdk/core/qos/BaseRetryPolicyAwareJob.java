@@ -109,7 +109,7 @@ public abstract class BaseRetryPolicyAwareJob<Result> extends Job {
     protected abstract void postFailure(Throwable throwable);
 
     /**
-     * Same as calling {@link #syncRun(boolean true)}
+     * Calls {@link #syncRun(boolean true)}, determines if this job needs to call {@link #postFailure(Throwable)} if exception is thrown.
      * @throws Throwable
      */
     @Override

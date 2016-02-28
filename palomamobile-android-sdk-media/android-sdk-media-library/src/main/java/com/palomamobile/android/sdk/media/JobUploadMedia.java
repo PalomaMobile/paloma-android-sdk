@@ -2,11 +2,12 @@ package com.palomamobile.android.sdk.media;
 
 import com.palomamobile.android.sdk.core.ServiceSupport;
 import com.path.android.jobqueue.Params;
-import retrofit.client.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedInput;
 
-import java.io.File;
+import java.io.IOException;
 
 /**
  * Convenience wrapper around {@link IMediaService#postMedia(String, TypedInput)}
@@ -16,6 +17,7 @@ import java.io.File;
  * </br>
  */
 public class JobUploadMedia extends BaseJobUploadMedia {
+    private static final Logger logger = LoggerFactory.getLogger(JobUploadMedia.class);
 
     private String trailingMediaUri;
 
@@ -61,18 +63,29 @@ public class JobUploadMedia extends BaseJobUploadMedia {
         this.trailingMediaUri = trailingMediaUri;
     }
 
-    @Override
-    protected MediaInfo callService(String mime, String file) throws Exception {
-        IMediaManager mediaManager = ServiceSupport.Instance.getServiceManager(IMediaManager.class);
-        TypedFile typedFile = new TypedFile(mime, new File(file));
-        Response response;
+
+    protected MediaInfo uploadSingleFile(TypedFile typedFile) throws IOException {
+        IMediaService mediaService = ServiceSupport.Instance.getServiceManager(IMediaManager.class).getService();
         if (trailingMediaUri == null) {
-            response = mediaManager.getService().postMedia(getRetryId(), typedFile);
+            return mediaService.postMedia(getRetryId(), typedFile);
         }
         else {
-            response = mediaManager.getService().postMedia(getRetryId(), trailingMediaUri, typedFile);
+            return mediaService.postMedia(getRetryId(), trailingMediaUri, typedFile);
         }
-        return getMediaInfo(response);
     }
 
+
+    @Override
+    protected MediaInfo uploadFileChunk(String transferId, String contentRangeHeaderValue, TypedInput chunk, String contentMd5) throws IOException {
+        IMediaService mediaService = ServiceSupport.Instance.getServiceManager(IMediaManager.class).getService();
+        MediaInfo mediaInfo;
+        if (trailingMediaUri == null) {
+            mediaInfo = mediaService.postMediaChunk(getRetryId(), transferId, contentRangeHeaderValue, chunk, contentMd5);
+            trailingMediaUri = mediaInfo.getTrailingMediaUri();
+        }
+        else {
+            mediaInfo = mediaService.putMediaChunk(getRetryId(), transferId, contentRangeHeaderValue, trailingMediaUri, chunk, contentMd5);
+        }
+        return mediaInfo;
+    }
 }
